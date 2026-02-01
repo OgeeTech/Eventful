@@ -6,24 +6,35 @@ import path from 'path';
 import { errorHandler } from './common/middlewares/error.middleware';
 import { apiLimiter } from './common/middlewares/rate-limit.middleware';
 import authRoutes from './modules/auth/auth.routes';
+import eventRoutes from './modules/events/event.routes';
 
 const app: Application = express();
 
-// 1. Middleware
+// ==========================================
+// 1. GLOBAL MIDDLEWARE (MUST BE FIRST)
+// ==========================================
+
+// Parse JSON bodies (Fixes 'req.body undefined' error)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Security & Logging
 app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
 
-// Apply Rate Limiting to all API routes
+// Rate Limiting
 app.use('/api', apiLimiter);
 
-// 2. Serve Static Frontend Files
-const frontendPath = path.join(__dirname, '../../frontend');
-app.use(express.static(frontendPath));
+// ==========================================
+// 2. API ROUTES (MUST BE AFTER MIDDLEWARE)
+// ==========================================
 
-// 3. API Routes 
+// Auth Routes
+app.use('/api/auth', authRoutes);
+
+app.use('/api/events', eventRoutes);
+// Health Check
 app.get('/api/health', (req: Request, res: Response) => {
     res.json({
         status: 'success',
@@ -31,10 +42,14 @@ app.get('/api/health', (req: Request, res: Response) => {
     });
 });
 
+// ==========================================
+// 3. FRONTEND SERVING & FALLBACKS
+// ==========================================
 
-app.use('/api/auth', authRoutes);
+const frontendPath = path.join(__dirname, '../../frontend');
+app.use(express.static(frontendPath));
 
-// 4. Fallback for 404s (Frontend)
+// Fallback Handler
 app.use((req: Request, res: Response, next: Function) => {
     if (req.originalUrl.startsWith('/api')) {
         return res.status(404).json({ message: 'API Route not found' });
@@ -42,7 +57,9 @@ app.use((req: Request, res: Response, next: Function) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-// 5. Global Error Handler (MUST be last)
-app.use(errorHandler); // <--- Register here
+// ==========================================
+// 4. ERROR HANDLER (MUST BE LAST)
+// ==========================================
+app.use(errorHandler);
 
 export default app;
