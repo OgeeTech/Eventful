@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '../common/utils/logger';
+import { logger } from '../utils/logger';
 
 // Custom Error Interface
 interface AppError extends Error {
