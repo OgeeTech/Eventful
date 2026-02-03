@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Payment Successful - Eventful</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: #f4f4f9;
+        }
+
+        .ticket-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        #qrCodeImg {
+            margin-top: 20px;
+            border: 10px solid #fff;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ticket-card">
+        <h1 style="color: #28a745;">🎉 Payment Successful!</h1>
+        <p>Your ticket has been generated. Please save the QR code below.</p>
+
+        <div id="loader">Verifying payment...</div>
+        <img id="qrCodeImg" style="display: none;" width="200" height="200" />
+
+        <div id="details" style="margin-top: 20px; font-weight: bold;"></div>
+
+        <a href="index.html" class="btn">Back to Events</a>
+    </div>
+
+    <script>
+        async function verifyAndGenerateTicket() {
+            // 1. Get the reference from the URL (?reference=xxxx)
+            const urlParams = new URLSearchParams(window.location.search);
+            const reference = urlParams.get('reference');
+            const token = localStorage.getItem('token');
+
+            if (!reference) {
+                document.getElementById('loader').innerText = "No payment reference found.";
+                return;
+            }
+
+            try {
+                // 2. Call your backend Verify endpoint
+                const response = await fetch('/api/payments/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ reference })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // 3. Show the QR Code!
+                    document.getElementById('loader').style.display = "none";
+                    const img = document.getElementById('qrCodeImg');
+                    img.src = data.ticket.qrCode; // This is the base64 string
+                    img.style.display = "block";
+                    document.getElementById('details').innerText = "Ticket ID: " + data.ticket.ticketId;
+                } else {
+                    document.getElementById('loader').innerText = "Verification failed: " + data.message;
+                }
+            } catch (err) {
+                document.getElementById('loader').innerText = "Error connecting to server.";
+            }
+        }
+
+        verifyAndGenerateTicket();
+    </script>
+</body>
+
+</html>

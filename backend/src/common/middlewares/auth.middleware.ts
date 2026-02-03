@@ -6,7 +6,8 @@ export interface AuthRequest extends Request {
     user?: any;
 }
 
-export const protect = (req: AuthRequest, res: Response, next: NextFunction) => {
+// RENAMED 'protect' TO 'authenticateUser' TO MATCH YOUR ROUTES
+export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunction) => {
     let token;
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {

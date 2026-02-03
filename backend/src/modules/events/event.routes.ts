@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import { createEvent, getEvents } from './event.controller';
-import { protect, creatorOnly } from '../../common/middlewares/auth.middleware';
+// UPDATE: Changed 'protect' to 'authenticateUser'
+import { authenticateUser, creatorOnly } from '../../common/middlewares/auth.middleware';
 
 const router = Router();
 
-// Public: Everyone can see events
+// Public: Get all events
 router.get('/', getEvents);
 
-// Protected: Only Logged-in Creators can create events
-router.post('/', protect, creatorOnly, createEvent);
+// Protected: Create Event (Only logged-in Creators)
+// UPDATE: Using 'authenticateUser' here
+router.post('/', authenticateUser, creatorOnly, createEvent);
 
 export default router;

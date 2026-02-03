@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Security & Logging
 app.use(cors());
-app.use(helmet());
+// app.use(helmet());
 app.use(morgan('dev'));
 
 // Rate Limiting
@@ -43,7 +43,7 @@ app.use('/api/events', eventRoutes);
 app.get('/api/health', (req: Request, res: Response) => {
     res.json({
         status: 'success',
-        message: 'Eventful Backend is running smoothly 🚀'
+        message: 'Eventful Backend is running smoothly '
     });
 });
 

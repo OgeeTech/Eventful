@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eventful Login</title>
+</head>
+
+<body style="padding: 50px; font-family: sans-serif;">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email" value="gift@test.com"><br><br>
+    <input type="password" id="password" placeholder="Password" value="securePassword123"><br><br>
+    <button id="loginBtn">Sign In</button>
+
+    <p id="status"></p>
+
+    <script>
+        const btn = document.getElementById('loginBtn');
+        const status = document.getElementById('status');
+
+        btn.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            status.innerText = "Connecting to server...";
+            status.style.color = "blue";
+
+            try {
+                // We use /api/auth/login because the file is hosted on the same server
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("Login Successful!");
+                    // SAVE THE TOKEN (This is the most important part)
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('role', data.role);
+
+                    // Redirect based on role
+                    if (data.role === 'creator') {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    status.innerText = "Error: " + data.message;
+                    status.style.color = "red";
+                }
+            } catch (err) {
+                console.error(err);
+                status.innerText = "Cannot connect to backend.";
+                status.style.color = "red";
+            }
+        });
+    </script>
+</body>
+
+</html>

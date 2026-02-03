@@ -1,11 +1,14 @@
 import { Router } from 'express';
-import { initPayment, verifyAndIssueTicket } from './payment.controller';
-import { protect } from '../../common/middlewares/auth.middleware';
+import { authenticateUser } from '../../common/middlewares/auth.middleware';
+// FIXED: Changed 'initPayment' to 'initializePayment'
+import { initializePayment, verifyAndIssueTicket } from './payment.controller';
 
 const router = Router();
 
-// Only logged-in users can pay
-router.post('/initialize', protect, initPayment);
-router.post('/verify', protect, verifyAndIssueTicket);
+// 1. Initialize Payment (User clicks "Buy Ticket")
+router.post('/initialize', authenticateUser, initializePayment);
+
+// 2. Verify Payment (Paystack calls this back or Frontend calls it)
+router.post('/verify', authenticateUser, verifyAndIssueTicket);
 
 export default router;
