@@ -7,6 +7,7 @@ import { errorHandler } from './common/middlewares/error.middleware';
 import { apiLimiter } from './common/middlewares/rate-limit.middleware';
 import authRoutes from './modules/auth/auth.routes';
 import eventRoutes from './modules/events/event.routes';
+import paymentRoutes from './modules/payments/payment.routes';
 
 const app: Application = express();
 
@@ -32,6 +33,10 @@ app.use('/api', apiLimiter);
 
 // Auth Routes
 app.use('/api/auth', authRoutes);
+
+// Payment Routes
+app.use('/api/payments', paymentRoutes);
+
 
 app.use('/api/events', eventRoutes);
 // Health Check
