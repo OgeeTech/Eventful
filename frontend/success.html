@@ -52,44 +52,48 @@
 
     <script>
         async function verifyAndGenerateTicket() {
-            // 1. Get the reference from the URL (?reference=xxxx)
             const urlParams = new URLSearchParams(window.location.search);
             const reference = urlParams.get('reference');
             const token = localStorage.getItem('token');
 
-            if (!reference) {
-                document.getElementById('loader').innerText = "No payment reference found.";
+            // RETRIEVE THE EVENT ID
+            const eventId = localStorage.getItem('pendingEventId'); // <--- ADD THIS
+
+            if (!reference || !eventId) {
+                document.getElementById('loader').innerText = "Missing reference or event ID.";
                 return;
             }
 
             try {
-                // 2. Call your backend Verify endpoint
                 const response = await fetch('/api/payments/verify', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ reference })
+                    // SEND BOTH REFERENCE AND EVENT ID
+                    body: JSON.stringify({ reference, eventId }) // <--- UPDATE THIS LINE
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    // 3. Show the QR Code!
                     document.getElementById('loader').style.display = "none";
                     const img = document.getElementById('qrCodeImg');
-                    img.src = data.ticket.qrCode; // This is the base64 string
+                    img.src = data.ticket.qrCode;
                     img.style.display = "block";
                     document.getElementById('details').innerText = "Ticket ID: " + data.ticket.ticketId;
+
+                    // Cleanup
+                    localStorage.removeItem('pendingEventId');
                 } else {
                     document.getElementById('loader').innerText = "Verification failed: " + data.message;
                 }
             } catch (err) {
                 document.getElementById('loader').innerText = "Error connecting to server.";
+                console.error(err);
             }
         }
-
         verifyAndGenerateTicket();
     </script>
 </body>

@@ -8,6 +8,7 @@ import { apiLimiter } from './common/middlewares/rate-limit.middleware';
 import authRoutes from './modules/auth/auth.routes';
 import eventRoutes from './modules/events/event.routes';
 import paymentRoutes from './modules/payments/payment.routes';
+import ticketRoutes from './modules/tickets/ticket.routes';
 
 const app: Application = express();
 
@@ -37,6 +38,8 @@ app.use('/api/auth', authRoutes);
 // Payment Routes
 app.use('/api/payments', paymentRoutes);
 
+//ticket scan
+app.use('/api/tickets', ticketRoutes);
 
 app.use('/api/events', eventRoutes);
 // Health Check

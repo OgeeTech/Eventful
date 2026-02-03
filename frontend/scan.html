@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Scanner - Eventful</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: #222;
+            color: white;
+        }
+
+        .scanner-card {
+            background: #333;
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            margin: 20px 0;
+            font-size: 16px;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            width: 85%;
+            padding: 12px;
+            font-size: 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        #result {
+            margin-top: 20px;
+            min-height: 60px;
+            font-size: 18px;
+        }
+
+        .valid {
+            color: #4caf50;
+            border: 2px solid #4caf50;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .invalid {
+            color: #f44336;
+            border: 2px solid #f44336;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(244, 67, 54, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scanner-card">
+        <h2>🎟️ Ticket Validator</h2>
+        <p style="color: #aaa;">Enter the Ticket ID found on the QR Code</p>
+
+        <input type="text" id="ticketId" placeholder="e.g. 65c48a..." />
+        <button onclick="verifyTicket()">Check Ticket</button>
+
+        <div id="result"></div>
+
+        <br>
+        <a href="dashboard.html" style="color: #ccc; text-decoration: none; font-size: 14px;">Back to Dashboard</a>
+    </div>
+
+    <script>
+        async function verifyTicket() {
+            const ticketId = document.getElementById('ticketId').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!ticketId) {
+                alert("Please enter a Ticket ID");
+                return;
+            }
+
+            resultDiv.innerText = "Scanning database...";
+            resultDiv.className = "";
+
+            try {
+                const response = await fetch('/api/tickets/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticketId })
+                });
+
+                const data = await response.json();
+
+                if (data.valid) {
+                    resultDiv.innerHTML = `
+                        <strong>${data.message}</strong><br>
+                        <small>Attendee: ${data.attendee.name}</small>
+                    `;
+                    resultDiv.className = "valid";
+                } else {
+                    resultDiv.innerHTML = `<strong>${data.message}</strong>`;
+                    resultDiv.className = "invalid";
+                }
+
+            } catch (err) {
+                console.error(err);
+                resultDiv.innerText = "Connection Error";
+                resultDiv.className = "invalid";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
