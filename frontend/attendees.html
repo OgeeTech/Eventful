@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Event Attendees - Eventful</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f4f4f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: #555;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .valid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .used {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        <h2 id="eventTitle">Loading...</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Ticket ID</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="attendeeList">
+                <tr>
+                    <td colspan="4">Loading attendees...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+        const token = localStorage.getItem('token');
+
+        if (!token || !eventId) {
+            window.location.href = 'dashboard.html';
+        }
+
+        async function loadAttendees() {
+            try {
+                const response = await fetch(`/api/events/${eventId}/attendees`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('eventTitle').innerText = `Attendees for: ${data.eventTitle}`;
+                    const tbody = document.getElementById('attendeeList');
+
+                    if (data.attendees.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4">No tickets sold yet.</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = '';
+                    data.attendees.forEach(user => {
+                        const statusClass = user.status === 'valid' ? 'valid' : 'used';
+                        const statusText = user.status === 'valid' ? 'Active' : 'Checked In';
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td style="font-family: monospace;">${user.ticketId.substring(0, 8)}...</td>
+                                <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    alert("Error: " + data.message);
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('attendeeList').innerHTML = '<tr><td colspan="4" style="color:red">Failed to load data.</td></tr>';
+            }
+        }
+
+        loadAttendees();
+    </script>
+
+</body>
+
+</html>

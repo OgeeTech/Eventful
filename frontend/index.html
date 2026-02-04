@@ -117,7 +117,16 @@
                 }
 
                 grid.innerHTML = '';
+                // ... inside loadEvents() loop ...
                 eventsArray.forEach(event => {
+
+                    // Create Share Links
+                    const shareText = encodeURIComponent(`Check out this event: ${event.title} at ${event.location}!`);
+                    const shareUrl = encodeURIComponent(window.location.href); // Shares current page
+
+                    const twitterLink = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
+                    const whatsappLink = `https://wa.me/?text=${shareText} ${shareUrl}`;
+
                     grid.innerHTML += `
                         <div class="card">
                             <h3>${event.title}</h3>
@@ -125,10 +134,17 @@
                             <p>📍 ${event.location}</p>
                             <p>📅 ${new Date(event.date).toLocaleDateString()}</p>
                             <p class="price">₦${event.price.toLocaleString()}</p>
+                            
                             <button class="buy-btn" onclick="buyTicket('${event._id}')">Buy Ticket</button>
+                            
+                            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                <a href="${whatsappLink}" target="_blank" style="flex: 1; text-align: center; background: #25D366; color: white; padding: 5px; border-radius: 5px; text-decoration: none; font-size: 14px;">Share WA</a>
+                                <a href="${twitterLink}" target="_blank" style="flex: 1; text-align: center; background: #1DA1F2; color: white; padding: 5px; border-radius: 5px; text-decoration: none; font-size: 14px;">Share X</a>
+                            </div>
                         </div>
                     `;
                 });
+
             } catch (err) {
                 console.error("Failed to load events:", err);
                 document.getElementById('eventsGrid').innerHTML = '<p style="color:red">Error loading events.</p>';

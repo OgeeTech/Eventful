@@ -162,31 +162,47 @@
                 <h3>Total Events</h3>
                 <p id="eventsCountDisplay" class="stat-value dark">Loading...</p>
             </div>
+
+            <div class="stat-card">
+                <h3>Total Events</h3>
+                <p id="eventsCountDisplay" class="stat-value dark">Loading...</p>
+            </div>
+            <div class="stat-card">
+                <h3>Checked In</h3>
+                <p id="scannedDisplay" class="stat-value" style="color: #e67e22;">Loading...</p>
+            </div>
         </div>
+    </div>
 
-        <div class="form-section">
-            <h2>🚀 Create New Event</h2>
-            <form id="createEventForm">
-                <input type="text" id="title" placeholder="Event Title" required>
-                <textarea id="description" placeholder="Description" rows="3" required></textarea>
-                <input type="text" id="location" placeholder="Location (e.g., Abuja Tech Hub)" required>
+    <div class="form-section">
+        <h2>🚀 Create New Event</h2>
+        <form id="createEventForm">
+            <input type="text" id="title" placeholder="Event Title" required>
+            <textarea id="description" placeholder="Description" rows="3" required></textarea>
+            <input type="text" id="location" placeholder="Location (e.g., Abuja Tech Hub)" required>
 
-                <div style="display: flex; gap: 10px;">
-                    <input type="date" id="date" required>
-                    <input type="number" id="price" placeholder="Price (₦)" required>
-                    <input type="number" id="capacity" placeholder="Capacity" required>
-                </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="date" id="date" required>
+                <input type="number" id="price" placeholder="Price (₦)" required>
+                <input type="number" id="capacity" placeholder="Capacity" required>
+            </div>
 
-                <button type="submit" class="btn-primary">Publish Event</button>
-            </form>
-            <p id="status" style="text-align: center; margin-top: 10px;"></p>
+            <button type="submit" class="btn-primary">Publish Event</button>
+        </form>
+        <p id="status" style="text-align: center; margin-top: 10px;"></p>
+    </div>
+
+    <div class="links">
+        <a href="index.html">View Event Gallery (Home)</a> |
+        <a href="scan.html">Ticket Scanner</a>
+    </div>
+    <div
+        style="margin-top: 40px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h3>📅 My Events Management</h3>
+        <div id="myEventsList">
+            <p>Loading your events...</p>
         </div>
-
-        <div class="links">
-            <a href="index.html">View Event Gallery (Home)</a> |
-            <a href="scan.html">Ticket Scanner</a>
-        </div>
-
+    </div>
     </div>
 
     <script>
@@ -215,6 +231,7 @@
                 document.getElementById('revenueDisplay').innerText = `₦${data.totalRevenue.toLocaleString()}`;
                 document.getElementById('ticketsDisplay').innerText = data.ticketsSold;
                 document.getElementById('eventsCountDisplay').innerText = data.eventsCount;
+                document.getElementById('scannedDisplay').innerText = data.ticketsScanned || 0;
 
             } catch (err) {
                 console.error("Analytics Error:", err);

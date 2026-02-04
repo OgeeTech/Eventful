@@ -18,9 +18,9 @@ export const validateTicket = async (req: Request, res: Response) => {
             return res.status(400).json({ valid: false, message: "⚠️ Ticket already used" });
         }
 
-        // 3. (Optional) Mark as used so it can't be used twice
-        // ticket.status = 'used';
-        // await ticket.save();
+        //  Mark as used so it can't be used twice
+        ticket.status = 'used';
+        await ticket.save();
 
         res.json({
             valid: true,

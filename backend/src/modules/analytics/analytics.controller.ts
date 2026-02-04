@@ -2,7 +2,6 @@ import { Response } from 'express';
 import { Ticket } from '../tickets/ticket.model';
 import { Event } from '../events/event.model';
 import { AuthRequest } from '../../common/middlewares/auth.middleware';
-import mongoose from 'mongoose';
 
 export const getCreatorAnalytics = async (req: AuthRequest, res: Response) => {
     try {
@@ -14,11 +13,14 @@ export const getCreatorAnalytics = async (req: AuthRequest, res: Response) => {
         const eventIds = events.map(e => e._id);
 
         console.log(`📅 Found ${events.length} events for this creator.`);
-        console.log(`🆔 Event IDs:`, eventIds);
 
         if (eventIds.length === 0) {
-            console.log("⚠️ No events found for this user. Returning zeros.");
-            return res.json({ totalRevenue: 0, ticketsSold: 0, eventsCount: 0 });
+            return res.json({
+                totalRevenue: 0,
+                ticketsSold: 0,
+                ticketsScanned: 0,
+                eventsCount: 0
+            });
         }
 
         // 2. Aggregate Tickets
@@ -26,7 +28,8 @@ export const getCreatorAnalytics = async (req: AuthRequest, res: Response) => {
             {
                 $match: {
                     eventId: { $in: eventIds },
-                    status: 'valid'
+                    // Count both 'valid' (sold) and 'used' (scanned) tickets
+                    status: { $in: ['valid', 'used'] }
                 }
             },
             {
@@ -42,18 +45,25 @@ export const getCreatorAnalytics = async (req: AuthRequest, res: Response) => {
                 $group: {
                     _id: null,
                     totalRevenue: { $sum: '$eventDetails.price' },
-                    ticketsSold: { $sum: 1 }
+                    ticketsSold: { $sum: 1 }, // Count all valid+used tickets
+                    // Count only tickets where status is 'used'
+                    ticketsScanned: {
+                        $sum: {
+                            $cond: [{ $eq: ["$status", "used"] }, 1, 0]
+                        }
+                    }
                 }
             }
         ]);
 
         console.log("📊 Aggregation Result:", stats);
 
-        const result = stats.length > 0 ? stats[0] : { totalRevenue: 0, ticketsSold: 0 };
+        const finalResult = stats.length > 0 ? stats[0] : { totalRevenue: 0, ticketsSold: 0, ticketsScanned: 0 };
 
         res.json({
-            totalRevenue: result.totalRevenue,
-            ticketsSold: result.ticketsSold,
+            totalRevenue: finalResult.totalRevenue,
+            ticketsSold: finalResult.ticketsSold,
+            ticketsScanned: finalResult.ticketsScanned,
             eventsCount: eventIds.length
         });
 
