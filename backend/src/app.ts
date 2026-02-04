@@ -9,6 +9,7 @@ import authRoutes from './modules/auth/auth.routes';
 import eventRoutes from './modules/events/event.routes';
 import paymentRoutes from './modules/payments/payment.routes';
 import ticketRoutes from './modules/tickets/ticket.routes';
+import analyticsRoutes from './modules/analytics/analytics.routes';
 
 const app: Application = express();
 
@@ -41,6 +42,8 @@ app.use('/api/payments', paymentRoutes);
 //ticket scan
 app.use('/api/tickets', ticketRoutes);
 
+//analytics route setup
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api/events', eventRoutes);
 // Health Check
 app.get('/api/health', (req: Request, res: Response) => {

@@ -18,13 +18,12 @@ export const initializePayment = async (req: AuthRequest, res: Response, next: N
         const userId = req.user?.userId || req.user?.id || req.user?._id;
 
         console.log("Debug - User ID from Token:", userId);
-        console.log("Debug - Event ID from Body:", eventId);
 
         if (!userId) {
             return res.status(401).json({ message: "User ID missing from token." });
         }
 
-        // A. Find the User (This defines the 'user' variable!)
+        // A. Find the User
         const user = await User.findById(userId);
         if (!user) {
             console.error("❌ Database Error: User not found for ID:", userId);
@@ -33,16 +32,16 @@ export const initializePayment = async (req: AuthRequest, res: Response, next: N
 
         // B. Find the Event
         const event = await Event.findById(eventId);
-        if (!event) {
-            console.error("❌ Database Error: Event not found for ID:", eventId);
-            return res.status(404).json({ message: 'Event not found.' });
-        }
+        if (!event) return res.status(404).json({ message: 'Event not found' });
 
-        // C. Define Callback URL
-        const myCallbackUrl = "http://127.0.0.1:5000/success.html";
+        // C. Define Callback URL (Dynamic for localhost vs 127.0.0.1)
+        const host = req.get('host'); // Gets "localhost:5000" or "127.0.0.1:5000"
+        const protocol = req.protocol; // Gets "http"
+        const myCallbackUrl = `${protocol}://${host}/success.html`;
+
+        console.log("Redirecting user back to:", myCallbackUrl);
 
         // D. Initialize Paystack
-        // Now 'user' is definitely defined, so user.email works
         const paymentData = await initPaystack(user.email, event.price, myCallbackUrl);
 
         res.json({
@@ -58,21 +57,18 @@ export const initializePayment = async (req: AuthRequest, res: Response, next: N
 };
 
 // 2. Verify Payment & Issue Ticket
-// 2. Verify Payment & Issue Ticket
 export const verifyAndIssueTicket = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const { reference, eventId } = req.body;
-        // Fix for User ID extraction
         const userId = req.user?.userId || req.user?.id || req.user?._id;
 
-        console.log("Verifying reference:", reference); // Debug Log
+        console.log("Verifying reference:", reference);
 
         // A. Verify with Paystack
         const paystackData = await verifyPayment(reference);
 
-        console.log("Paystack Status:", paystackData.status); // Debug Log
+        console.log("Paystack Status:", paystackData.status);
 
-        // FIX: Paystack returns 'success' (string), not true (boolean) inside the data object
         if (paystackData.status !== 'success') {
             return res.status(400).json({ message: 'Payment failed or invalid status: ' + paystackData.status });
         }
@@ -82,8 +78,6 @@ export const verifyAndIssueTicket = async (req: AuthRequest, res: Response, next
         if (existingTicket) {
             return res.status(200).json({ message: 'Ticket already issued', ticket: existingTicket });
         }
-
-        // ... (Rest of the code remains the same: Generate ID, QR, Save Ticket) ...
 
         // C. Generate Unique Ticket ID
         const uniqueTicketId = new mongoose.Types.ObjectId().toString();
