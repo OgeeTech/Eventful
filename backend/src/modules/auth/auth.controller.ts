@@ -30,31 +30,44 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     }
 };
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+// ... imports
+
+export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
 
-        // 1. Find user
+        // 1. Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        // 2. Check password
+        // 2. Check Password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: "Invalid credentials" });
         }
 
         // 3. Generate Token
         const token = jwt.sign(
-            { id: user._id, role: user.role },
-            process.env.JWT_SECRET as string,
-            { expiresIn: '1d' }
+            { userId: user._id, role: user.role }, // Payload
+            process.env.JWT_SECRET as string,     // Secret
+            { expiresIn: '1h' }                   // Expiry
         );
 
-        res.json({ message: 'Login successful', token, role: user.role });
+        // 4. SEND RESPONSE (With Name!)
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,  // <--- CRITICAL: Make sure we send this!
+                email: user.email,
+                role: user.role
+            }
+        });
+
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: "Server Error" });
     }
 };
+

@@ -2,7 +2,6 @@ import { Queue } from 'bullmq';
 import { logger } from '../../common/utils/logger';
 
 // 1. Create a new Queue named 'email-queue'
-// We connect it to the same Redis server you just set up
 export const emailQueue = new Queue('email-queue', {
     connection: {
         host: 'localhost',
@@ -10,10 +9,11 @@ export const emailQueue = new Queue('email-queue', {
     }
 });
 
-// 2. Helper function to add a job
-export const sendNotification = async (type: string, data: any) => {
+// 2. Helper function to add a job 
+// FIX: Added 'opts' (optional) as the 3rd argument to fix the error
+export const sendNotification = async (type: string, data: any, opts?: any) => {
     try {
-        await emailQueue.add(type, data);
+        await emailQueue.add(type, data, opts); // <--- Pass options (like delay) to BullMQ
         logger.info(`Job added to queue: ${type}`);
     } catch (error) {
         logger.error('Failed to add job to queue', error);

@@ -1,9 +1,16 @@
 import { Router } from 'express';
-import { validateTicket } from './ticket.controller';
+// FIX: Changed 'verifyTicket' to 'validateTicket' to match the controller
+import { buyTicket, validateTicket, getMyTickets } from './ticket.controller';
+import { authenticateUser } from '../../common/middlewares/auth.middleware';
 
 const router = Router();
 
-// Endpoint: POST /api/tickets/validate
-router.post('/validate', validateTicket);
+router.post('/buy', authenticateUser, buyTicket);
+
+// FIX: Update the function usage here too
+router.post('/verify', validateTicket);
+
+// New Route: GET /api/tickets/my-tickets
+router.get('/my-tickets', authenticateUser, getMyTickets);
 
 export default router;

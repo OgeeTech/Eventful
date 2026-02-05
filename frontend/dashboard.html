@@ -42,7 +42,7 @@
             padding: 20px;
         }
 
-        /* Analytics Section (Phase 7 Requirement) */
+        /* Analytics Section */
         .stats-grid {
             display: flex;
             gap: 20px;
@@ -84,12 +84,13 @@
             color: #333;
         }
 
-        /* Create Event Form (Phase 4 Requirement) */
+        /* Create Event Form */
         .form-section {
             background: white;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
         }
 
         input,
@@ -117,6 +118,39 @@
             background: #357abd;
         }
 
+        /* My Events List */
+        .events-list-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .view-btn {
+            background: #6c757d;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .view-btn:hover {
+            background: #5a6268;
+        }
+
         /* Links */
         .links {
             margin-top: 20px;
@@ -133,6 +167,62 @@
             text-decoration: underline;
             color: #000;
         }
+
+        /* Notification Bell */
+        .notification-container {
+            position: relative;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .bell-icon {
+            font-size: 24px;
+            color: white;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            display: none;
+            /* Hidden by default */
+        }
+
+        /* Dropdown */
+        .notif-dropdown {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            background: white;
+            color: #333;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notif-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .notif-item:hover {
+            background: #f9f9f9;
+        }
+
+        .notif-item.unread {
+            background: #e8f0fe;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -140,7 +230,15 @@
 
     <nav>
         <div class="nav-brand">Eventful Creator</div>
-        <div>
+        <div style="display: flex; align-items: center;">
+            <div class="notification-container" onclick="toggleNotifications()">
+                <span class="bell-icon">🔔</span>
+                <span id="notifBadge" class="badge">0</span>
+                <div id="notifDropdown" class="notif-dropdown">
+                    <div style="padding:10px; text-align:center; color:#999;">No notifications</div>
+                </div>
+            </div>
+
             <span id="creatorName" style="margin-right: 15px;">Hello, Creator</span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
@@ -162,54 +260,49 @@
                 <h3>Total Events</h3>
                 <p id="eventsCountDisplay" class="stat-value dark">Loading...</p>
             </div>
-
-            <div class="stat-card">
-                <h3>Total Events</h3>
-                <p id="eventsCountDisplay" class="stat-value dark">Loading...</p>
-            </div>
             <div class="stat-card">
                 <h3>Checked In</h3>
                 <p id="scannedDisplay" class="stat-value" style="color: #e67e22;">Loading...</p>
             </div>
         </div>
-    </div>
 
-    <div class="form-section">
-        <h2>🚀 Create New Event</h2>
-        <form id="createEventForm">
-            <input type="text" id="title" placeholder="Event Title" required>
-            <textarea id="description" placeholder="Description" rows="3" required></textarea>
-            <input type="text" id="location" placeholder="Location (e.g., Abuja Tech Hub)" required>
+        <div class="form-section">
+            <h2>🚀 Create New Event</h2>
+            <form id="createEventForm">
+                <input type="text" id="title" placeholder="Event Title" required>
+                <textarea id="description" placeholder="Description" rows="3" required></textarea>
+                <input type="text" id="location" placeholder="Location (e.g., Abuja Tech Hub)" required>
 
-            <div style="display: flex; gap: 10px;">
-                <input type="date" id="date" required>
-                <input type="number" id="price" placeholder="Price (₦)" required>
-                <input type="number" id="capacity" placeholder="Capacity" required>
-            </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="date" id="date" required>
+                    <input type="number" id="price" placeholder="Price (₦)" required>
+                    <input type="number" id="capacity" placeholder="Capacity" required>
+                </div>
 
-            <button type="submit" class="btn-primary">Publish Event</button>
-        </form>
-        <p id="status" style="text-align: center; margin-top: 10px;"></p>
-    </div>
-
-    <div class="links">
-        <a href="index.html">View Event Gallery (Home)</a> |
-        <a href="scan.html">Ticket Scanner</a>
-    </div>
-    <div
-        style="margin-top: 40px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <h3>📅 My Events Management</h3>
-        <div id="myEventsList">
-            <p>Loading your events...</p>
+                <button type="submit" class="btn-primary">Publish Event</button>
+            </form>
+            <p id="status" style="text-align: center; margin-top: 10px;"></p>
         </div>
-    </div>
+
+        <div class="events-list-section">
+            <h3>📅 My Events Management</h3>
+            <div id="myEventsList">
+                <p>Loading your events...</p>
+            </div>
+        </div>
+
+        <div class="links">
+            <a href="index.html">View Event Gallery (Home)</a> |
+            <a href="scan.html">Ticket Scanner</a>
+        </div>
+
     </div>
 
     <script>
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
 
-        // Security Check: Redirect if not a Creator
+        // Security Check
         if (!token || role !== 'creator') {
             alert("Access Denied: Creators only.");
             window.location.href = 'signin.html';
@@ -218,28 +311,115 @@
         // 1. Load Analytics Data
         async function loadAnalytics() {
             try {
-
                 const response = await fetch(`/api/analytics/dashboard?t=${new Date().getTime()}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                if (!response.ok) throw new Error("Failed to load data");
-
                 const data = await response.json();
 
-                // Format Currency
-                document.getElementById('revenueDisplay').innerText = `₦${data.totalRevenue.toLocaleString()}`;
-                document.getElementById('ticketsDisplay').innerText = data.ticketsSold;
-                document.getElementById('eventsCountDisplay').innerText = data.eventsCount;
+                // Update Stats
+                document.getElementById('revenueDisplay').innerText = `₦${(data.totalRevenue || 0).toLocaleString()}`;
+                document.getElementById('ticketsDisplay').innerText = data.ticketsSold || 0;
+                document.getElementById('eventsCountDisplay').innerText = data.eventsCount || 0;
                 document.getElementById('scannedDisplay').innerText = data.ticketsScanned || 0;
 
             } catch (err) {
                 console.error("Analytics Error:", err);
-                document.getElementById('revenueDisplay').innerText = "₦0";
             }
         }
 
-        // 2. Handle Event Creation
+        // Load Notifications
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/api/notifications', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const notifs = await response.json();
+
+                const badge = document.getElementById('notifBadge');
+                const dropdown = document.getElementById('notifDropdown');
+
+                // Count unread
+                const unreadCount = notifs.filter(n => !n.isRead).length;
+
+                // Update Badge
+                if (unreadCount > 0) {
+                    badge.innerText = unreadCount;
+                    badge.style.display = 'block';
+                } else {
+                    badge.style.display = 'none';
+                }
+
+                // Update Dropdown List
+                if (notifs.length > 0) {
+                    dropdown.innerHTML = notifs.map(n => `
+                        <div class="notif-item ${n.isRead ? '' : 'unread'}" onclick="markRead('${n._id}')">
+                            ${n.message}
+                            <div style="font-size:10px; color:#666; margin-top:5px;">${new Date(n.createdAt).toLocaleDateString()}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error("Notif Error", err);
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notifDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        async function markRead(id) {
+            await fetch(`/api/notifications/${id}/read`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            loadNotifications(); // Refresh to remove unread style
+        }
+
+        // Call on load
+        loadNotifications();
+        // Optional: Poll every 30 seconds for new messages
+        setInterval(loadNotifications, 30000);
+
+        // 2. Load My Events List (To see Attendees)
+        async function loadMyEvents() {
+            try {
+                // For this exam, we fetch all events. In production, use /api/events/my-events
+                const response = await fetch('/api/events/my-events', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                const allEvents = data.events || [];
+
+                const listDiv = document.getElementById('myEventsList');
+                listDiv.innerHTML = '';
+
+                // We display events. Since we are the creator (checked by token), 
+                // clicking "View Attendees" will work on the backend.
+                allEvents.forEach(event => {
+                    listDiv.innerHTML += `
+                        <div class="event-item">
+                            <div>
+                                <strong>${event.title}</strong>
+                                <br><small>${new Date(event.date).toLocaleDateString()}</small>
+                            </div>
+                            <a href="attendees.html?id=${event._id}" class="view-btn">View Attendees</a>
+                        </div>
+                    `;
+                });
+
+                if (allEvents.length === 0) {
+                    listDiv.innerHTML = '<p>No events found.</p>';
+                }
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('myEventsList').innerHTML = '<p style="color:red">Failed to load list.</p>';
+            }
+        }
+
+        // 3. Handle Event Creation
         document.getElementById('createEventForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const status = document.getElementById('status');
@@ -271,7 +451,8 @@
                     status.innerText = "Event Created Successfully!";
                     status.style.color = "green";
                     document.getElementById('createEventForm').reset();
-                    loadAnalytics(); // Refresh numbers immediately
+                    loadAnalytics(); // Refresh numbers
+                    loadMyEvents();  // Refresh list
                 } else {
                     status.innerText = "Error: " + data.message;
                     status.style.color = "red";
@@ -288,6 +469,7 @@
 
         // Load data on startup
         loadAnalytics();
+        loadMyEvents();
     </script>
 
 </body>

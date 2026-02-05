@@ -1,76 +1,148 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    /* DARK MINT PALETTE */
+    --bg-dark: #0B0E14;       /* Deepest Blue/Black */
+    --bg-card: #151A23;       /* Slightly lighter for cards */
+    --primary: #00DC82;       /* Neon Mint Green */
+    --primary-hover: #00b86b; 
+    --text-white: #FFFFFF;
+    --text-muted: #94A3B8;    /* Cool Grey */
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 body {
-    background-color: #f4f4f9;
-    color: #333;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    margin: 0;
     line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
-/* Navbar */
+/* --- NAVBAR --- */
 nav {
-    background: #4a90e2;
-    color: white;
-    padding: 1rem;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 5%;
+    position: absolute; top: 0; width: 90%; z-index: 100;
+}
+
+.brand { 
+    font-size: 1.5rem; font-weight: 800; color: var(--text-white); 
+    text-decoration: none; 
+}
+.brand span { color: var(--primary); } /* The dot */
+
+.nav-links a { 
+    margin-left: 30px; 
+    color: var(--text-muted); 
+    text-decoration: none; font-weight: 500; transition: 0.3s; font-size: 0.95rem;
+}
+.nav-links a:hover { color: var(--primary); }
+
+/* --- BUTTONS --- */
+.btn {
+    display: inline-block; padding: 0.8rem 1.8rem; border-radius: 50px;
+    font-weight: 600; text-decoration: none; transition: 0.3s; border: none; cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.btn-primary { 
+    background: var(--primary); 
+    color: var(--bg-dark); /* Dark text on mint button looks sharp */
+    box-shadow: 0 4px 15px rgba(0, 220, 130, 0.3); /* Glowing Shadow */
+}
+.btn-primary:hover { 
+    background: var(--primary-hover); 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
+}
+
+.btn-glass {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-white);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--text-white);
+}
+
+/* --- HERO SECTION --- */
+.hero-container {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    align-items: center; 
+    min-height: 100vh;
+    padding: 0 5%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Glow Effect */
+.glow-blob {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,220,130,0.15) 0%, rgba(0,0,0,0) 70%);
+    top: -100px; left: -200px;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.hero-text h1 { 
+    font-size: 3.5rem; line-height: 1.2; margin-bottom: 1.5rem; 
+    font-weight: 700;
+}
+.hero-text h1 span { color: var(--primary); }
+
+.hero-text p { 
+    font-size: 1.1rem; color: var(--text-muted); 
+    margin-bottom: 2.5rem; max-width: 500px; 
+}
+
+.hero-btns { display: flex; gap: 15px; }
+
+/* PHONE MOCKUP STYLES */
+.hero-image {
+    position: relative;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 15px;
-    font-weight: bold;
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    /* This creates the "floating" 3D feel */
+    transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) scale(0.9);
+    filter: drop-shadow(20px 20px 50px rgba(0,0,0,0.5));
+    transition: 0.5s ease;
 }
 
-/* Container */
-.container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+.hero-image:hover img {
+    transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1);
 }
 
-/* Forms */
-.form-group {
-    margin-bottom: 1rem;
+/* --- STATS / CARDS (Glassmorphism) --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: 0.3s;
+}
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-5px);
+    border-color: var(--primary);
 }
 
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-button {
-    background: #4a90e2;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-button:hover {
-    background: #357abd;
-}
-
-/* Cards (Events) */
-.card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 1rem;
+/* Responsive */
+@media (max-width: 900px) {
+    .hero-container { grid-template-columns: 1fr; text-align: center; padding-top: 100px;}
+    .hero-text p { margin: 0 auto 2rem auto; }
+    .hero-btns { justify-content: center; }
+    .hero-image img { transform: none; margin-top: 50px; width: 80%; }
 }

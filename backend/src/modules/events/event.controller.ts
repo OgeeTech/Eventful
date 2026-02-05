@@ -25,15 +25,38 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
         await clearCache(EVENTS_CACHE_KEY);
         console.log("🧹 Cache Cleared");
 
-        // B. Send Notification (Background Job) - MISSING PART ADDED HERE
+        // B. Send Notifications
         const user = await User.findById(userId);
         if (user) {
+            // 1. Immediate Notification (Event Created)
             await sendNotification('EVENT_CREATED', {
                 email: user.email,
                 title: event.title,
-                eventId: event._id
+                eventId: event._id,
+                userId: user._id
             });
-            console.log("📨 Notification Job Added to Queue");
+
+            // 2. Scheduled Reminder (1 Day Before Event)
+            const eventDate = new Date(event.date);
+            const oneDayBefore = new Date(eventDate.getTime() - (24 * 60 * 60 * 1000));
+            const now = new Date();
+
+            // Calculate delay in milliseconds
+            const delay = oneDayBefore.getTime() - now.getTime();
+
+            if (delay > 0) {
+                // SCHEDULE THE JOB
+                await sendNotification('EVENT_REMINDER', {
+                    email: user.email,
+                    title: event.title,
+                    eventId: event._id,
+                    userId: user._id
+                }, { delay }); // <--- Pass the delay option here!
+
+                console.log(`⏰ Reminder Scheduled for: ${oneDayBefore.toISOString()} (in ${Math.round(delay / 1000 / 60)} mins)`);
+            } else {
+                console.log("⚠️ Event is too soon for a 24h reminder.");
+            }
         }
 
         res.status(201).json({ message: 'Event created successfully', event });
@@ -61,6 +84,18 @@ export const getEvents = async (req: Request, res: Response) => {
         // C. Save to Redis for next time (Expires in 1 hour)
         await setCache(EVENTS_CACHE_KEY, events, 3600);
 
+        res.json({ events });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// 3. Get Only My Events (For Creator Dashboard)
+export const getMyEvents = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId || req.user?.id;
+        // Find events where createdBy matches the logged-in user
+        const events = await Event.find({ createdBy: userId }).sort({ date: -1 });
         res.json({ events });
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });

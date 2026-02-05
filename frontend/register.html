@@ -3,80 +3,240 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Join Eventful</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Eventful</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body {
-            font-family: sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #f4f4f9;
-            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg-dark);
         }
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 350px;
+        /* Back Arrow */
+        .back-link {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 20;
         }
 
-        input,
-        select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .back-link:hover {
+            color: var(--primary);
+            transform: translateX(-5px);
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+        /* Split Card Container */
+        .auth-container {
+            display: flex;
+            width: 900px;
+            max-width: 90%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
         }
 
-        button:hover {
-            background: #357abd;
-        }
-
-        .link {
+        /* Left Side: Illustrator/Graphic */
+        .auth-illustration {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(0, 220, 130, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
             text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        .graphic-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(0, 220, 130, 0.4));
+        }
+
+        /* Right Side: Form */
+        .auth-form-side {
+            flex: 1.2;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        /* Input Groups with Icons */
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            /* Space for icon */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+
+        /* Dropdown specific */
+        select option {
+            background: #151A23;
+            color: white;
+            padding: 10px;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px rgba(0, 220, 130, 0.1);
+        }
+
+        .input-group input:focus+i,
+        .input-group select:focus+i {
+            color: var(--primary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+                width: 90%;
+                max-width: 400px;
+                height: auto;
+                overflow-y: auto;
+            }
+
+            .auth-illustration {
+                display: none;
+            }
+
+            .auth-form-side {
+                padding: 40px 30px;
+            }
+
+            .back-link {
+                top: 20px;
+                left: 20px;
+            }
+
+            body {
+                align-items: flex-start;
+                padding-top: 60px;
+                height: auto;
+                min-height: 100vh;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="card">
-        <h2 style="text-align: center; color: #333;">Create Account</h2>
-        <form id="registerForm">
-            <input type="text" id="name" placeholder="Full Name" required>
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="password" id="password" placeholder="Password" required>
+    <div class="glow-blob" style="top: -10%; left: -10%;"></div>
+    <div class="glow-blob"
+        style="bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, rgba(0,0,0,0) 70%);">
+    </div>
 
-            <label style="font-size: 12px; color: #666;">I want to be a:</label>
-            <select id="role">
-                <option value="attendee">Event Goer (Buy Tickets)</option>
-                <option value="creator">Event Creator (Organize Events)</option>
-            </select>
+    <a href="landing.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
 
-            <button type="submit">Sign Up</button>
-        </form>
-        <p id="status" style="text-align: center; color: red;"></p>
+    <div class="auth-container">
 
-        <div class="link">
-            Already have an account? <a href="signin.html">Sign In</a>
+        <div class="auth-illustration">
+            <i class="fas fa-user-plus graphic-icon"></i>
+            <h3 style="color: white; margin-bottom: 10px;">Join Eventful</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Create an account to start hosting <br>or discovering amazing events.
+            </p>
+        </div>
+
+        <div class="auth-form-side">
+            <h2>Create Account</h2>
+            <p class="subtitle">Fill in your details to get started.</p>
+
+            <form id="registerForm">
+                <div class="input-group">
+                    <input type="text" id="name" placeholder="Full Name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <div class="input-group">
+                    <select id="role">
+                        <option value="attendee"> I want to Buy Tickets</option>
+                        <option value="creator">I want to Organize Events</option>
+                    </select>
+                    <i class="fas fa-users-cog"></i>
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; border-radius: 8px; margin-top: 10px;">
+                    Sign Up <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                </button>
+            </form>
+
+            <p id="status" style="text-align: center; margin-top: 20px; font-size: 0.9rem; min-height: 20px;"></p>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
+                Already have an account? <a href="signin.html"
+                    style="color: var(--primary); text-decoration: none; font-weight: 600;">Log In</a>
+            </div>
         </div>
     </div>
 
@@ -84,20 +244,16 @@
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const status = document.getElementById('status');
-
-            // 1. Capture the data
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const role = document.getElementById('role').value;
 
             status.innerText = "Creating account...";
-            status.style.color = "blue";
+            status.style.color = "#00DC82"; // Mint Green for loading
 
             try {
-                // ----------------------------------------------------
-                // STEP 1: REGISTER
-                // ----------------------------------------------------
+                // 1. REGISTER
                 const registerResponse = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -106,14 +262,10 @@
 
                 const registerData = await registerResponse.json();
 
-                if (!registerResponse.ok) {
-                    throw new Error(registerData.message || "Registration failed");
-                }
+                if (!registerResponse.ok) throw new Error(registerData.message || "Registration failed");
 
-                // ----------------------------------------------------
-                // STEP 2: AUTO-LOGIN (The Magic Step)
-                // ----------------------------------------------------
-                status.innerText = "Account created! Logging you in...";
+                // 2. AUTO-LOGIN
+                status.innerText = "Account created! Logging in...";
 
                 const loginResponse = await fetch('/api/auth/login', {
                     method: 'POST',
@@ -124,20 +276,21 @@
                 const loginData = await loginResponse.json();
 
                 if (loginResponse.ok) {
-                    // Save Token
+                    // Save Data
                     localStorage.setItem('token', loginData.token);
                     localStorage.setItem('role', loginData.role);
 
-                    status.style.color = "green";
+                    // SAFE NAME SAVING
+                    if (loginData.user && loginData.user.name) {
+                        localStorage.setItem('userName', loginData.user.name);
+                    } else {
+                        localStorage.setItem('userName', "User");
+                    }
+
                     status.innerText = "Success! Redirecting...";
 
-                    // Redirect based on role
                     setTimeout(() => {
-                        if (loginData.role === 'creator') {
-                            window.location.href = 'dashboard.html';
-                        } else {
-                            window.location.href = 'index.html'; // Go straight to tickets!
-                        }
+                        window.location.href = loginData.user.role === 'creator' ? 'dashboard.html' : 'index.html';
                     }, 1000);
                 } else {
                     throw new Error("Auto-login failed. Please sign in manually.");
@@ -145,7 +298,7 @@
 
             } catch (err) {
                 console.error(err);
-                status.style.color = "red";
+                status.style.color = "#ff4d4d"; // Red for error
                 status.innerText = err.message;
             }
         });

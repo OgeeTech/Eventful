@@ -1,35 +1,224 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Eventful Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Eventful</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+        }
+
+        /* Back Arrow */
+        .back-link {
+            position: absolute;
+            top: 30px;
+            left: 40px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 20;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        /* Split Card Container */
+        .auth-container {
+            display: flex;
+            width: 800px;
+            max-width: 90%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Left Side: Illustrator/Graphic */
+        .auth-illustration {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(0, 220, 130, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        .graphic-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(0, 220, 130, 0.4));
+        }
+
+        /* Right Side: Form */
+        .auth-form-side {
+            flex: 1;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        /* Input Groups with Icons */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            /* Space for icon */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px rgba(0, 220, 130, 0.1);
+        }
+
+        .input-group input:focus+i {
+            color: var(--primary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+                width: 90%;
+                max-width: 400px;
+            }
+
+            .auth-illustration {
+                display: none;
+            }
+
+            /* Hide graphic on mobile */
+            .auth-form-side {
+                padding: 40px 30px;
+            }
+
+            .back-link {
+                top: 20px;
+                left: 20px;
+            }
+        }
+    </style>
 </head>
 
-<body style="padding: 50px; font-family: sans-serif;">
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email" value="gift@test.com"><br><br>
-    <input type="password" id="password" placeholder="Password" value="securePassword123"><br><br>
-    <button id="loginBtn">Sign In</button>
+<body>
 
-    <p id="status"></p>
+    <div class="glow-blob" style="top: -10%; right: -10%;"></div>
+    <div class="glow-blob"
+        style="bottom: -10%; left: -10%; background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, rgba(0,0,0,0) 70%);">
+    </div>
 
-    <p style="margin-top: 20px;">
-        New to Eventful? <a href="register.html">Create an Account</a>
-    </p>
+    <a href="landing.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <div class="auth-container">
+
+        <div class="auth-illustration">
+            <i class="fas fa-rocket graphic-icon"></i>
+            <h3 style="color: white; margin-bottom: 10px;">Welcome Back!</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Ready to create your next memory? <br>Log in to access your dashboard.
+            </p>
+        </div>
+
+        <div class="auth-form-side">
+            <h2>Sign In</h2>
+            <p class="subtitle">Enter your credentials to continue.</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; border-radius: 8px; margin-top: 10px;">
+                    Log In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                </button>
+            </form>
+
+            <p id="status" style="text-align: center; margin-top: 20px; font-size: 0.9rem; min-height: 20px;"></p>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
+                New here? <a href="register.html"
+                    style="color: var(--primary); text-decoration: none; font-weight: 600;">Create Account</a>
+            </div>
+        </div>
+    </div>
 
     <script>
-        const btn = document.getElementById('loginBtn');
-        const status = document.getElementById('status');
-
-        btn.addEventListener('click', async () => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('status');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            status.innerText = "Connecting to server...";
-            status.style.color = "blue";
+            status.innerText = "Authenticating...";
+            status.style.color = "#00DC82";
 
             try {
-                // We use /api/auth/login because the file is hosted on the same server
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -39,28 +228,32 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    alert("Login Successful!");
-                    // SAVE THE TOKEN (This is the most important part)
                     localStorage.setItem('token', data.token);
-                    localStorage.setItem('role', data.role);
+                    localStorage.setItem('role', data.user.role);
 
-                    // Redirect based on role
-                    if (data.role === 'creator') {
-                        window.location.href = 'dashboard.html';
+                    if (data.user && data.user.name) {
+                        localStorage.setItem('userName', data.user.name);
                     } else {
-                        window.location.href = 'index.html';
+                        localStorage.setItem('userName', "User");
                     }
+
+                    status.innerText = "Login Successful!";
+
+                    setTimeout(() => {
+                        window.location.href = data.user.role === 'creator' ? 'dashboard.html' : 'index.html';
+                    }, 800);
                 } else {
-                    status.innerText = "Error: " + data.message;
-                    status.style.color = "red";
+                    status.style.color = "#ff4d4d";
+                    status.innerText = data.message || "Invalid email or password";
                 }
             } catch (err) {
                 console.error(err);
-                status.innerText = "Cannot connect to backend.";
-                status.style.color = "red";
+                status.style.color = "#ff4d4d";
+                status.innerText = "Cannot connect to server";
             }
         });
     </script>
+
 </body>
 
 </html>
