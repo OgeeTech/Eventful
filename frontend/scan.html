@@ -3,130 +3,282 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Ticket Scanner - Eventful</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner - Eventful</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
     <style>
         body {
-            font-family: sans-serif;
+            background-color: #0B0E14;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+
+        .scanner-container {
+            background: rgba(21, 26, 35, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
             text-align: center;
-            padding: 50px;
-            background: #222;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            margin: 0 0 10px;
             color: white;
         }
 
-        .scanner-card {
-            background: #333;
-            padding: 30px;
-            border-radius: 10px;
-            display: inline-block;
+        p {
+            color: #94A3B8;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        /* Camera Box */
+        #reader {
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Manual Input */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         input {
-            width: 80%;
+            flex: 1;
             padding: 12px;
-            margin: 20px 0;
-            font-size: 16px;
-            text-align: center;
-            border-radius: 5px;
-            border: none;
-        }
-
-        button {
-            width: 85%;
-            padding: 12px;
-            font-size: 16px;
-            background: #28a745;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
             color: white;
+            outline: none;
+            text-align: center;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        input:focus {
+            border-color: #00DC82;
+        }
+
+        .btn-scan {
+            padding: 12px 20px;
+            background: #00DC82;
+            color: black;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 8px;
             font-weight: bold;
+            cursor: pointer;
         }
 
-        button:hover {
-            background: #218838;
+        .btn-scan:hover {
+            background: #00b86b;
         }
 
+        /* Result Box */
         #result {
-            margin-top: 20px;
-            min-height: 60px;
-            font-size: 18px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            display: none;
         }
 
         .valid {
-            color: #4caf50;
-            border: 2px solid #4caf50;
-            padding: 10px;
-            border-radius: 5px;
-            background: rgba(76, 175, 80, 0.1);
+            background: rgba(0, 220, 130, 0.15);
+            border: 1px solid #00DC82;
+            color: #00DC82;
         }
 
         .invalid {
-            color: #f44336;
-            border: 2px solid #f44336;
-            padding: 10px;
-            border-radius: 5px;
-            background: rgba(244, 67, 54, 0.1);
+            background: rgba(255, 77, 77, 0.15);
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            color: white;
+            border-color: #00DC82;
+        }
+
+        .back-link {
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 20px;
+        }
+
+        .back-link:hover {
+            color: white;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="scanner-card">
+    <div class="scanner-container">
         <h2>🎟️ Ticket Validator</h2>
-        <p style="color: #aaa;">Enter the Ticket ID found on the QR Code</p>
+        <p>Scan a QR code or enter the Ticket ID manually.</p>
 
-        <input type="text" id="ticketId" placeholder="e.g. 65c48a..." />
-        <button onclick="verifyTicket()">Check Ticket</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchMode('camera')">📷 Camera</button>
+            <button class="tab-btn" onclick="switchMode('manual')">⌨️ Manual</button>
+        </div>
+
+        <div id="cameraSection">
+            <div id="reader"></div>
+            <p style="font-size:0.8rem; margin-top:5px;">Point your camera at the QR code</p>
+        </div>
+
+        <div id="manualSection" style="display: none;">
+            <div class="input-group">
+                <input type="text" id="ticketId" placeholder="Enter Ticket ID (e.g. 65c4...)" />
+                <button class="btn-scan" onclick="verifyTicket()">Check</button>
+            </div>
+        </div>
 
         <div id="result"></div>
 
-        <br>
-        <a href="dashboard.html" style="color: #ccc; text-decoration: none; font-size: 14px;">Back to Dashboard</a>
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
     </div>
 
     <script>
-        async function verifyTicket() {
-            const ticketId = document.getElementById('ticketId').value.trim();
+        let html5QrcodeScanner;
+
+        // Switch Tabs
+        function switchMode(mode) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (mode === 'camera') {
+                document.getElementById('cameraSection').style.display = 'block';
+                document.getElementById('manualSection').style.display = 'none';
+                startScanner();
+            } else {
+                document.getElementById('cameraSection').style.display = 'none';
+                document.getElementById('manualSection').style.display = 'block';
+                stopScanner();
+                document.getElementById('ticketId').focus();
+            }
+            document.getElementById('result').style.display = 'none';
+        }
+
+        // --- CAMERA SCANNER LOGIC ---
+        function startScanner() {
+            if (html5QrcodeScanner) return; // Already running
+
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", { fps: 10, qrbox: 250 }
+            );
+
+            html5QrcodeScanner.render((decodedText) => {
+                // On Success
+                document.getElementById('ticketId').value = decodedText;
+                verifyTicket(decodedText);
+                stopScanner(); // Stop scanning once found
+                switchMode('manual'); // Switch to view result
+            }, (errorMessage) => {
+                // Scanning... (ignore errors)
+            });
+        }
+
+        function stopScanner() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+                html5QrcodeScanner = null;
+            }
+        }
+
+        // --- VERIFY TICKET LOGIC ---
+        async function verifyTicket(scannedId = null) {
+            const ticketId = scannedId || document.getElementById('ticketId').value.trim();
             const resultDiv = document.getElementById('result');
 
-            if (!ticketId) {
-                alert("Please enter a Ticket ID");
-                return;
-            }
+            if (!ticketId) return;
 
-            resultDiv.innerText = "Scanning database...";
-            resultDiv.className = "";
+            resultDiv.style.display = 'block';
+            resultDiv.className = '';
+            resultDiv.style.color = '#ccc';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
 
             try {
+                const token = localStorage.getItem('token'); // Creator must be logged in
                 const response = await fetch('/api/tickets/validate', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify({ ticketId })
                 });
 
                 const data = await response.json();
 
                 if (data.valid) {
-                    resultDiv.innerHTML = `
-                        <strong>${data.message}</strong><br>
-                        <small>Attendee: ${data.attendee.name}</small>
-                    `;
                     resultDiv.className = "valid";
+                    resultDiv.innerHTML = `
+                        <i class="fas fa-check-circle"></i> <strong>Valid Ticket!</strong><br>
+                        <div style="margin-top:5px; font-size:0.85rem; color:#fff;">
+                            ${data.message}<br>
+                            Attendee: <b>${data.attendee.name}</b>
+                        </div>
+                    `;
+                    // Optional: Play a success sound
                 } else {
-                    resultDiv.innerHTML = `<strong>${data.message}</strong>`;
                     resultDiv.className = "invalid";
+                    resultDiv.innerHTML = `
+                        <i class="fas fa-times-circle"></i> <strong>Invalid Ticket</strong><br>
+                        <div style="margin-top:5px; font-size:0.85rem;">
+                            ${data.message}
+                        </div>
+                    `;
                 }
 
             } catch (err) {
                 console.error(err);
-                resultDiv.innerText = "Connection Error";
                 resultDiv.className = "invalid";
+                resultDiv.innerText = "Connection Error";
             }
         }
+
+        // Start scanner by default
+        startScanner();
     </script>
 
 </body>

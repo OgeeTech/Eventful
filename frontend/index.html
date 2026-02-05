@@ -11,68 +11,164 @@
     <style>
         :root {
             --primary: #00dc82;
+            --bg-dark: #0b0f14;
             --glass-border: rgba(255, 255, 255, 0.1);
-            --text-muted: #aaa;
+            --text-muted: #94A3B8;
         }
 
         body {
             margin: 0;
-            font-family: Inter, Arial, sans-serif;
-            background: #0b0f14;
+            font-family: 'Inter', sans-serif;
+            /* Modern Font */
+            background: var(--bg-dark);
             color: white;
+            overflow-x: hidden;
         }
 
+        /* --- FINE NAVIGATION --- */
         nav {
             position: fixed;
             width: 100%;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 60px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            /* Responsive Padding */
+            background: rgba(11, 15, 20, 0.85);
+            /* Darker glass */
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            box-sizing: border-box;
         }
 
         .brand {
-            font-size: 1.6rem;
-            font-weight: bold;
+            font-size: 1.5rem;
+            font-weight: 800;
             color: white;
             text-decoration: none;
+            letter-spacing: -0.5px;
         }
 
         .brand span {
             color: var(--primary);
         }
 
-        .nav-links a {
-            margin-left: 20px;
-            color: white;
-            text-decoration: none;
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        /* Profile Styles */
+        .profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+        }
+
+        .profile-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .profile-name {
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .btn-action {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 220, 130, 0.3);
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .btn-logout:hover {
+            background: #ff4d4d;
+            color: white;
+        }
+
+
+        /* --- MAIN CONTENT --- */
         .container {
             max-width: 1200px;
             margin: auto;
             padding: 120px 20px 60px;
+            /* Top padding clears fixed nav */
         }
 
         /* Search */
         .search-container {
             max-width: 600px;
-            margin: 30px auto;
+            margin: 30px auto 50px auto;
             position: relative;
         }
 
         .search-input {
             width: 100%;
-            padding: 15px 20px 15px 50px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 16px 20px 16px 50px;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
             color: white;
+            font-size: 1rem;
             outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 20px rgba(0, 220, 130, 0.1);
         }
 
         .search-icon {
@@ -86,45 +182,53 @@
         /* Grid */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 30px;
         }
 
         .event-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             overflow: hidden;
             transition: 0.3s;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .event-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--primary);
+            transform: translateY(-8px);
+            border-color: var(--glass-border);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.04);
         }
 
         /* SVG Cover */
         .card-image {
             height: 180px;
+            width: 100%;
         }
 
         .svg-cover svg {
             width: 100%;
             height: 100%;
             display: block;
+            object-fit: cover;
         }
 
         .card-body {
-            padding: 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
 
         h3 {
-            margin: 0 0 10px;
+            margin: 0 0 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .meta-row {
@@ -133,17 +237,26 @@
             font-size: 0.9rem;
             margin-bottom: 8px;
             color: #ccc;
+            align-items: center;
         }
 
         .meta-row i {
             color: var(--primary);
+            width: 20px;
+            text-align: center;
         }
 
         .description {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            margin: 15px 0;
+            margin: 20px 0;
             flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 10px;
         }
 
         .progress-bar-bg {
@@ -156,27 +269,71 @@
         .progress-bar-fill {
             height: 100%;
             background: var(--primary);
+            transition: width 0.5s ease;
+        }
+
+        .capacity-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            display: block;
         }
 
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
         }
 
         .price-tag {
-            color: var(--primary);
+            color: white;
             font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .price-tag span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: normal;
         }
 
         .btn-buy {
-            background: var(--primary);
+            background: white;
+            color: black;
             border: none;
-            padding: 8px 20px;
+            padding: 8px 24px;
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-buy:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px;
+            }
+
+            .nav-right {
+                gap: 10px;
+            }
+
+            .profile-name {
+                display: none;
+            }
+
+            /* Hide name on small screens */
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -184,43 +341,20 @@
 <body>
 
     <nav>
+        <a href="index.html" class="brand">Eventful<span>.</span></a>
 
-        <div class="nav-brand">
-
-            <a href="index.html">Eventful</a>
-
+        <div class="nav-right" id="navRight">
         </div>
-
-        <div class="nav-right">
-
-            <a href="index.html" class="nav-link">← Browse Events</a>
-
-
-
-            <div class="profile-box">
-
-                <div class="profile-icon" id="userInitial">U</div>
-
-                <span class="profile-name" id="userNameDisplay">Loading...</span>
-
-            </div>
-
-
-
-            <button class="logout-btn" onclick="logout()">Logout</button>
-
-        </div>
-
     </nav>
 
     <div class="container">
-
-        <h1 style="text-align:center;">Explore Events</h1>
-        <p style="text-align:center;color:var(--text-muted);">Discover trending experiences around you</p>
+        <h1 style="text-align:center; font-size: 2.5rem; margin-bottom: 10px;">Explore Events</h1>
+        <p style="text-align:center;color:var(--text-muted); font-size: 1.1rem;">Discover trending experiences around
+            you</p>
 
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
-            <input id="searchInput" class="search-input" placeholder="Search by title or location" />
+            <input id="searchInput" class="search-input" placeholder="Search by title, location, or vibe..." />
         </div>
 
         <div id="eventsGrid" class="grid">
@@ -229,43 +363,84 @@
     </div>
 
     <script>
+        // --- 1. DYNAMIC NAVIGATION LOGIC ---
+        const token = localStorage.getItem('token');
+        const userName = localStorage.getItem('userName') || 'User';
+        const role = localStorage.getItem('role');
+        const navRight = document.getElementById('navRight');
+
+        if (token) {
+            // LOGGED IN STATE
+            navRight.innerHTML = `
+                <a href="my-tickets.html" class="nav-link">🎟️ My Wallet</a>
+                ${role === 'creator' ? '<a href="dashboard.html" class="nav-link">Dashboard</a>' : ''}
+                
+                <div class="profile-box">
+                    <div class="profile-icon">${userName.charAt(0).toUpperCase()}</div>
+                    <span class="profile-name">${userName}</span>
+                </div>
+                
+                <button class="btn-action btn-logout" onclick="logout()">Logout</button>
+            `;
+        } else {
+            // LOGGED OUT STATE
+            navRight.innerHTML = `
+                <a href="signin.html" class="nav-link">Login</a>
+                <a href="signup.html" class="btn-action btn-primary">Sign Up</a>
+            `;
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'signin.html';
+        }
+
+        // --- 2. BUY TICKET LOGIC ---
+        async function buyTicket(eventId) {
+            if (!token) {
+                window.location.href = 'signin.html';
+                return;
+            }
+            try {
+                const response = await fetch('/api/payments/initialize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ eventId })
+                });
+                const data = await response.json();
+                if (response.ok) window.location.href = data.url;
+                else alert(data.message);
+            } catch (e) { alert("Connection Error"); }
+        }
+
+
+        // --- 3. EVENT RENDERING ---
         let allEvents = [];
 
         function generateEventSVG(event) {
+            // Generates a unique, colorful, deterministic gradient cover
             const colors = [
-                ["#00dc82", "#0066ff"],
-                ["#ff7a18", "#ffb347"],
-                ["#7f00ff", "#e100ff"],
-                ["#00c6ff", "#0072ff"],
-                ["#ff4d4d", "#ff9a9e"]
+                ["#00dc82", "#0066ff"], ["#ff7a18", "#ffb347"],
+                ["#7f00ff", "#e100ff"], ["#00c6ff", "#0072ff"],
+                ["#ff4d4d", "#ff9a9e"], ["#f9d423", "#ff4e50"]
             ];
-
-            const index = event._id.charCodeAt(0) % colors.length;
+            const index = (event._id || 'a').charCodeAt(0) % colors.length;
             const [c1, c2] = colors[index];
 
             return `
-        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="g-${event._id}" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="${c1}"/>
-                    <stop offset="100%" stop-color="${c2}"/>
-                </linearGradient>
-            </defs>
-
-            <rect width="600" height="300" fill="url(#g-${event._id})"/>
-
-            <circle cx="520" cy="80" r="60" fill="rgba(255,255,255,0.15)" />
-            <circle cx="100" cy="220" r="40" fill="rgba(255,255,255,0.12)" />
-
-            <text x="40" y="150" fill="white" font-size="34" font-weight="700">
-                ${event.title.substring(0, 22)}
-            </text>
-
-            <text x="40" y="190" fill="rgba(255,255,255,0.85)" font-size="18">
-                📍 ${event.location}
-            </text>
-        </svg>
-        `;
+            <svg viewBox="0 0 600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="g-${event._id}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${c1}"/>
+                        <stop offset="100%" stop-color="${c2}"/>
+                    </linearGradient>
+                </defs>
+                <rect width="600" height="300" fill="url(#g-${event._id})"/>
+                <circle cx="520" cy="80" r="60" fill="rgba(255,255,255,0.15)" />
+                <circle cx="100" cy="220" r="40" fill="rgba(255,255,255,0.12)" />
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="60" font-weight="900" transform="rotate(-15, 300, 150)">EVENTFUL</text>
+            </svg>
+            `;
         }
 
         function renderEvents(events) {
@@ -273,7 +448,7 @@
             grid.innerHTML = "";
 
             if (!events.length) {
-                grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">No events found</p>`;
+                grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted); padding: 50px;">No events found matching your search.</p>`;
                 return;
             }
 
@@ -301,17 +476,20 @@
                         ${event.location}
                     </div>
 
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width:${percent}%"></div>
+                    <div class="progress-container">
+                        <span class="capacity-text">${sold} / ${capacity} Sold</span>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width:${percent}%"></div>
+                        </div>
                     </div>
 
-                    <p class="description">${event.description.substring(0, 80)}...</p>
+                    <p class="description">${event.description ? event.description.substring(0, 80) + '...' : 'No description available.'}</p>
 
                     <div class="card-footer">
                         <div class="price-tag">
                             ${event.price > 0 ? "₦" + event.price.toLocaleString() : "Free"}
                         </div>
-                        <button class="btn-buy">Book</button>
+                        <button class="btn-buy" onclick="buyTicket('${event._id}')">${percent >= 100 ? 'Sold Out' : 'Book Now'}</button>
                     </div>
                 </div>
             </div>
@@ -328,10 +506,15 @@
         });
 
         async function loadEvents() {
-            const res = await fetch("/api/events");
-            const data = await res.json();
-            allEvents = data.events || data;
-            renderEvents(allEvents);
+            try {
+                const res = await fetch("/api/events");
+                const data = await res.json();
+                allEvents = data.events || data; // Handle both array or {events: []} structure
+                renderEvents(allEvents);
+            } catch (e) {
+                console.error(e);
+                document.getElementById("eventsGrid").innerHTML = `<p style="text-align:center; color:#ff4d4d; grid-column:1/-1">Failed to connect to server.</p>`;
+            }
         }
 
         loadEvents();

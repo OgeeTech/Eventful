@@ -3,68 +3,160 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Attendees - Eventful</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body {
-            font-family: sans-serif;
-            background: #f4f4f9;
-            padding: 20px;
+            background-color: #0B0E14;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
         }
 
         h2 {
-            margin-top: 0;
-            color: #333;
+            margin: 0;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .back-btn {
+            color: #94A3B8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #00DC82;
+        }
+
+        /* TABLE STYLES */
+        .table-container {
+            background: rgba(21, 26, 35, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background: #f8f9fa;
-            color: #555;
+            background: rgba(255, 255, 255, 0.05);
+            color: #94A3B8;
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* User Avatar */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background: rgba(0, 220, 130, 0.1);
+            color: #00DC82;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 1px solid rgba(0, 220, 130, 0.3);
+        }
+
+        /* Status Badges */
         .badge {
             padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
         }
 
         .valid {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(0, 220, 130, 0.15);
+            color: #00DC82;
+            border: 1px solid rgba(0, 220, 130, 0.2);
         }
 
         .used {
-            background: #fff3cd;
-            color: #856404;
+            background: rgba(148, 163, 184, 0.15);
+            color: #94A3B8;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            text-decoration: line-through;
         }
 
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            text-decoration: none;
-            color: #666;
+        /* Copy Button */
+        .btn-copy {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-copy:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .table-container {
+                overflow-x: auto;
+            }
+
+            th,
+            td {
+                min-width: 120px;
+            }
         }
     </style>
 </head>
@@ -72,24 +164,28 @@
 <body>
 
     <div class="container">
-        <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
-        <h2 id="eventTitle">Loading...</h2>
+        <div class="header">
+            <h2 id="eventTitle">Loading...</h2>
+            <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Ticket ID</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="attendeeList">
-                <tr>
-                    <td colspan="4">Loading attendees...</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Attendee</th>
+                        <th>Email Address</th>
+                        <th>Ticket ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="attendeeList">
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding: 30px; color:#94A3B8;">Loading data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -110,11 +206,11 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    document.getElementById('eventTitle').innerText = `Attendees for: ${data.eventTitle}`;
+                    document.getElementById('eventTitle').innerText = data.eventTitle;
                     const tbody = document.getElementById('attendeeList');
 
                     if (data.attendees.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="4">No tickets sold yet.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:#94A3B8;">No tickets sold yet.</td></tr>';
                         return;
                     }
 
@@ -122,12 +218,23 @@
                     data.attendees.forEach(user => {
                         const statusClass = user.status === 'valid' ? 'valid' : 'used';
                         const statusText = user.status === 'valid' ? 'Active' : 'Checked In';
+                        const initial = user.name.charAt(0).toUpperCase();
 
                         tbody.innerHTML += `
                             <tr>
-                                <td>${user.name}</td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="avatar">${initial}</div>
+                                        <span>${user.name}</span>
+                                    </div>
+                                </td>
                                 <td>${user.email}</td>
-                                <td style="font-family: monospace;">${user.ticketId.substring(0, 8)}...</td>
+                                <td style="font-family: monospace; color: #00DC82;">
+                                    ${user.ticketId.substring(0, 8)}...
+                                    <button class="btn-copy" onclick="navigator.clipboard.writeText('${user.ticketId}')" title="Copy ID">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </td>
                                 <td><span class="badge ${statusClass}">${statusText}</span></td>
                             </tr>
                         `;
@@ -137,7 +244,7 @@
                 }
             } catch (err) {
                 console.error(err);
-                document.getElementById('attendeeList').innerHTML = '<tr><td colspan="4" style="color:red">Failed to load data.</td></tr>';
+                document.getElementById('attendeeList').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:#ff4d4d;">Failed to load data.</td></tr>';
             }
         }
 

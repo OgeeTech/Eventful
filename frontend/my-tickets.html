@@ -5,20 +5,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tickets - Eventful</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* CONTAINER */
+        /* --- NAVBAR STYLES (Ensuring Responsiveness) --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(21, 26, 35, 0.95);
+            /* Dark background */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: #00DC82;
+        }
+
+        /* Mint Green */
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* --- CONTAINER --- */
         .ticket-container {
             max-width: 900px;
             margin: 40px auto;
             padding: 0 20px;
+            /* Ensure it pushes down below the sticky nav */
+            position: relative;
+            z-index: 1;
         }
 
-        /* --- THE CLASSIC RIPPED TICKET DESIGN (RESTORED) --- */
+        /* --- BACK BUTTON --- */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #94A3B8;
+            /* Text Muted */
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #00DC82;
+            transform: translateX(-5px);
+        }
+
+        /* --- THE CLASSIC RIPPED TICKET DESIGN --- */
         .real-ticket {
             display: flex;
             background: #ffffff;
@@ -28,13 +83,11 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             position: relative;
             min-height: 220px;
-
-            /* The Ticket Texture you liked! */
             background-image: radial-gradient(#e5e5f7 1px, transparent 1px);
             background-size: 20px 20px;
         }
 
-        /* The Double Ripped Edge Effect */
+        /* Double Ripped Edge Effect */
         .real-ticket::after,
         .real-ticket::before {
             content: '';
@@ -42,20 +95,18 @@
             top: 50%;
             width: 30px;
             height: 30px;
-            background-color: var(--bg-dark);
-            /* Matches background to create hole */
+            background-color: #0B0E14;
+            /* Matches page background */
             border-radius: 50%;
             transform: translateY(-50%);
             z-index: 5;
         }
 
-        /* Right Rip (Between Main and Stub) */
         .real-ticket::after {
             right: 285px;
             box-shadow: inset 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Left Rip (The "Ticket Feel" edge) */
         .real-ticket::before {
             left: -15px;
             box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.1);
@@ -82,12 +133,10 @@
             flex: 1;
             padding: 30px;
             border-right: 2px dashed #ccc;
-            /* Perforated line */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             background: rgba(255, 255, 255, 0.8);
-            /* Slight transparency for texture to show */
         }
 
         .event-title {
@@ -147,7 +196,6 @@
             justify-content: center;
             text-align: center;
             border-left: 2px dashed #fff;
-            /* Stitching effect */
         }
 
         .qr-box {
@@ -168,8 +216,8 @@
         /* BUTTONS */
         .btn-icon {
             background: rgba(0, 220, 130, 0.1);
-            color: var(--primary);
-            border: 1px solid var(--primary);
+            color: #00DC82;
+            border: 1px solid #00DC82;
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
@@ -182,7 +230,7 @@
         }
 
         .btn-icon:hover {
-            background: var(--primary);
+            background: #00DC82;
             color: #000;
         }
 
@@ -198,15 +246,15 @@
             color: white;
         }
 
-        /* NOTIFICATION ICON */
+        /* NOTIFICATION & NAV ITEMS */
         .nav-icon-btn {
             position: relative;
             background: none;
             border: none;
-            color: var(--text-muted);
+            color: #94A3B8;
             font-size: 1.2rem;
             cursor: pointer;
-            margin-right: 15px;
+            margin-right: 10px;
             transition: 0.3s;
         }
 
@@ -227,11 +275,18 @@
             display: block;
         }
 
+        .logout-link {
+            color: #ff4d4d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
         /* MODALS */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
@@ -246,7 +301,7 @@
 
         .modal-content {
             background: #151A23;
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 16px;
             width: 100%;
@@ -264,7 +319,7 @@
 
         .time-btn {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             padding: 12px;
             border-radius: 8px;
@@ -274,12 +329,12 @@
 
         .time-btn:hover,
         .time-btn.selected {
-            background: var(--primary);
+            background: #00DC82;
             color: black;
-            border-color: var(--primary);
+            border-color: #00DC82;
         }
 
-        /* Generic Message Modal */
+        /* Generic Modal Styles */
         .msg-icon {
             font-size: 3rem;
             margin-bottom: 15px;
@@ -287,14 +342,13 @@
         }
 
         .msg-success {
-            color: var(--primary);
+            color: #00DC82;
         }
 
         .msg-error {
             color: #ff4d4d;
         }
 
-        /* Notification List */
         .notif-list {
             text-align: left;
             margin-top: 15px;
@@ -312,13 +366,22 @@
             align-items: start;
         }
 
-        .notif-item i {
-            color: var(--primary);
-            margin-top: 3px;
-        }
-
-        /* MOBILE RESPONSIVE TWEAKS */
+        /* --- MOBILE RESPONSIVE TWEAKS --- */
         @media (max-width: 768px) {
+
+            /* Navbar Stack */
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 5%;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            /* Ticket Stack */
             .real-ticket {
                 flex-direction: column;
             }
@@ -328,7 +391,7 @@
                 display: none;
             }
 
-            /* Hide holes on mobile */
+            /* Remove holes */
 
             .ticket-main {
                 border-right: none;
@@ -344,15 +407,11 @@
             }
 
             .ticket-details {
-                gap: 20px;
+                gap: 15px;
             }
 
             .event-title {
                 font-size: 1.4rem;
-            }
-
-            .ticket-actions {
-                width: 100%;
             }
 
             .btn-icon {
@@ -363,7 +422,7 @@
     </style>
 </head>
 
-<body>
+<body style="background-color: #0B0E14; margin: 0; font-family: sans-serif; color: white;">
 
     <nav>
         <a href="landing.html" class="brand">Eventful<span>.</span></a>
@@ -372,24 +431,30 @@
                 <i class="fas fa-bell"></i>
                 <span class="badge" id="notifBadge" style="display:none">0</span>
             </button>
-            <button onclick="logout()"
-                style="background:none; border:none; color:#ff4d4d; cursor:pointer;">Logout</button>
+            <div>
+                <span style="color: #94A3B8; font-size: 0.9rem;">Hi, <span id="userNameDisplay">User</span></span>
+                <a href="#" onclick="logout()" class="logout-link">Logout</a>
+            </div>
         </div>
     </nav>
 
     <div class="ticket-container">
-        <h1 style="color: white; margin-bottom: 10px;">🎟️ My Wallet</h1>
-        <p style="color: var(--text-muted); margin-bottom: 40px;">Your access passes and history.</p>
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Events
+        </a>
+
+        <h1 style="color: white; margin-bottom: 10px; margin-top: 0;">🎟️ My Wallet</h1>
+        <p style="color: #94A3B8; margin-bottom: 40px;">Your access passes and history.</p>
 
         <div id="ticketsList">
-            <p style="color: var(--text-muted);">Loading tickets...</p>
+            <p style="color: #94A3B8;">Loading tickets...</p>
         </div>
     </div>
 
     <div id="reminderModal" class="modal">
         <div class="modal-content">
             <h3 style="color:white; margin:0;">Set Reminder ⏰</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem;">When should we notify you?</p>
+            <p style="color:#94A3B8; font-size:0.9rem;">When should we notify you?</p>
 
             <div class="modal-options">
                 <button class="time-btn" onclick="selectTime(1, this)">1 Hour Before</button>
@@ -402,10 +467,9 @@
             <input type="hidden" id="selectedEventId">
 
             <div style="display:flex; gap:10px;">
-                <button onclick="closeModal('reminderModal')" class="btn btn-glass"
-                    style="flex:1; border-radius:8px;">Cancel</button>
-                <button onclick="confirmReminder()" class="btn btn-primary"
-                    style="flex:1; border-radius:8px;">Save</button>
+                <button onclick="closeModal('reminderModal')" class="time-btn" style="flex:1;">Cancel</button>
+                <button onclick="confirmReminder()" class="time-btn"
+                    style="flex:1; background: #00DC82; color: black;">Save</button>
             </div>
         </div>
     </div>
@@ -413,10 +477,9 @@
     <div id="notifModal" class="modal">
         <div class="modal-content">
             <h3 style="color:white; margin-bottom:10px;">Notifications</h3>
-            <div class="notif-list" id="notifList">
-            </div>
-            <button onclick="closeModal('notifModal')" class="btn btn-primary"
-                style="width:100%; margin-top:20px; border-radius:8px;">Close</button>
+            <div class="notif-list" id="notifList"></div>
+            <button onclick="closeModal('notifModal')" class="time-btn"
+                style="width:100%; margin-top:20px;">Close</button>
         </div>
     </div>
 
@@ -425,14 +488,14 @@
             <i id="msgIcon" class="fas fa-check-circle msg-icon msg-success"></i>
             <h3 id="msgTitle" style="color:white; margin:0 0 10px 0;">Success</h3>
             <p id="msgText" style="color:#ccc; margin-bottom:20px;">Operation completed.</p>
-            <button onclick="closeModal('messageModal')" class="btn btn-primary"
-                style="width:100%; border-radius:8px;">Okay</button>
+            <button onclick="closeModal('messageModal')" class="time-btn" style="width:100%;">Okay</button>
         </div>
     </div>
 
     <script>
         const token = localStorage.getItem('token');
         const userName = localStorage.getItem('userName') || 'Attendee';
+        document.getElementById('userNameDisplay').innerText = userName;
 
         if (!token) window.location.href = 'signin.html';
 
@@ -448,11 +511,11 @@
                 list.innerHTML = '';
 
                 if (data.tickets.length === 0) {
-                    list.innerHTML = '<div style="text-align:center; padding:40px; border:1px dashed #333; border-radius:10px;"><p style="color:#666;">No tickets found.</p><a href="index.html" class="btn btn-primary">Browse Events</a></div>';
+                    list.innerHTML = '<div style="text-align:center; padding:40px; border:1px dashed #333; border-radius:10px;"><p style="color:#666;">No tickets found.</p><a href="index.html" class="time-btn" style="display:inline-block; text-decoration:none; margin-top:10px;">Browse Events</a></div>';
                     return;
                 }
 
-                // Check LocalStorage for any active reminders to display badges
+                // Check LocalStorage for reminders
                 const savedReminders = JSON.parse(localStorage.getItem('ticketReminders') || '{}');
 
                 data.tickets.forEach((t, index) => {
@@ -460,8 +523,6 @@
 
                     const qrId = `qr-${index}`;
                     const ticketIdDiv = `ticket-div-${index}`;
-
-                    // Check if this ticket has a saved reminder
                     const reminderText = savedReminders[t.eventId._id] ? `🔔 ${savedReminders[t.eventId._id]}H` : '';
                     const displayStyle = reminderText ? 'block' : 'none';
 
@@ -470,12 +531,11 @@
                             <div class="reminder-ribbon" id="ribbon-${t.eventId._id}" style="display: ${displayStyle}">
                                 ${reminderText}
                             </div>
-
                             <div class="ticket-main">
                                 <div>
                                     <h2 class="event-title">${t.eventId.title}</h2>
                                     <div class="event-loc">
-                                        <i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> 
+                                        <i class="fas fa-map-marker-alt" style="color:#00DC82"></i> 
                                         ${t.eventId.location}
                                     </div>
                                 </div>
@@ -513,30 +573,43 @@
             }
         }
 
-        // --- NOTIFICATION LOGIC ---
+        // --- NOTIFICATION LOGIC (REAL) ---
+        async function checkNotifications() {
+            try {
+                const response = await fetch('/api/notifications', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                window.myNotifications = data.notifications || [];
+
+                const count = window.myNotifications.filter(n => !n.isRead).length; // Optional: count only unread
+                const badge = document.getElementById('notifBadge');
+
+                if (window.myNotifications.length > 0) {
+                    badge.innerText = window.myNotifications.length;
+                    badge.style.display = 'block';
+                }
+            } catch (err) { console.error("Notif check failed"); }
+        }
+
         function openNotifications() {
-            // Hide Badge
+            const list = document.getElementById('notifList');
             document.getElementById('notifBadge').style.display = 'none';
 
-            // Populate Modal
-            const notifList = document.getElementById('notifList');
-            notifList.innerHTML = `
-                <div class="notif-item">
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>Welcome to Eventful!</strong><br>
-                        Thanks for joining. Start exploring events now.
+            if (!window.myNotifications || window.myNotifications.length === 0) {
+                list.innerHTML = '<p style="color:#666; font-size:0.9rem;">No new notifications.</p>';
+            } else {
+                list.innerHTML = window.myNotifications.map(n => `
+                    <div class="notif-item">
+                        <i class="fas ${n.type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}" 
+                           style="color: ${n.type === 'success' ? '#00DC82' : '#4a90e2'}"></i>
+                        <div>
+                            <strong>${n.title}</strong><br>
+                            ${n.message}
+                        </div>
                     </div>
-                </div>
-                <div class="notif-item">
-                    <i class="fas fa-info-circle"></i>
-                    <div>
-                        <strong>Tip:</strong><br>
-                        You can download your tickets for offline use.
-                    </div>
-                </div>
-            `;
-
+                `).join('');
+            }
             document.getElementById('notifModal').style.display = 'flex';
         }
 
@@ -557,10 +630,7 @@
             const eventId = document.getElementById('selectedEventId').value;
             const hours = document.getElementById('selectedHours').value;
 
-            if (!hours) {
-                showMessage("Selection Required", "Please select a time.", false);
-                return;
-            }
+            if (!hours) { showMessage("Required", "Please select a time.", false); return; }
 
             try {
                 const response = await fetch('/api/notifications/remind', {
@@ -577,18 +647,12 @@
                     closeModal('reminderModal');
                     showMessage("Success", "Reminder set successfully!");
 
-                    // UPDATE UI: Show Ribbon immediately
                     const ribbon = document.getElementById(`ribbon-${eventId}`);
-                    if (ribbon) {
-                        ribbon.innerText = `🔔 ${hours}H`;
-                        ribbon.style.display = 'block';
-                    }
+                    if (ribbon) { ribbon.innerText = `🔔 ${hours}H`; ribbon.style.display = 'block'; }
 
-                    // SAVE TO LOCALSTORAGE
                     const savedReminders = JSON.parse(localStorage.getItem('ticketReminders') || '{}');
                     savedReminders[eventId] = hours;
                     localStorage.setItem('ticketReminders', JSON.stringify(savedReminders));
-
                 } else {
                     showMessage("Error", res.message, false);
                 }
@@ -599,74 +663,19 @@
         function downloadTicket(id) {
             const el = document.getElementById(id);
             const actions = el.querySelector('.ticket-actions');
-            actions.style.opacity = '0'; // Hide buttons
+            actions.style.opacity = '0';
 
             html2canvas(el, { scale: 2, backgroundColor: null }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'Eventful-Ticket.png';
                 link.href = canvas.toDataURL();
                 link.click();
-                actions.style.opacity = '1'; // Show buttons
-                showMessage("Saved", "Ticket saved to your photos! 📸");
+                actions.style.opacity = '1';
+                showMessage("Saved", "Ticket saved to gallery! 📸");
             });
         }
 
-
-        // --- NOTIFICATION LOGIC (REAL BACKEND) ---
-
-        // 1. Check for notifications on page load
-        async function checkNotifications() {
-            try {
-                const response = await fetch('/api/notifications', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await response.json();
-
-                // Store globally to use when opening modal
-                window.myNotifications = data.notifications || [];
-
-                const count = window.myNotifications.length;
-                const badge = document.getElementById('notifBadge');
-
-                if (count > 0) {
-                    badge.innerText = count;
-                    badge.style.display = 'block';
-                } else {
-                    badge.style.display = 'none';
-                }
-            } catch (err) { console.error("Notif check failed"); }
-        }
-
-        // 2. Open Modal and Render
-        function openNotifications() {
-            const list = document.getElementById('notifList');
-            const badge = document.getElementById('notifBadge');
-
-            // Hide badge once opened
-            badge.style.display = 'none';
-
-            // Render content
-            if (!window.myNotifications || window.myNotifications.length === 0) {
-                list.innerHTML = '<p style="color:#666; font-size:0.9rem;">No new notifications.</p>';
-            } else {
-                list.innerHTML = window.myNotifications.map(n => `
-                <div class="notif-item">
-                    <i class="fas ${n.type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}" 
-                       style="color: ${n.type === 'success' ? '#00DC82' : '#4a90e2'}"></i>
-                    <div>
-                        <strong>${n.title}</strong><br>
-                        ${n.message}
-                    </div>
-                </div>
-            `).join('');
-            }
-
-            document.getElementById('notifModal').style.display = 'flex';
-        }
-
-        // Add this to your existing load calls at the bottom
-        checkNotifications();
-        // --- HELPER FUNCTIONS ---
+        // --- HELPERS ---
         function showMessage(title, text, isSuccess = true) {
             document.getElementById('msgTitle').innerText = title;
             document.getElementById('msgText').innerText = text;
@@ -674,17 +683,12 @@
             icon.className = isSuccess ? "fas fa-check-circle msg-icon msg-success" : "fas fa-times-circle msg-icon msg-error";
             document.getElementById('messageModal').style.display = 'flex';
         }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function logout() { localStorage.clear(); window.location.href = 'signin.html'; }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        function logout() {
-            localStorage.clear();
-            window.location.href = 'signin.html';
-        }
-
+        // Init
         loadTickets();
+        checkNotifications();
     </script>
 </body>
 

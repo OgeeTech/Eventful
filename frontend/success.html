@@ -1,53 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Successful - Eventful</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body {
-            font-family: sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: #f4f4f9;
-        }
-
-        .ticket-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            display: inline-block;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        #qrCodeImg {
-            margin-top: 20px;
-            border: 10px solid #fff;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #4a90e2;
+            background-color: #0B0E14;
             color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .success-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 220, 130, 0.1);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #00DC82;
+            box-shadow: 0 0 20px rgba(0, 220, 130, 0.3);
+        }
+
+        .icon-circle i {
+            font-size: 40px;
+            color: #00DC82;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 1.8rem;
+        }
+
+        p {
+            color: #94A3B8;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        /* QR Code Container */
+        #qrContainer {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+            /* Hidden until loaded */
+        }
+
+        .ticket-id {
+            font-family: monospace;
+            color: #00DC82;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .btn-home {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #00DC82;
+            color: black;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 220, 130, 0.2);
+        }
+
+        /* Loader */
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #00DC82;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="ticket-card">
-        <h1 style="color: #28a745;">🎉 Payment Successful!</h1>
-        <p>Your ticket has been generated. Please save the QR code below.</p>
+    <div style="position:absolute; width:100%; height:100%; overflow:hidden; z-index:-1;">
+    </div>
 
-        <div id="loader">Verifying payment...</div>
-        <img id="qrCodeImg" style="display: none;" width="200" height="200" />
+    <div class="success-card">
+        <div class="icon-circle">
+            <i class="fas fa-check"></i>
+        </div>
 
-        <div id="details" style="margin-top: 20px; font-weight: bold;"></div>
+        <h1>Payment Successful!</h1>
+        <p id="statusMsg">Verifying your transaction...</p>
 
-        <a href="index.html" class="btn">Back to Events</a>
+        <div id="loader" class="loader"></div>
+
+        <div id="resultSection" style="display: none;">
+            <div id="qrContainer">
+                <img id="qrCodeImg" width="180" height="180" alt="Ticket QR" />
+            </div>
+            <div class="ticket-id" id="ticketIdDisplay"></div>
+            <a href="my-tickets.html" class="btn-home">View in Wallet</a>
+        </div>
+
+        <p id="errorMsg" style="color:#ff4d4d; display:none;"></p>
     </div>
 
     <script>
@@ -55,12 +167,10 @@
             const urlParams = new URLSearchParams(window.location.search);
             const reference = urlParams.get('reference');
             const token = localStorage.getItem('token');
-
-            // RETRIEVE THE EVENT ID
-            const eventId = localStorage.getItem('pendingEventId'); // <--- ADD THIS
+            const eventId = localStorage.getItem('pendingEventId');
 
             if (!reference || !eventId) {
-                document.getElementById('loader').innerText = "Missing reference or event ID.";
+                showError("Missing reference or event ID.");
                 return;
             }
 
@@ -71,31 +181,54 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    // SEND BOTH REFERENCE AND EVENT ID
-                    body: JSON.stringify({ reference, eventId }) // <--- UPDATE THIS LINE
+                    body: JSON.stringify({ reference, eventId })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    document.getElementById('loader').style.display = "none";
-                    const img = document.getElementById('qrCodeImg');
-                    img.src = data.ticket.qrCode;
-                    img.style.display = "block";
-                    document.getElementById('details').innerText = "Ticket ID: " + data.ticket.ticketId;
-
-                    // Cleanup
-                    localStorage.removeItem('pendingEventId');
+                    showSuccess(data.ticket);
+                    localStorage.removeItem('pendingEventId'); // Cleanup
                 } else {
-                    document.getElementById('loader').innerText = "Verification failed: " + data.message;
+                    showError(data.message || "Verification failed.");
                 }
             } catch (err) {
-                document.getElementById('loader').innerText = "Error connecting to server.";
+                showError("Connection error. Please contact support.");
                 console.error(err);
             }
         }
+
+        function showSuccess(ticket) {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('statusMsg').innerText = "Your ticket has been secured!";
+
+            document.getElementById('qrCodeImg').src = ticket.qrCode;
+            document.getElementById('ticketIdDisplay').innerText = `#${ticket.ticketId.substring(0, 8).toUpperCase()}`;
+
+            document.getElementById('resultSection').style.display = 'block';
+        }
+
+        function showError(msg) {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('statusMsg').style.display = 'none';
+
+            const errEl = document.getElementById('errorMsg');
+            errEl.innerText = msg;
+            errEl.style.display = 'block';
+
+            // Change Icon to Red X
+            document.querySelector('.icon-circle').style.borderColor = '#ff4d4d';
+            document.querySelector('.icon-circle').style.boxShadow = '0 0 20px rgba(255, 77, 77, 0.3)';
+            document.querySelector('.icon-circle').style.background = 'rgba(255, 77, 77, 0.1)';
+            document.querySelector('.icon-circle i').className = 'fas fa-times';
+            document.querySelector('.icon-circle i').style.color = '#ff4d4d';
+            document.querySelector('h1').innerText = "Payment Failed";
+        }
+
+        // Run on load
         verifyAndGenerateTicket();
     </script>
+
 </body>
 
 </html>
