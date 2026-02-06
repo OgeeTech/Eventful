@@ -1,21 +1,19 @@
 import { Router } from 'express';
-// FIX: Added 'getMyEvents' to the import list below
-import { createEvent, getEvents, getMyEvents } from './event.controller';
-import { authenticateUser, creatorOnly } from '../../common/middlewares/auth.middleware';
-import { getEventAttendees } from './event.attendees.controller';
+import { authenticateUser } from '../../common/middlewares/auth.middleware';
+import { createEvent, getEvents, getMyEvents, getEventAttendees, updateEvent, deleteEvent } from './event.controller';
 
 const router = Router();
 
-// Public: Get all events
+// 1. Public Routes
 router.get('/', getEvents);
 
-// Protected: Get ONLY my events (Must come before /:id routes)
-router.get('/my-events', authenticateUser, creatorOnly, getMyEvents);
+// 2. Specific Static Routes (MUST BE ABOVE /:id)
+router.post('/', authenticateUser, createEvent);
+router.get('/my-events', authenticateUser, getMyEvents); // <--- THIS MUST BE HERE
 
-// Protected: Create Event (Only logged-in Creators)
-router.post('/', authenticateUser, creatorOnly, createEvent);
-
-// Protected: View Attendees for a specific event
-router.get('/:eventId/attendees', authenticateUser, creatorOnly, getEventAttendees);
+// 3. Dynamic ID Routes (MUST BE LAST)
+router.get('/:id/attendees', authenticateUser, getEventAttendees);
+router.put('/:id', authenticateUser, updateEvent);
+router.delete('/:id', authenticateUser, deleteEvent);
 
 export default router;

@@ -279,6 +279,7 @@
                     // Save Data
                     localStorage.setItem('token', loginData.token);
                     localStorage.setItem('role', loginData.role);
+                    localStorage.setItem('userId', loginData.user.id || loginData.user._id);
 
                     // SAFE NAME SAVING
                     if (loginData.user && loginData.user.name) {

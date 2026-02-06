@@ -5,10 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Eventful</title>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        :root {
+            --primary: #00dc82;
+            --bg-dark: #0b0f14;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-muted: #94A3B8;
+        }
+
         body {
             display: flex;
             justify-content: center;
@@ -16,6 +22,8 @@
             height: 100vh;
             overflow: hidden;
             background-color: var(--bg-dark);
+            margin: 0;
+            font-family: 'Inter', sans-serif;
         }
 
         /* Back Arrow */
@@ -113,13 +121,14 @@
         .input-group input {
             width: 100%;
             padding: 14px 14px 14px 45px;
-            /* Space for icon */
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             border-radius: 8px;
             color: white;
             outline: none;
             transition: 0.3s;
+            box-sizing: border-box;
+            /* Fix padding width issue */
         }
 
         .input-group input:focus {
@@ -130,6 +139,32 @@
 
         .input-group input:focus+i {
             color: var(--primary);
+        }
+
+        /* Decoration Blobs */
+        .glow-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 220, 130, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 14px;
+        }
+
+        .btn-primary:hover {
+            background: #00b36b;
+            transform: translateY(-2px);
         }
 
         /* Mobile Responsive */
@@ -144,7 +179,6 @@
                 display: none;
             }
 
-            /* Hide graphic on mobile */
             .auth-form-side {
                 padding: 40px 30px;
             }
@@ -193,8 +227,7 @@
                     <i class="fas fa-lock"></i>
                 </div>
 
-                <button type="submit" class="btn btn-primary"
-                    style="width: 100%; border-radius: 8px; margin-top: 10px;">
+                <button type="submit" class="btn-primary" style="width: 100%; border-radius: 8px; margin-top: 10px;">
                     Log In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
                 </button>
             </form>
@@ -202,7 +235,7 @@
             <p id="status" style="text-align: center; margin-top: 20px; font-size: 0.9rem; min-height: 20px;"></p>
 
             <div style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
-                New here? <a href="register.html"
+                New here? <a href="signup.html"
                     style="color: var(--primary); text-decoration: none; font-weight: 600;">Create Account</a>
             </div>
         </div>
@@ -228,8 +261,12 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    // --- SAVE CREDENTIALS ---
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('role', data.user.role);
+
+                    // IMPORTANT: Save User ID for Edit/Delete logic
+                    localStorage.setItem('userId', data.user.id || data.user._id);
 
                     if (data.user && data.user.name) {
                         localStorage.setItem('userName', data.user.name);
@@ -239,6 +276,7 @@
 
                     status.innerText = "Login Successful!";
 
+                    // Redirect based on role
                     setTimeout(() => {
                         window.location.href = data.user.role === 'creator' ? 'dashboard.html' : 'index.html';
                     }, 800);
