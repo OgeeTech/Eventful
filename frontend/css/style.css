@@ -49,7 +49,7 @@ nav {
 
 .btn-primary { 
     background: var(--primary); 
-    color: var(--bg-dark); /* Dark text on mint button looks sharp */
+    color: #fff; /* Dark text on mint button looks sharp */
     box-shadow: 0 4px 15px rgba(0, 220, 130, 0.3); /* Glowing Shadow */
 }
 .btn-primary:hover { 

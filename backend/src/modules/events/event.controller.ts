@@ -1,34 +1,31 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../../common/middlewares/auth.middleware';
 import { Event } from './event.model';
-// FIX 1: Add curly braces { } because Ticket is a named export
 import { Ticket } from '../tickets/ticket.model';
+import { redisClient } from '../../config/redis';
 
 // 1. Create Event
-// 1. Create Event (FIXED)
 export const createEvent = async (req: AuthRequest, res: Response) => {
     try {
         const { title, description, date, location, price, capacity } = req.body;
 
         // ROBUST ID EXTRACTION
-        // Check all possible locations where the ID might be stored by the middleware
         const user = req.user as any;
         const userId = user?.id || user?._id || user?.userId;
 
         if (!userId) {
-            console.error("Create Event Failed: User ID missing from request object", req.user);
+            console.error("Create Event Failed: User ID missing", req.user);
             return res.status(401).json({ message: "Unauthorized: User ID not found." });
         }
 
         const event = await Event.create({
-            title,
-            description,
-            date,
-            location,
-            price,
-            capacity,
+            title, description, date, location, price, capacity,
             createdBy: userId
         });
+
+        // --- CACHE CLEAR ---
+        // Clear the feed so the new event appears immediately
+        await redisClient.del('events_feed');
 
         res.status(201).json({ message: 'Event created successfully', event });
     } catch (error) {
@@ -37,72 +34,90 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
     }
 };
 
-// 2. Get All Events
+// 2. Get All Events (Public Feed with Caching)
+// 2. Get All Events (FIXED: Now counts 'sold' tickets + Caching)
 export const getEvents = async (req: Request, res: Response) => {
     try {
-        const events = await Event.find().sort({ date: 1 }).populate('createdBy', 'name email');
-        res.json({ events });
-    } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
-    }
-};
+        const cacheKey = 'events_feed';
 
-// 3. Get My Events (FIXED: Robust User ID Check)
-export const getMyEvents = async (req: AuthRequest, res: Response) => {
-    try {
-        // ROBUST ID EXTRACTION (Matches your Create Event fix)
-        const user = req.user as any;
-        const userId = user?.id || user?._id || user?.userId;
-
-        if (!userId) {
-            return res.status(401).json({ message: "Unauthorized: User ID not found." });
+        // Step A: Check Redis Cache
+        try {
+            const cachedData = await redisClient.get(cacheKey);
+            if (cachedData) {
+                return res.json(JSON.parse(cachedData));
+            }
+        } catch (err) {
+            console.error("Redis Get Error:", err);
         }
-        
-        console.log(`🔍 Fetching events for Creator: ${userId}`); // Debug Log
 
-        // 1. Get all events created by this user
-        const events = await Event.find({ createdBy: userId }).sort({ date: 1 }).lean();
+        // Step B: Query MongoDB (Using .lean() for performance)
+        const events = await Event.find().sort({ date: 1 }).populate('createdBy', 'name email').lean();
 
-        // 2. Count real tickets for each event
+        // Step C: Count Tickets for every event (The missing piece!)
         const eventsWithStats = await Promise.all(events.map(async (event) => {
             const soldCount = await Ticket.countDocuments({ eventId: event._id });
             return {
                 ...event,
-                sold: soldCount
+                sold: soldCount // This calculates the progress bar
             };
         }));
 
-        console.log(`✅ Found ${eventsWithStats.length} events.`); // Debug Log
+        // Step D: Save to Redis (60s TTL)
+        try {
+            await redisClient.setEx(cacheKey, 60, JSON.stringify({ events: eventsWithStats }));
+        } catch (err) {
+            console.error("Redis Set Error:", err);
+        }
+
+        res.json({ events: eventsWithStats });
+    } catch (error) {
+        console.error("Get Events Error:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// 3. Get My Events (Creator Dashboard)
+export const getMyEvents = async (req: AuthRequest, res: Response) => {
+    try {
+        const user = req.user as any;
+        const userId = user?.id || user?._id || user?.userId;
+
+        if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+        // 1. Get events
+        const events = await Event.find({ createdBy: userId }).sort({ date: 1 }).lean();
+
+        // 2. Count sold tickets
+        const eventsWithStats = await Promise.all(events.map(async (event) => {
+            const soldCount = await Ticket.countDocuments({ eventId: event._id });
+            return { ...event, sold: soldCount };
+        }));
+
         res.json({ events: eventsWithStats });
     } catch (error) {
         console.error("Get My Events Error:", error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
-// 4. Get Event attendee
+
+// 4. Get Event Attendees
 export const getEventAttendees = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
-
-        // 1. ROBUST USER ID EXTRACTION
         const user = req.user as any;
         const currentUserId = user?.id || user?._id || user?.userId;
 
         const event = await Event.findById(id);
-
         if (!event) return res.status(404).json({ message: "Event not found" });
 
-        // 2. ROBUST OWNERSHIP CHECK
-        // Handle if 'createdBy' is an object (populated) or a string (ID)
+        // Robust Ownership Check
         let creatorId = (event as any).createdBy;
         if (typeof creatorId === 'object' && creatorId !== null) {
             creatorId = creatorId._id || creatorId.id;
         }
 
-        // Convert both to strings for safe comparison
         if (String(creatorId) !== String(currentUserId)) {
-            console.log(`⛔ Unauthorized Access: Creator ${creatorId} !== User ${currentUserId}`);
-            return res.status(403).json({ message: "Unauthorized: You are not the creator of this event." });
+            return res.status(403).json({ message: "Unauthorized" });
         }
 
         const tickets = await Ticket.find({ eventId: id }).populate('userId', 'name email');
@@ -131,12 +146,15 @@ export const updateEvent = async (req: AuthRequest, res: Response) => {
         if (!event) return res.status(404).json({ message: 'Event not found' });
 
         if ((event as any).createdBy.toString() !== userId) {
-            return res.status(403).json({ message: 'Not authorized to edit this event' });
+            return res.status(403).json({ message: 'Not authorized' });
         }
 
         const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { new: true });
-        res.json(updatedEvent);
 
+        // --- CACHE CLEAR ---
+        await redisClient.del('events_feed');
+
+        res.json(updatedEvent);
     } catch (error) {
         console.error("Update Error:", error);
         res.status(500).json({ message: 'Server Error' });
@@ -153,12 +171,15 @@ export const deleteEvent = async (req: AuthRequest, res: Response) => {
         if (!event) return res.status(404).json({ message: 'Event not found' });
 
         if ((event as any).createdBy.toString() !== userId) {
-            return res.status(403).json({ message: 'Not authorized to delete this event' });
+            return res.status(403).json({ message: 'Not authorized' });
         }
 
         await event.deleteOne();
-        res.json({ message: 'Event deleted successfully' });
 
+        // --- CACHE CLEAR ---
+        await redisClient.del('events_feed');
+
+        res.json({ message: 'Event deleted successfully' });
     } catch (error) {
         console.error("Delete Error:", error);
         res.status(500).json({ message: 'Server Error' });

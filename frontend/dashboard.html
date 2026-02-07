@@ -9,14 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- DASHBOARD STYLES --- */
+        /* --- GLOBAL & DASHBOARD STYLES --- */
         body {
             background-color: #0B0E14;
             color: white;
             margin: 0;
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
 
+        /* --- RESPONSIVE NAVIGATION --- */
         nav {
             display: flex;
             justify-content: space-between;
@@ -28,6 +30,7 @@
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            height: 60px;
         }
 
         .brand {
@@ -35,27 +38,72 @@
             font-weight: 800;
             color: white;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .brand span {
             color: #00DC82;
         }
 
+        /* Desktop Nav Items */
         .nav-items {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
         }
 
-        .badge {
+        .nav-link {
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link i {
+            font-size: 1rem;
+        }
+
+        .btn-nav-logout {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.4);
+            color: #ff4d4d;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-nav-logout:hover {
             background: #ff4d4d;
             color: white;
-            font-size: 0.6rem;
-            padding: 2px 5px;
-            border-radius: 50%;
-            display: none;
         }
 
+        /* Mobile Menu Button (Hidden on Desktop) */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- DASHBOARD CONTENT --- */
         .container {
             max-width: 1100px;
             margin: 40px auto;
@@ -82,6 +130,12 @@
             padding: 25px;
             border-radius: 16px;
             text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .stat-value {
@@ -102,6 +156,59 @@
             color: #f59e0b;
         }
 
+        /* FORMS */
+        .form-section {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #00DC82;
+            outline: none;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .row input {
+            flex: 1;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #00DC82;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #00b86b;
+        }
+
         /* EVENTS LIST */
         .event-item {
             background: rgba(255, 255, 255, 0.03);
@@ -111,6 +218,8 @@
             justify-content: space-between;
             align-items: center;
             transition: 0.2s;
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
 
         .event-item:hover {
@@ -128,7 +237,6 @@
             font-size: 0.9rem;
         }
 
-        /* ACTION BUTTONS */
         .actions {
             display: flex;
             gap: 10px;
@@ -181,52 +289,7 @@
             color: white;
         }
 
-        /* FORMS & MODALS */
-        .form-section {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 30px;
-            border-radius: 16px;
-            margin-bottom: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        .row {
-            display: flex;
-            gap: 20px;
-        }
-
-        .row input {
-            flex: 1;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: #00DC82;
-            color: black;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-primary:hover {
-            background: #00b86b;
-        }
-
+        /* MODALS */
         .modal {
             display: none;
             position: fixed;
@@ -240,6 +303,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         .modal-content {
@@ -247,8 +311,10 @@
             padding: 30px;
             border-radius: 16px;
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
         .modal-actions {
@@ -265,9 +331,81 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
         }
 
+        .btn-confirm-delete {
+            background: #ff4d4d;
+            color: white;
+            padding: 12px;
+            flex: 1;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .msg-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .msg-success {
+            color: #00DC82;
+        }
+
+        .msg-error {
+            color: #ff4d4d;
+        }
+
+        .msg-text {
+            color: #94A3B8;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-items {
+                display: none;
+                /* Hidden by default */
+                position: absolute;
+                top: 60px;
+                /* Below navbar */
+                left: 0;
+                width: 100%;
+                background: #151A23;
+                flex-direction: column;
+                padding: 20px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+                gap: 0;
+            }
+
+            .nav-items.active {
+                display: flex;
+            }
+
+            .nav-link {
+                width: 100%;
+                padding: 15px 20px;
+                box-sizing: border-box;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 0;
+            }
+
+            .btn-nav-logout {
+                margin: 20px;
+                width: calc(100% - 40px);
+                text-align: center;
+            }
+
+            /* Event List Mobile */
             .event-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -295,10 +433,24 @@
 <body>
 
     <nav>
-        <a href="index.html" class="brand">Eventful<span>.</span> Creator</a>
-        <div class="nav-items">
-            <button onclick="logout()"
-                style="background:none; border:1px solid #ff4d4d; color:#ff4d4d; padding:5px 12px; border-radius:20px; cursor:pointer;">Logout</button>
+        <a href="index.html" class="brand">
+            <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
+        </a>
+
+        <button class="mobile-menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="nav-items" id="navItems">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-globe"></i> Public Gallery
+            </a>
+            <a href="scan.html" class="nav-link">
+                <i class="fas fa-qrcode"></i> Scanner
+            </a>
+            <button onclick="logout()" class="btn-nav-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
     </nav>
 
@@ -345,14 +497,14 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 40px;">
+        <!-- <div style="text-align: center; margin-bottom: 40px;">
             <a href="index.html" style="color:#00DC82; text-decoration:none; margin-right:20px;">View Public Gallery</a>
             <a href="scan.html" style="color:#00DC82; text-decoration:none;">Ticket Scanner Tool</a>
-        </div>
+        </div> -->
     </div>
 
     <div id="editModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="text-align: left;">
             <h3 style="color:white; margin-top:0;">✏️ Edit Event</h3>
             <form id="editForm">
                 <input type="hidden" id="editEventId">
@@ -364,10 +516,31 @@
                     <input type="number" id="editPrice" placeholder="Price" required>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" style="margin-top:0;">Save Changes</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal('editModal')">Cancel</button>
+                    <button type="submit" class="btn-primary" style="margin-top:0; flex:1;">Save Changes</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-circle msg-icon" style="color:#f59e0b;"></i>
+            <h3 id="confirmTitle" style="color:white; margin-top:0;">Are you sure?</h3>
+            <p id="confirmText" class="msg-text">This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('confirmModal')">Cancel</button>
+                <button id="btnConfirmYes" class="btn-confirm-delete">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <i id="msgIcon" class="fas fa-check-circle msg-icon msg-success"></i>
+            <h3 id="msgTitle" style="color:white; margin:0 0 10px 0;">Success</h3>
+            <p id="msgText" class="msg-text">Operation completed.</p>
+            <button onclick="closeModal('messageModal')" class="btn-primary">Okay</button>
         </div>
     </div>
 
@@ -377,7 +550,41 @@
 
         if (!token || role !== 'creator') window.location.href = 'signin.html';
 
-        let myEvents = []; // Store events locally for easy editing
+        let myEvents = [];
+        let confirmCallback = null; // Stores function to run if "Yes" is clicked
+
+        // --- UTILITY FUNCTIONS ---
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function showMessage(title, text, isSuccess = true) {
+            document.getElementById('msgTitle').innerText = title;
+            document.getElementById('msgText').innerText = text;
+            const icon = document.getElementById('msgIcon');
+            icon.className = isSuccess ? "fas fa-check-circle msg-icon msg-success" : "fas fa-times-circle msg-icon msg-error";
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+
+        function showConfirm(text, callback, isDelete = true) {
+            document.getElementById('confirmText').innerText = text;
+            confirmCallback = callback;
+
+            const yesBtn = document.getElementById('btnConfirmYes');
+            if (isDelete) {
+                yesBtn.className = "btn-confirm-delete";
+                yesBtn.innerText = "Delete";
+            } else {
+                yesBtn.className = "btn-primary";
+                yesBtn.style.marginTop = "0";
+                yesBtn.innerText = "Confirm";
+            }
+
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        document.getElementById('btnConfirmYes').addEventListener('click', () => {
+            if (confirmCallback) confirmCallback();
+            closeModal('confirmModal');
+        });
 
         // 1. LOAD ANALYTICS
         async function loadAnalytics() {
@@ -391,7 +598,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // 2. LOAD MY EVENTS (And render buttons)
+        // 2. LOAD MY EVENTS
         async function loadMyEvents() {
             try {
                 const res = await fetch('/api/events/my-events', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -424,7 +631,7 @@
                                 <button onclick="openEditModal('${event._id}')" class="btn-action btn-edit">
                                     <i class="fas fa-pencil-alt"></i> Edit
                                 </button>
-                                <button onclick="deleteEvent('${event._id}')" class="btn-action btn-delete">
+                                <button onclick="confirmDelete('${event._id}')" class="btn-action btn-delete">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>
                             </div>
@@ -435,10 +642,13 @@
         }
 
         // 3. CREATE EVENT
-        document.getElementById('createEventForm').addEventListener('submit', async (e) => {
+        document.getElementById('createEventForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            if (!confirm("Publish this event?")) return;
+            // Use Custom Confirm Modal instead of confirm()
+            showConfirm("Are you sure you want to publish this event?", executeCreateEvent, false);
+        });
 
+        async function executeCreateEvent() {
             const eventData = {
                 title: document.getElementById('title').value,
                 description: document.getElementById('description').value,
@@ -456,16 +666,16 @@
                 });
 
                 if (res.ok) {
-                    alert("Event Created!");
+                    showMessage("Published!", "Your event is now live.");
                     document.getElementById('createEventForm').reset();
                     loadAnalytics();
                     loadMyEvents();
                 } else {
                     const d = await res.json();
-                    alert(d.message);
+                    showMessage("Error", d.message, false);
                 }
-            } catch (err) { alert("Error connecting to server"); }
-        });
+            } catch (err) { showMessage("Error", "Connection failed", false); }
+        }
 
         // 4. EDIT EVENT LOGIC
         function openEditModal(id) {
@@ -481,8 +691,6 @@
 
             document.getElementById('editModal').style.display = 'flex';
         }
-
-        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
 
         document.getElementById('editForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -503,19 +711,23 @@
                 });
 
                 if (res.ok) {
-                    alert("Event Updated!");
-                    closeEditModal();
+                    closeModal('editModal');
+                    showMessage("Updated", "Event details saved successfully.");
                     loadMyEvents();
                 } else {
-                    alert("Failed to update event.");
+                    showMessage("Error", "Failed to update event.", false);
                 }
-            } catch (err) { alert("Connection Error"); }
+            } catch (err) { showMessage("Error", "Connection error", false); }
         });
 
         // 5. DELETE EVENT LOGIC
-        async function deleteEvent(id) {
-            if (!confirm("Are you sure? This will delete the event and all associated tickets permanently.")) return;
+        function confirmDelete(id) {
+            showConfirm("This will delete the event and all tickets permanently. This cannot be undone.", () => {
+                executeDelete(id);
+            }, true);
+        }
 
+        async function executeDelete(id) {
             try {
                 const res = await fetch(`/api/events/${id}`, {
                     method: 'DELETE',
@@ -523,13 +735,13 @@
                 });
 
                 if (res.ok) {
-                    alert("Event Deleted.");
+                    showMessage("Deleted", "The event has been removed.");
                     loadMyEvents();
                     loadAnalytics();
                 } else {
-                    alert("Failed to delete.");
+                    showMessage("Error", "Failed to delete event.", false);
                 }
-            } catch (err) { alert("Connection Error"); }
+            } catch (err) { showMessage("Error", "Connection error", false); }
         }
 
         function logout() { localStorage.clear(); window.location.href = 'signin.html'; }

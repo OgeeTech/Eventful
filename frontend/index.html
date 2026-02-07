@@ -326,7 +326,7 @@
             transform: scale(1.05);
         }
 
-        /* EDIT MODAL */
+        /* MODAL COMMON STYLES */
         .modal {
             display: none;
             position: fixed;
@@ -353,9 +353,11 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
-        .modal-content h2 {
+        .modal-content h2,
+        .modal-content h3 {
             margin-top: 0;
             color: white;
+            text-align: center;
         }
 
         .form-group {
@@ -412,6 +414,59 @@
             cursor: pointer;
         }
 
+        /* --- SOCIAL SHARE MODAL STYLES --- */
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .whatsapp {
+            background: #25D366;
+        }
+
+        .twitter {
+            background: #1DA1F2;
+        }
+
+        .facebook {
+            background: #1877F2;
+        }
+
+        .linkedin {
+            background: #0A66C2;
+        }
+
+        .copy-link {
+            background: #4B5563;
+            cursor: pointer;
+            border: none;
+        }
+
+        .copy-link:hover {
+            background: #6B7280;
+        }
+
         @media (max-width: 768px) {
             nav {
                 padding: 15px;
@@ -440,7 +495,7 @@
 <body>
 
     <nav>
-        <a href="index.html" class="brand">Eventful<span>.</span></a>
+        <a href="landing.html" class="brand">Eventful<span>.</span></a>
         <div class="nav-right" id="navRight"></div>
     </nav>
 
@@ -494,17 +549,44 @@
         </div>
     </div>
 
+    <div id="shareModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <h3>Share this Event</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem;">Share this event with your friends!</p>
+
+            <div class="social-grid">
+                <a href="#" id="share-whatsapp" target="_blank" class="social-btn whatsapp" title="Share on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="#" id="share-twitter" target="_blank" class="social-btn twitter" title="Share on Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" id="share-facebook" target="_blank" class="social-btn facebook" title="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" id="share-linkedin" target="_blank" class="social-btn linkedin" title="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <button onclick="copyToClipboard()" class="social-btn copy-link" title="Copy Link">
+                    <i class="fas fa-link"></i>
+                </button>
+            </div>
+
+            <button onclick="closeShareModal()" class="btn-cancel" style="width:100%;">Close</button>
+        </div>
+    </div>
+
     <script>
         // --- 1. SETUP & AUTH ---
         const token = localStorage.getItem('token');
         const userName = localStorage.getItem('userName') || 'User';
-        const userId = localStorage.getItem('userId'); // Required for checks
+        const userId = localStorage.getItem('userId');
         const role = localStorage.getItem('role');
         const navRight = document.getElementById('navRight');
 
         if (token) {
             navRight.innerHTML = `
-                <a href="my-tickets.html" class="nav-link">🎟️ My Wallet</a>
+                <a href="my-tickets.html" class="nav-link">My Wallet</a>
                 ${role === 'creator' ? '<a href="dashboard.html" class="nav-link">Dashboard</a>' : ''}
                 <div class="profile-box">
                     <div class="profile-icon">${userName.charAt(0).toUpperCase()}</div>
@@ -554,17 +636,13 @@
                 const capacity = event.capacity || 100;
                 const percent = Math.min((sold / capacity) * 100, 100);
 
-                // --- ROBUST OWNERSHIP CHECK ---
                 let creatorId = event.createdBy || event.creator;
-                // Handle populated creator object
                 if (typeof creatorId === 'object' && creatorId !== null) {
                     creatorId = creatorId._id || creatorId.id;
                 }
 
-                // Convert both to strings
                 const currentUserIdStr = String(userId).trim();
                 const eventCreatorIdStr = String(creatorId).trim();
-
                 const isOwner = token && (currentUserIdStr === eventCreatorIdStr);
 
                 const controlsHtml = isOwner ? `
@@ -599,7 +677,14 @@
 
                     <div class="card-footer">
                         <div class="price-tag">${event.price > 0 ? "₦" + event.price.toLocaleString() : "Free"}</div>
-                        <button class="btn-buy" onclick="buyTicket('${event._id}')">${percent >= 100 ? 'Sold Out' : 'Book Now'}</button>
+                        <div style="display:flex; gap:10px;">
+                            <button class="control-btn" onclick="openShareModal('${event._id}')" title="Share">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <button class="btn-buy" onclick="buyTicket('${event._id}')">
+                                ${percent >= 100 ? 'Sold Out' : 'Book Now'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -607,28 +692,21 @@
         }
 
         // --- 3. EDIT & DELETE LOGIC ---
-
         function openEditModal(id) {
             const event = allEvents.find(e => e._id === id);
             if (!event) return;
-
             document.getElementById('editEventId').value = event._id;
             document.getElementById('editTitle').value = event.title;
             document.getElementById('editDesc').value = event.description;
             document.getElementById('editLocation').value = event.location;
             document.getElementById('editPrice').value = event.price;
-
             if (event.date) {
-                const dateObj = new Date(event.date);
-                document.getElementById('editDate').value = dateObj.toISOString().split('T')[0];
+                document.getElementById('editDate').value = new Date(event.date).toISOString().split('T')[0];
             }
-
             document.getElementById('editModal').style.display = 'flex';
         }
 
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
 
         document.getElementById('editForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -659,8 +737,7 @@
         });
 
         async function deleteEvent(id) {
-            if (!confirm("Are you sure you want to delete this event? This action cannot be undone.")) return;
-
+            if (!confirm("Are you sure you want to delete this event?")) return;
             try {
                 const res = await fetch(`/api/events/${id}`, {
                     method: 'DELETE',
@@ -676,7 +753,41 @@
             } catch (err) { alert("Connection Error"); }
         }
 
-        // --- 4. LOAD & SEARCH ---
+        // --- 4. SHARE LOGIC (NEW) ---
+        let currentShareUrl = "";
+
+        function openShareModal(id) {
+            const event = allEvents.find(e => e._id === id);
+            if (!event) return;
+
+            // Generate links
+            // NOTE: In production, 'window.location.origin' should be your real domain (e.g. https://eventful.com)
+            // Social media sites usually require a real public URL to fetch preview images.
+            currentShareUrl = `${window.location.origin}/index.html?event=${id}`;
+
+            const text = encodeURIComponent(`Check out ${event.title} on Eventful!`);
+            const url = encodeURIComponent(currentShareUrl);
+
+            document.getElementById('share-whatsapp').href = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+
+            document.getElementById('shareModal').style.display = 'flex';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(currentShareUrl).then(() => {
+                alert("Link copied! 📋");
+                closeShareModal();
+            });
+        }
+
+        // --- 5. LOAD & SEARCH ---
         document.getElementById("searchInput").addEventListener("input", e => {
             const term = e.target.value.toLowerCase();
             renderEvents(allEvents.filter(ev => ev.title.toLowerCase().includes(term) || ev.location.toLowerCase().includes(term)));
@@ -693,16 +804,24 @@
 
         async function buyTicket(eventId) {
             if (!token) { window.location.href = 'signin.html'; return; }
+            localStorage.setItem('pendingEventId', eventId);
+
             try {
-                const res = await fetch('/api/payments/initialize', {
+                const response = await fetch('/api/payments/initialize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ eventId })
                 });
-                const data = await res.json();
-                if (res.ok) window.location.href = data.url;
-                else alert(data.message);
-            } catch (e) { alert("Connection Error"); }
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = data.url;
+                } else {
+                    alert(data.message);
+                }
+            } catch (e) {
+                alert("Connection Error");
+            }
         }
 
         loadEvents();

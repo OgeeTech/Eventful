@@ -1,20 +1,25 @@
 import { createClient } from 'redis';
+import dotenv from 'dotenv';
 
-// Create a Redis client
-const redisClient = createClient({
-    url: process.env.REDIS_URL || 'redis://localhost:6379'
+dotenv.config();
+
+// 1. Create the Client (Export as NAMED export)
+export const redisClient = createClient({
+    // Checks for Upstash URL first, then generic REDIS_URL, then localhost
+    url: process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || 'redis://localhost:6379'
 });
 
 redisClient.on('error', (err) => console.error('❌ Redis Client Error', err));
 redisClient.on('connect', () => console.log('✅ Redis Client Connected'));
 
-// Function to start the connection
+// 2. Connect Function (For server.ts)
 export const connectRedis = async () => {
     try {
-        await redisClient.connect();
+        // Only connect if not already open
+        if (!redisClient.isOpen) {
+            await redisClient.connect();
+        }
     } catch (err) {
         console.error('Could not connect to Redis:', err);
     }
 };
-
-export default redisClient;

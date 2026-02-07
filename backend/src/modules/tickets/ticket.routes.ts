@@ -8,7 +8,7 @@ const router = Router();
 router.post('/buy', authenticateUser, buyTicket);
 
 // FIX: Update the function usage here too
-router.post('/verify', validateTicket);
+router.post('/validate', authenticateUser, validateTicket);
 
 // New Route: GET /api/tickets/my-tickets
 router.get('/my-tickets', authenticateUser, getMyTickets);
