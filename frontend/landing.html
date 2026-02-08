@@ -5,14 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventful - The Future of Events</title>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- EMBEDDED CSS FOR SLIDER & NAV --- */
         :root {
+            /* DARK MINT PALETTE */
+            --bg-dark: #0B0E14;
+            --bg-card: #151A23;
             --primary: #00DC82;
+            --primary-hover: #00b86b;
+            --text-white: #FFFFFF;
             --text-muted: #94A3B8;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            margin: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: absolute;
+            top: 0;
+            width: 90%;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-white);
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
         }
 
         /* Mobile Menu Button */
@@ -25,36 +80,108 @@
             cursor: pointer;
         }
 
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background: #0b0f14;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px 0;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-                gap: 15px;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .nav-links a {
-                margin: 0;
-            }
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-align: center;
         }
 
-        /* Container for the slider */
+        .btn-primary {
+            background: var(--primary);
+            color: #000; /* Dark text for contrast */
+            box-shadow: 0 4px 15px rgba(0, 220, 130, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 220, 130, 0.4);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-white);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-white);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 220, 130, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            top: -100px;
+            left: -200px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .hero-text h1 span {
+            color: var(--primary);
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) scale(0.9);
+            filter: drop-shadow(20px 20px 50px rgba(0, 0, 0, 0.5));
+            transition: 0.5s ease;
+        }
+
+        .hero-image:hover img {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1);
+        }
+
+        /* --- TESTIMONIAL SLIDER --- */
         .testimonial-widget {
             margin-top: 40px;
             width: 100%;
@@ -63,23 +190,19 @@
             position: relative;
         }
 
-        /* The track that moves left/right */
         .testimonial-track {
             display: flex;
             transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Individual Slides */
         .t-slide {
             min-width: 100%;
             display: flex;
             align-items: center;
             gap: 15px;
-            /* Prevent text wrapping issues during slide */
             box-sizing: border-box;
         }
 
-        /* Avatars */
         .t-avatar {
             width: 45px;
             height: 45px;
@@ -95,7 +218,6 @@
             font-size: 1.2rem;
         }
 
-        /* Text Content */
         .t-content {
             display: flex;
             flex-direction: column;
@@ -119,13 +241,11 @@
             font-style: italic;
         }
 
-        /* Navigation Dots */
         .t-dots {
             display: flex;
             gap: 8px;
             margin-top: 12px;
             margin-left: 60px;
-            /* Align with text */
         }
 
         .t-dot {
@@ -141,6 +261,147 @@
             background-color: var(--primary);
             width: 20px;
             border-radius: 10px;
+        }
+
+        /* --- FEATURES --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 50px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .heart-icon {
+            color: #00DC82;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* =========================
+           MOBILE OPTIMIZATION
+           ========================= */
+        @media (max-width: 900px) {
+            nav {
+                width: 100%;
+                padding: 1.5rem 5%;
+                box-sizing: border-box;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-dark);
+                flex-direction: column;
+                padding: 20px 0;
+                border-bottom: 1px solid var(--glass-border);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                margin: 15px 0;
+                font-size: 1.1rem;
+            }
+
+            .btn-primary.nav-btn {
+                margin: 10px 0 0 0 !important;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 140px 5% 60px; /* More top padding for fixed nav */
+                min-height: auto;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem; /* Smaller text for mobile */
+                line-height: 1.3;
+            }
+
+            .hero-text p {
+                margin: 0 auto 2.5rem auto;
+            }
+
+            /* --- FIXED MOBILE BUTTONS --- */
+            .hero-btns {
+                flex-direction: column; /* Stack buttons */
+                width: 100%;
+                gap: 15px;
+            }
+
+            .hero-btns .btn {
+                width: 100%; /* Full width */
+                box-sizing: border-box;
+                padding: 1rem;
+                font-size: 1rem;
+            }
+
+            .testimonial-widget {
+                margin: 40px auto 0;
+            }
+            
+            .t-dots {
+                margin-left: 0;
+                justify-content: center;
+            }
+
+            .hero-image {
+                margin-top: 50px;
+            }
+
+            .hero-image img {
+                transform: none;
+                width: 85%;
+            }
         }
     </style>
 </head>
@@ -161,8 +422,7 @@
         <div class="nav-links" id="navLinks">
             <a href="index.html">Events</a>
             <a href="signin.html">Login</a>
-            <a href="register.html" class="btn btn-primary" style="margin-left: 20px; padding: 0.5rem 1.2rem;">Sign
-                Up</a>
+            <a href="register.html" class="btn btn-primary nav-btn" style="padding: 0.5rem 1.2rem;">Sign Up</a>
         </div>
     </nav>
 
@@ -180,7 +440,6 @@
 
             <div class="testimonial-widget">
                 <div class="testimonial-track" id="track">
-
                     <div class="t-slide">
                         <div class="t-avatar">F</div>
                         <div class="t-content">
@@ -189,7 +448,6 @@
                             <div class="t-quote">"Best tool for ticketing. Highly recommend!"</div>
                         </div>
                     </div>
-
                     <div class="t-slide">
                         <div class="t-avatar">S</div>
                         <div class="t-content">
@@ -198,7 +456,6 @@
                             <div class="t-quote">"Sold out my art show in 2 hours using Eventful."</div>
                         </div>
                     </div>
-
                     <div class="t-slide">
                         <div class="t-avatar">D</div>
                         <div class="t-content">
@@ -207,7 +464,6 @@
                             <div class="t-quote">"The analytics dashboard is a game changer."</div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="t-dots" id="dotsContainer">
@@ -226,24 +482,21 @@
 
     <section style="padding: 50px 5%;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-
             <div class="glass-card">
                 <h3 style="color: var(--primary); margin-bottom: 10px;">Ticket Management</h3>
                 <p style="color: var(--text-muted);">Seamless QR code generation and validation for rapid entry.</p>
             </div>
-
             <div class="glass-card">
                 <h3 style="color: var(--primary); margin-bottom: 10px;">Real-time Analytics</h3>
                 <p style="color: var(--text-muted);">Track your sales, revenue, and attendee demographics live.</p>
             </div>
-
             <div class="glass-card">
                 <h3 style="color: var(--primary); margin-bottom: 10px;">Global Payments</h3>
                 <p style="color: var(--text-muted);">Accept payments from anywhere in the world securely.</p>
             </div>
-
         </div>
     </section>
+
     <footer>
         <p>
             Built with <i class="fas fa-heart heart-icon"></i> by
@@ -251,6 +504,7 @@
         </p>
         <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">&copy; 2026 Eventful. All rights reserved.</p>
     </footer>
+
     <script>
         // --- AUTH & UI LOGIC ---
         const token = localStorage.getItem('token');
@@ -262,7 +516,7 @@
         if (token) {
             const dashboardLink = role === 'creator' ? 'dashboard.html' : 'my-tickets.html';
             const dashboardText = role === 'creator' ? 'Dashboard' : 'My Wallet';
-
+            
             navLinks.innerHTML = `
                 <a href="index.html">Events</a>
                 <a href="${dashboardLink}">${dashboardText}</a>
@@ -279,7 +533,7 @@
         function toggleMenu() {
             navLinks.classList.toggle('active');
             const btn = document.querySelector('.mobile-menu-btn i');
-            if (navLinks.classList.contains('active')) {
+            if(navLinks.classList.contains('active')) {
                 btn.classList.remove('fa-bars');
                 btn.classList.add('fa-times');
             } else {
@@ -300,10 +554,7 @@
         const totalSlides = dots.length;
 
         function updateSlide() {
-            // Move the track
             track.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-            // Update dots
             dots.forEach(dot => dot.classList.remove('active'));
             dots[currentSlide].classList.add('active');
         }
@@ -313,15 +564,13 @@
             updateSlide();
         }
 
-        // Manual Navigation
         window.goToSlide = function (index) {
             currentSlide = index;
             updateSlide();
             resetTimer();
         }
 
-        // Auto Swipe
-        let slideInterval = setInterval(nextSlide, 4000); // 4 seconds
+        let slideInterval = setInterval(nextSlide, 4000);
 
         function resetTimer() {
             clearInterval(slideInterval);
@@ -331,4 +580,4 @@
 
 </body>
 
-</html>
+</html>''
