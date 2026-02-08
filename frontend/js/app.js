@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://eventful-api-74t2.onrender.com/api';
 
 // --- Auth Functions ---
 

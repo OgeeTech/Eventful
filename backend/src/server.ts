@@ -27,7 +27,11 @@ import notificationRoutes from './modules/notifications/notification.routes';
 const app = express();
 
 // 3. Global Middleware
-app.use(cors());
+app.use(cors({
+    origin: '*', // Allow ALL frontends (easiest for testing)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 // app.use(express.static('../frontend')); // Optional: Depends on how you host frontend
 
