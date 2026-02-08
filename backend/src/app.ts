@@ -21,8 +21,18 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Security & Logging
-app.use(cors());
+// 👇 CRITICAL FIX: Updated CORS for Netlify
+app.use(cors({
+    origin: [
+        "http://127.0.0.1:5500",      // Local Testing
+        "http://localhost:5500",      // Local Testing
+        "https://iventfuul.netlify.app" // 👈 YOUR LIVE FRONTEND
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // app.use(helmet());
 app.use(morgan('dev'));
 
@@ -39,17 +49,18 @@ app.use('/api/auth', authRoutes);
 // Payment Routes
 app.use('/api/payments', paymentRoutes);
 
-//ticket scan
+// Ticket Scan Routes
 app.use('/api/tickets', ticketRoutes);
 
-//analytics route setup
+// Analytics & Event Routes
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/events', eventRoutes);
+
 // Health Check
 app.get('/api/health', (req: Request, res: Response) => {
     res.json({
         status: 'success',
-        message: 'Eventful Backend is running smoothly '
+        message: 'Eventful Backend is running smoothly 🚀'
     });
 });
 
@@ -65,6 +76,8 @@ app.use((req: Request, res: Response, next: Function) => {
     if (req.originalUrl.startsWith('/api')) {
         return res.status(404).json({ message: 'API Route not found' });
     }
+    // For any other route, send the frontend (if hosted on same server)
+    // Since you are using Netlify, this part is mostly fallback for local testing
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
