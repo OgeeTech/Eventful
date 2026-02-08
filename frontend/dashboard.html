@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creator Dashboard - Eventful</title>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         /* --- GLOBAL & DASHBOARD STYLES --- */
         body {
@@ -16,6 +14,18 @@
             margin: 0;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+        }
+
+        /* Style the calendar icon inside date inputs */
+        input[type="date"] {
+            color: white;
+            color-scheme: dark;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 1;
+            filter: brightness(0) invert(1);
+            cursor: pointer;
         }
 
         /* --- RESPONSIVE NAVIGATION --- */
@@ -41,6 +51,10 @@
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+
+        #date {
+            color: #fff;
         }
 
         .brand span {
@@ -376,7 +390,6 @@
                 /* Hidden by default */
                 position: absolute;
                 top: 60px;
-                /* Below navbar */
                 left: 0;
                 width: 100%;
                 background: #151A23;
@@ -405,7 +418,6 @@
                 text-align: center;
             }
 
-            /* Event List Mobile */
             .event-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -448,7 +460,7 @@
             <a href="scan.html" class="nav-link">
                 <i class="fas fa-qrcode"></i> Scanner
             </a>
-            <button onclick="logout()" class="btn-nav-logout">
+            <button onclick="confirmLogout()" class="btn-nav-logout">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
@@ -496,11 +508,6 @@
                 <p style="color:#94A3B8;">Loading your events...</p>
             </div>
         </div>
-
-        <!-- <div style="text-align: center; margin-bottom: 40px;">
-            <a href="index.html" style="color:#00DC82; text-decoration:none; margin-right:20px;">View Public Gallery</a>
-            <a href="scan.html" style="color:#00DC82; text-decoration:none;">Ticket Scanner Tool</a>
-        </div> -->
     </div>
 
     <div id="editModal" class="modal">
@@ -552,16 +559,35 @@
     </footer>
 
     <script>
+        // 👇 1. POINT TO RENDER CLOUD SERVER
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
+
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
 
         if (!token || role !== 'creator') window.location.href = 'signin.html';
 
         let myEvents = [];
-        let confirmCallback = null; // Stores function to run if "Yes" is clicked
+        let confirmCallback = null;
 
         // --- UTILITY FUNCTIONS ---
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // 👇 HAMBURGER TOGGLE FUNCTION
+        function toggleMenu() {
+            const nav = document.getElementById('navItems');
+            nav.classList.toggle('active');
+
+            // Toggle Icon
+            const btn = document.querySelector('.mobile-menu-btn i');
+            if (nav.classList.contains('active')) {
+                btn.classList.remove('fa-bars');
+                btn.classList.add('fa-times');
+            } else {
+                btn.classList.remove('fa-times');
+                btn.classList.add('fa-bars');
+            }
+        }
 
         function showMessage(title, text, isSuccess = true) {
             document.getElementById('msgTitle').innerText = title;
@@ -571,18 +597,20 @@
             document.getElementById('messageModal').style.display = 'flex';
         }
 
-        function showConfirm(text, callback, isDelete = true) {
+        // 👇 FIXED SHOW CONFIRM FUNCTION (Handles Button Text Correctly)
+        function showConfirm(text, callback, buttonText = "Confirm", isDestructive = false) {
             document.getElementById('confirmText').innerText = text;
             confirmCallback = callback;
 
             const yesBtn = document.getElementById('btnConfirmYes');
-            if (isDelete) {
+            yesBtn.innerText = buttonText; // Set Correct Text (Publish/Delete/Logout)
+
+            if (isDestructive) {
                 yesBtn.className = "btn-confirm-delete";
-                yesBtn.innerText = "Delete";
+                yesBtn.style.marginTop = "0";
             } else {
                 yesBtn.className = "btn-primary";
                 yesBtn.style.marginTop = "0";
-                yesBtn.innerText = "Confirm";
             }
 
             document.getElementById('confirmModal').style.display = 'flex';
@@ -596,7 +624,7 @@
         // 1. LOAD ANALYTICS
         async function loadAnalytics() {
             try {
-                const res = await fetch(`/api/analytics/dashboard?t=${Date.now()}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(`${API_URL}/analytics/dashboard?t=${Date.now()}`, { headers: { 'Authorization': `Bearer ${token}` } });
                 const data = await res.json();
                 document.getElementById('revenueDisplay').innerText = `₦${(data.totalRevenue || 0).toLocaleString()}`;
                 document.getElementById('ticketsDisplay').innerText = data.ticketsSold || 0;
@@ -608,7 +636,7 @@
         // 2. LOAD MY EVENTS
         async function loadMyEvents() {
             try {
-                const res = await fetch('/api/events/my-events', { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(`${API_URL}/events/my-events`, { headers: { 'Authorization': `Bearer ${token}` } });
                 const data = await res.json();
                 myEvents = data.events || [];
 
@@ -651,8 +679,8 @@
         // 3. CREATE EVENT
         document.getElementById('createEventForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            // Use Custom Confirm Modal instead of confirm()
-            showConfirm("Are you sure you want to publish this event?", executeCreateEvent, false);
+            // Pass "Publish" as button text, and false for destructive (So it is Green)
+            showConfirm("Are you sure you want to publish this event?", executeCreateEvent, "Publish", false);
         });
 
         async function executeCreateEvent() {
@@ -666,7 +694,7 @@
             };
 
             try {
-                const res = await fetch('/api/events', {
+                const res = await fetch(`${API_URL}/events`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify(eventData)
@@ -711,7 +739,7 @@
             };
 
             try {
-                const res = await fetch(`/api/events/${id}`, {
+                const res = await fetch(`${API_URL}/events/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify(updatedData)
@@ -731,12 +759,12 @@
         function confirmDelete(id) {
             showConfirm("This will delete the event and all tickets permanently. This cannot be undone.", () => {
                 executeDelete(id);
-            }, true);
+            }, "Delete", true);
         }
 
         async function executeDelete(id) {
             try {
-                const res = await fetch(`/api/events/${id}`, {
+                const res = await fetch(`${API_URL}/events/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -751,7 +779,13 @@
             } catch (err) { showMessage("Error", "Connection error", false); }
         }
 
-        function logout() { localStorage.clear(); window.location.href = 'signin.html'; }
+        // 6. LOGOUT LOGIC
+        function confirmLogout() {
+            showConfirm("Are you sure you want to log out?", () => {
+                localStorage.clear();
+                window.location.href = 'signin.html';
+            }, "Logout", true); // Destructive true -> Red button
+        }
 
         // INIT
         loadAnalytics();

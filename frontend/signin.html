@@ -242,6 +242,9 @@
     </div>
 
     <script>
+        // 👇 1. POINT TO RENDER CLOUD SERVER
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const status = document.getElementById('status');
@@ -249,10 +252,11 @@
             const password = document.getElementById('password').value;
 
             status.innerText = "Authenticating...";
-            status.style.color = "#00DC82";
+            status.style.color = "#00DC82"; // Mint Green
 
             try {
-                const response = await fetch('/api/auth/login', {
+                // 👇 2. USE THE FULL URL HERE
+                const response = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -263,13 +267,16 @@
                 if (response.ok) {
                     // --- SAVE CREDENTIALS ---
                     localStorage.setItem('token', data.token);
-                    localStorage.setItem('role', data.user.role);
 
-                    // IMPORTANT: Save User ID for Edit/Delete logic
-                    localStorage.setItem('userId', data.user.id || data.user._id);
+                    // Handle user object structure (sometimes it's data.user, sometimes data.data.user)
+                    const user = data.user || data.data?.user || {};
 
-                    if (data.user && data.user.name) {
-                        localStorage.setItem('userName', data.user.name);
+                    localStorage.setItem('role', user.role);
+                    localStorage.setItem('userId', user.id || user._id);
+
+                    // Safe Name Saving
+                    if (user.name) {
+                        localStorage.setItem('userName', user.name);
                     } else {
                         localStorage.setItem('userName', "User");
                     }
@@ -278,7 +285,7 @@
 
                     // Redirect based on role
                     setTimeout(() => {
-                        window.location.href = data.user.role === 'creator' ? 'dashboard.html' : 'index.html';
+                        window.location.href = user.role === 'creator' ? 'dashboard.html' : 'index.html';
                     }, 800);
                 } else {
                     status.style.color = "#ff4d4d";
@@ -287,7 +294,7 @@
             } catch (err) {
                 console.error(err);
                 status.style.color = "#ff4d4d";
-                status.innerText = "Cannot connect to server";
+                status.innerText = "Cannot connect to server. Please check your internet.";
             }
         });
     </script>

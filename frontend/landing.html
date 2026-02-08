@@ -9,10 +9,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
-        /* --- EMBEDDED CSS FOR SLIDER --- */
+        /* --- EMBEDDED CSS FOR SLIDER & NAV --- */
         :root {
             --primary: #00DC82;
             --text-muted: #94A3B8;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: #0b0f14;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+                gap: 15px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                margin: 0;
+            }
         }
 
         /* Container for the slider */
@@ -114,7 +153,12 @@
         <a href="landing.html" class="brand">
             <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
         </a>
-        <div class="nav-links">
+
+        <button class="mobile-menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="nav-links" id="navLinks">
             <a href="index.html">Events</a>
             <a href="signin.html">Login</a>
             <a href="register.html" class="btn btn-primary" style="margin-left: 20px; padding: 0.5rem 1.2rem;">Sign
@@ -129,7 +173,7 @@
             <p>Join the largest event community. Create, manage, and discover experiences with a single tap.
                 Professional tools for modern creators.</p>
 
-            <div class="hero-btns">
+            <div class="hero-btns" id="heroBtns">
                 <a href="register.html" class="btn btn-primary">Get Started</a>
                 <a href="index.html" class="btn btn-glass">Explore Events</a>
             </div>
@@ -208,6 +252,48 @@
         <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">&copy; 2026 Eventful. All rights reserved.</p>
     </footer>
     <script>
+        // --- AUTH & UI LOGIC ---
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        const navLinks = document.getElementById('navLinks');
+        const heroBtns = document.getElementById('heroBtns');
+
+        // 1. Update Navigation based on Auth State
+        if (token) {
+            const dashboardLink = role === 'creator' ? 'dashboard.html' : 'my-tickets.html';
+            const dashboardText = role === 'creator' ? 'Dashboard' : 'My Wallet';
+
+            navLinks.innerHTML = `
+                <a href="index.html">Events</a>
+                <a href="${dashboardLink}">${dashboardText}</a>
+                <a href="#" onclick="logout()" style="color: #ff4d4d;">Logout</a>
+            `;
+
+            heroBtns.innerHTML = `
+                <a href="${dashboardLink}" class="btn btn-primary">Go to ${dashboardText}</a>
+                <a href="index.html" class="btn btn-glass">Explore Events</a>
+            `;
+        }
+
+        // 2. Mobile Menu Toggle
+        function toggleMenu() {
+            navLinks.classList.toggle('active');
+            const btn = document.querySelector('.mobile-menu-btn i');
+            if (navLinks.classList.contains('active')) {
+                btn.classList.remove('fa-bars');
+                btn.classList.add('fa-times');
+            } else {
+                btn.classList.remove('fa-times');
+                btn.classList.add('fa-bars');
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.reload();
+        }
+
+        // --- SLIDER LOGIC ---
         let currentSlide = 0;
         const track = document.getElementById('track');
         const dots = document.querySelectorAll('.t-dot');

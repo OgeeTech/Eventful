@@ -8,6 +8,7 @@ import { initializePayment as initPaystack, verifyPayment } from '../../config/p
 import QRCode from 'qrcode';
 
 // 1. Initialize Payment
+// 1. Initialize Payment
 export const initializePayment = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         console.log("--- Payment Init Started ---");
@@ -27,10 +28,16 @@ export const initializePayment = async (req: AuthRequest, res: Response, next: N
         const event = await Event.findById(eventId);
         if (!event) return res.status(404).json({ message: 'Event not found' });
 
-        // Dynamic Callback URL
-        const host = req.get('host');
-        const protocol = req.protocol;
-        const myCallbackUrl = `${protocol}://${host}/success.html`;
+        // 👇 FIX: POINT TO YOUR FRONTEND URL MANUALLY
+        // If testing locally, use http://127.0.0.1:5500 (or your VS Code Live Server port)
+        // If deployed, use https://your-netlify-site.com
+
+        // For now, let's assume you are testing locally on port 5500:
+        const FRONTEND_URL = "http://127.0.0.1:5500";
+
+        // If you are using a different port (like 3000 or 8080), change it above!
+
+        const myCallbackUrl = `${FRONTEND_URL}/success.html`;
 
         console.log("Redirecting user back to:", myCallbackUrl);
 

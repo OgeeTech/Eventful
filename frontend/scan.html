@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scanner - Eventful</title>
-    <link rel="./css/stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <style>
@@ -51,7 +51,6 @@
             overflow: hidden;
             margin-bottom: 20px;
             background: rgba(0, 0, 0, 0.5);
-            /* Fix for library generic UI */
             border: none !important;
         }
 
@@ -187,6 +186,9 @@
     <audio id="beepSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
 
     <script>
+        // 👇 1. POINT TO RENDER CLOUD SERVER
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
+
         let html5QrcodeScanner;
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
@@ -217,10 +219,8 @@
 
         // --- CAMERA SCANNER LOGIC ---
         function startScanner() {
-            // If already initialized, do nothing
             if (html5QrcodeScanner) return;
 
-            // Wait 100ms to ensure DOM is ready
             setTimeout(() => {
                 html5QrcodeScanner = new Html5QrcodeScanner(
                     "reader",
@@ -229,16 +229,13 @@
                 );
 
                 html5QrcodeScanner.render((decodedText) => {
-                    // Success Callback
                     console.log(`Scan result: ${decodedText}`);
-                    stopScanner(); // Stop camera
-
-                    // Switch to manual view to show result clearly
+                    stopScanner();
                     document.getElementById('ticketId').value = decodedText;
                     switchMode('manual');
                     verifyTicket(decodedText);
                 }, (error) => {
-                    // Error Callback (Scan failure is common, ignore console spam)
+                    // Ignore minor scan errors
                 });
             }, 100);
         }
@@ -255,7 +252,7 @@
             }
         }
 
-        // --- VERIFY TICKET LOGIC (DEBUG VERSION) ---
+        // --- VERIFY TICKET LOGIC ---
         async function verifyTicket(scannedId = null) {
             const ticketId = scannedId || document.getElementById('ticketId').value.trim();
             const resultDiv = document.getElementById('result');
@@ -269,7 +266,8 @@
             console.log("Checking Ticket ID:", ticketId);
 
             try {
-                const response = await fetch('/api/tickets/validate', {
+                // 👇 USE API_URL HERE
+                const response = await fetch(`${API_URL}/tickets/validate`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -280,9 +278,8 @@
 
                 console.log("Response Status:", response.status);
 
-                // Check for 404 (Route not found) or 500 (Server Error)
                 if (!response.ok) {
-                    const data = await response.json(); // Parse the error JSON
+                    const data = await response.json();
                     resultDiv.className = "invalid";
                     resultDiv.innerHTML = `
                         <i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i><br>
@@ -318,9 +315,10 @@
             } catch (err) {
                 console.error("Network Error:", err);
                 resultDiv.className = "invalid";
-                resultDiv.innerText = "Network Failure: Is the backend running?";
+                resultDiv.innerText = "Network Failure: Please check your internet.";
             }
         }
+
         // Start scanner on load
         startScanner();
     </script>

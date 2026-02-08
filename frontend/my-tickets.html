@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tickets - Eventful</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -382,7 +381,7 @@
 <body style="background-color: #0B0E14; margin: 0; font-family: sans-serif; color: white;">
 
     <nav>
-        <a href="landing.html" class="brand">Eventful<span>.</span></a>
+        <a href="index.html" class="brand">Eventful<span>.</span></a>
         <div class="nav-links">
             <button class="nav-icon-btn" onclick="openNotifications()">
                 <i class="fas fa-bell"></i>
@@ -447,6 +446,9 @@
     </div>
 
     <script>
+        // 👇 1. POINT TO RENDER CLOUD SERVER
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
+
         const token = localStorage.getItem('token');
         const userName = localStorage.getItem('userName') || 'Attendee';
         document.getElementById('userNameDisplay').innerText = userName;
@@ -456,7 +458,8 @@
         // --- TICKETS LOGIC ---
         async function loadTickets() {
             try {
-                const response = await fetch('/api/tickets/my-tickets', {
+                // 👇 USE API_URL HERE
+                const response = await fetch(`${API_URL}/tickets/my-tickets`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
@@ -480,7 +483,6 @@
                     const displayStyle = reminderText ? 'block' : 'none';
 
                     // LOGIC FIX: Handle New 8-digit IDs vs Old MongoDB IDs
-                    // If t.ticketId exists, use it. If not, fallback to _id (Old ticket)
                     const rawId = t.ticketId || t._id;
                     const displayId = t.ticketId ? `#${t.ticketId}` : `Ref: ${t._id.substring(0, 8)}...`;
 
@@ -521,7 +523,7 @@
 
                     setTimeout(() => {
                         new QRCode(document.getElementById(qrId), {
-                            text: rawId, // Encode the ID available
+                            text: rawId,
                             width: 110,
                             height: 110
                         });
@@ -530,13 +532,12 @@
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('ticketsList').innerHTML = '<p style="color:#ff4d4d">Error loading tickets.</p>';
+                document.getElementById('ticketsList').innerHTML = '<p style="color:#ff4d4d">Error loading tickets. Please try refreshing.</p>';
             }
         }
 
         // --- NOTIFICATION & REMINDER LOGIC ---
         function openNotifications() {
-            // Implementation matches your existing logic
             document.getElementById('notifModal').style.display = 'flex';
         }
 
@@ -552,7 +553,7 @@
             btn.classList.add('selected');
         }
 
-        async function confirmReminder() {
+        function confirmReminder() {
             const eventId = document.getElementById('selectedEventId').value;
             const hours = document.getElementById('selectedHours').value;
             if (!hours) return;

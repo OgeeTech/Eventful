@@ -241,6 +241,9 @@
     </div>
 
     <script>
+
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const status = document.getElementById('status');
@@ -253,8 +256,8 @@
             status.style.color = "#00DC82"; // Mint Green for loading
 
             try {
-                // 1. REGISTER
-                const registerResponse = await fetch('/api/auth/register', {
+                // 1. REGISTER (Using the full Render URL)
+                const registerResponse = await fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password, role })
@@ -264,10 +267,10 @@
 
                 if (!registerResponse.ok) throw new Error(registerData.message || "Registration failed");
 
-                // 2. AUTO-LOGIN
+                // 2. AUTO-LOGIN (Using the full Render URL)
                 status.innerText = "Account created! Logging in...";
 
-                const loginResponse = await fetch('/api/auth/login', {
+                const loginResponse = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -291,7 +294,12 @@
                     status.innerText = "Success! Redirecting...";
 
                     setTimeout(() => {
-                        window.location.href = loginData.user.role === 'creator' ? 'dashboard.html' : 'index.html';
+                        // Redirect based on role
+                        if (loginData.user.role === 'creator') {
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
                     }, 1000);
                 } else {
                     throw new Error("Auto-login failed. Please sign in manually.");

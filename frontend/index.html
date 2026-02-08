@@ -5,8 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Explore Events - Eventful</title>
-    <link rel="stylesheet" href="./css/style.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
@@ -35,7 +33,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 5%;
-            background: rgba(11, 15, 20, 0.85);
+            background: rgba(11, 15, 20, 0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--glass-border);
             box-sizing: border-box;
@@ -122,6 +120,14 @@
             font-size: 0.8rem;
         }
 
+        /* HAMBURGER MENU */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+
         /* --- CONTENT --- */
         .container {
             max-width: 1200px;
@@ -185,7 +191,7 @@
             background: rgba(255, 255, 255, 0.04);
         }
 
-        /* CREATOR CONTROLS (Floating Edit/Delete) */
+        /* CREATOR CONTROLS */
         .creator-controls {
             position: absolute;
             top: 15px;
@@ -415,7 +421,40 @@
             cursor: pointer;
         }
 
-        /* --- SOCIAL SHARE MODAL STYLES --- */
+        .btn-confirm-delete {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 12px;
+            flex: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .msg-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: block;
+            text-align: center;
+        }
+
+        .msg-success {
+            color: #00DC82;
+        }
+
+        .msg-error {
+            color: #ff4d4d;
+        }
+
+        .msg-text {
+            color: #94A3B8;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* SOCIAL SHARE MODAL STYLES */
         .social-grid {
             display: flex;
             justify-content: center;
@@ -468,17 +507,53 @@
             background: #6B7280;
         }
 
+        /* --- MOBILE RESPONSIVE STYLES --- */
         @media (max-width: 768px) {
             nav {
                 padding: 15px;
             }
 
-            .nav-right {
-                gap: 10px;
+            .menu-toggle {
+                display: block;
             }
 
-            .profile-name {
+            .nav-right {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #0b0f14;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                border-bottom: 1px solid var(--glass-border);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .nav-right.active {
+                display: flex;
+            }
+
+            .nav-link {
+                width: 100%;
+                padding: 10px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .btn-action {
+                width: 100%;
+                text-align: center;
+                margin-top: 10px;
+            }
+
+            .profile-box {
+                width: 100%;
+                justify-content: flex-start;
+                margin-bottom: 10px;
+                border: none;
+                background: none;
+                padding: 0;
             }
 
             .grid {
@@ -499,7 +574,11 @@
         <a href="landing.html" class="brand">
             <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
         </a>
-        <!-- <a href="landing.html" class="brand">Eventful<span>.</span></a> -->
+
+        <div class="menu-toggle" id="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+
         <div class="nav-right" id="navRight"></div>
     </nav>
 
@@ -546,7 +625,7 @@
                     </div>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal('editModal')">Cancel</button>
                     <button type="submit" class="btn-save">Save Changes</button>
                 </div>
             </form>
@@ -576,9 +655,31 @@
                 </button>
             </div>
 
-            <button onclick="closeShareModal()" class="btn-cancel" style="width:100%;">Close</button>
+            <button onclick="closeModal('shareModal')" class="btn-cancel" style="width:100%;">Close</button>
         </div>
     </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-circle msg-icon" style="color:#f59e0b;"></i>
+            <h3 id="confirmTitle" style="color:white; margin-top:0;">Are you sure?</h3>
+            <p id="confirmText" class="msg-text">This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('confirmModal')">Cancel</button>
+                <button id="btnConfirmYes" class="btn-confirm-delete">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <i id="msgIcon" class="fas fa-check-circle msg-icon msg-success"></i>
+            <h3 id="msgTitle" style="color:white; margin:0 0 10px 0;">Success</h3>
+            <p id="msgText" class="msg-text">Operation completed.</p>
+            <button onclick="closeModal('messageModal')" class="btn-save">Okay</button>
+        </div>
+    </div>
+
     <footer>
         <p>
             Built with <i class="fas fa-heart heart-icon"></i> by
@@ -588,12 +689,30 @@
     </footer>
 
     <script>
+        // 👇 1. POINT TO RENDER CLOUD SERVER
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
+
         // --- 1. SETUP & AUTH ---
         const token = localStorage.getItem('token');
         const userName = localStorage.getItem('userName') || 'User';
         const userId = localStorage.getItem('userId');
         const role = localStorage.getItem('role');
         const navRight = document.getElementById('navRight');
+
+        // Mobile Menu Toggle Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navRight.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navRight.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
 
         if (token) {
             navRight.innerHTML = `
@@ -617,7 +736,30 @@
             window.location.href = 'signin.html';
         }
 
-        // --- 2. RENDER EVENTS ---
+        // --- 2. MODAL HELPER FUNCTIONS ---
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function showMessage(title, text, isSuccess = true) {
+            document.getElementById('msgTitle').innerText = title;
+            document.getElementById('msgText').innerText = text;
+            const icon = document.getElementById('msgIcon');
+            icon.className = isSuccess ? "fas fa-check-circle msg-icon msg-success" : "fas fa-times-circle msg-icon msg-error";
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+
+        let confirmCallback = null;
+        function showConfirm(text, callback) {
+            document.getElementById('confirmText').innerText = text;
+            confirmCallback = callback;
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        document.getElementById('btnConfirmYes').addEventListener('click', () => {
+            if (confirmCallback) confirmCallback();
+            closeModal('confirmModal');
+        });
+
+        // --- 3. RENDER EVENTS ---
         let allEvents = [];
 
         function generateEventSVG(event) {
@@ -637,7 +779,7 @@
             const grid = document.getElementById("eventsGrid");
             grid.innerHTML = "";
 
-            if (!events.length) {
+            if (!events || !events.length) {
                 grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted); padding: 50px;">No events found.</p>`;
                 return;
             }
@@ -702,7 +844,7 @@
             });
         }
 
-        // --- 3. EDIT & DELETE LOGIC ---
+        // --- 4. EDIT & DELETE LOGIC ---
         function openEditModal(id) {
             const event = allEvents.find(e => e._id === id);
             if (!event) return;
@@ -731,51 +873,50 @@
             };
 
             try {
-                const res = await fetch(`/api/events/${id}`, {
+                const res = await fetch(`${API_URL}/events/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify(updatedData)
                 });
                 if (res.ok) {
-                    alert("Event Updated! ✅");
                     closeEditModal();
+                    showMessage("Success", "Event Updated! ✅");
                     loadEvents();
                 } else {
                     const data = await res.json();
-                    alert("Error: " + data.message);
+                    showMessage("Error", data.message, false);
                 }
-            } catch (err) { alert("Connection Error"); }
+            } catch (err) { showMessage("Error", "Connection Error", false); }
         });
 
-        async function deleteEvent(id) {
-            if (!confirm("Are you sure you want to delete this event?")) return;
+        function deleteEvent(id) {
+            showConfirm("Are you sure you want to delete this event?", () => {
+                executeDelete(id);
+            });
+        }
+
+        async function executeDelete(id) {
             try {
-                const res = await fetch(`/api/events/${id}`, {
+                const res = await fetch(`${API_URL}/events/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
-                    alert("Event Deleted! 🗑️");
+                    showMessage("Deleted", "Event Deleted! 🗑️");
                     loadEvents();
                 } else {
                     const data = await res.json();
-                    alert("Error: " + data.message);
+                    showMessage("Error", data.message, false);
                 }
-            } catch (err) { alert("Connection Error"); }
+            } catch (err) { showMessage("Error", "Connection Error", false); }
         }
 
-        // --- 4. SHARE LOGIC (NEW) ---
+        // --- 5. SHARE LOGIC ---
         let currentShareUrl = "";
-
         function openShareModal(id) {
             const event = allEvents.find(e => e._id === id);
             if (!event) return;
-
-            // Generate links
-            // NOTE: In production, 'window.location.origin' should be your real domain (e.g. https://eventful.com)
-            // Social media sites usually require a real public URL to fetch preview images.
             currentShareUrl = `${window.location.origin}/index.html?event=${id}`;
-
             const text = encodeURIComponent(`Check out ${event.title} on Eventful!`);
             const url = encodeURIComponent(currentShareUrl);
 
@@ -783,22 +924,18 @@
             document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
             document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
             document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-
             document.getElementById('shareModal').style.display = 'flex';
         }
-
-        function closeShareModal() {
-            document.getElementById('shareModal').style.display = 'none';
-        }
+        function closeShareModal() { document.getElementById('shareModal').style.display = 'none'; }
 
         function copyToClipboard() {
             navigator.clipboard.writeText(currentShareUrl).then(() => {
-                alert("Link copied! 📋");
+                showMessage("Success", "Link copied! 📋");
                 closeShareModal();
             });
         }
 
-        // --- 5. LOAD & SEARCH ---
+        // --- 6. LOAD & SEARCH ---
         document.getElementById("searchInput").addEventListener("input", e => {
             const term = e.target.value.toLowerCase();
             renderEvents(allEvents.filter(ev => ev.title.toLowerCase().includes(term) || ev.location.toLowerCase().includes(term)));
@@ -806,11 +943,14 @@
 
         async function loadEvents() {
             try {
-                const res = await fetch("/api/events");
+                const res = await fetch(`${API_URL}/events`);
                 const data = await res.json();
-                allEvents = data.events || data;
+                allEvents = data.events || data || [];
                 renderEvents(allEvents);
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error("Load Error:", e);
+                document.getElementById("eventsGrid").innerHTML = `<p style="grid-column:1/-1;text-align:center;color:#ff4d4d">Failed to load events. Check console.</p>`;
+            }
         }
 
         async function buyTicket(eventId) {
@@ -818,7 +958,7 @@
             localStorage.setItem('pendingEventId', eventId);
 
             try {
-                const response = await fetch('/api/payments/initialize', {
+                const response = await fetch(`${API_URL}/payments/initialize`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ eventId })
@@ -828,10 +968,10 @@
                 if (response.ok) {
                     window.location.href = data.url;
                 } else {
-                    alert(data.message);
+                    showMessage("Error", data.message, false);
                 }
             } catch (e) {
-                alert("Connection Error");
+                showMessage("Error", "Connection Error", false);
             }
         }
 

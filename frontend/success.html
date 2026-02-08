@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Successful - Eventful</title>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         body {
@@ -83,8 +83,7 @@
             display: inline-block;
             margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            display: none;
-            /* Hidden until loaded */
+            /* display: none; Managed by JS */
         }
 
         .ticket-id {
@@ -106,6 +105,7 @@
             border-radius: 12px;
             font-weight: bold;
             transition: 0.3s;
+            box-sizing: border-box;
         }
 
         .btn-home:hover {
@@ -152,9 +152,8 @@
         <div id="loader" class="loader"></div>
 
         <div id="resultSection" style="display: none;">
-            <div id="qrContainer">
-                <img id="qrCodeImg" width="180" height="180" alt="Ticket QR" />
-            </div>
+            <div id="qrContainer"></div>
+
             <div class="ticket-id" id="ticketIdDisplay"></div>
             <a href="my-tickets.html" class="btn-home">View in Wallet</a>
         </div>
@@ -163,6 +162,9 @@
     </div>
 
     <script>
+        // 👇 1. POINT TO RENDER CLOUD SERVER
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
+
         async function verifyAndGenerateTicket() {
             const urlParams = new URLSearchParams(window.location.search);
             const reference = urlParams.get('reference');
@@ -170,12 +172,15 @@
             const eventId = localStorage.getItem('pendingEventId');
 
             if (!reference || !eventId) {
+                // If missing params, check if we just refreshed on a success page?
+                // For now, assume error.
                 showError("Missing reference or event ID.");
                 return;
             }
 
             try {
-                const response = await fetch('/api/payments/verify', {
+                // 👇 USE API_URL HERE
+                const response = await fetch(`${API_URL}/payments/verify`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -202,8 +207,21 @@
             document.getElementById('loader').style.display = 'none';
             document.getElementById('statusMsg').innerText = "Your ticket has been secured!";
 
-            document.getElementById('qrCodeImg').src = ticket.qrCode;
-            document.getElementById('ticketIdDisplay').innerText = `#${ticket.ticketId.substring(0, 8).toUpperCase()}`;
+            // 👇 GENERATE QR CODE CLIENT-SIDE
+            const qrContainer = document.getElementById('qrContainer');
+            qrContainer.innerHTML = ""; // Clear previous
+
+            // Use ticketId or fallback to _id
+            const rawId = ticket.ticketId || ticket._id;
+
+            new QRCode(qrContainer, {
+                text: rawId,
+                width: 150,
+                height: 150
+            });
+
+            const displayId = ticket.ticketId ? ticket.ticketId : ticket._id.substring(0, 8);
+            document.getElementById('ticketIdDisplay').innerText = `#${displayId.toUpperCase()}`;
 
             document.getElementById('resultSection').style.display = 'block';
         }
@@ -217,11 +235,15 @@
             errEl.style.display = 'block';
 
             // Change Icon to Red X
-            document.querySelector('.icon-circle').style.borderColor = '#ff4d4d';
-            document.querySelector('.icon-circle').style.boxShadow = '0 0 20px rgba(255, 77, 77, 0.3)';
-            document.querySelector('.icon-circle').style.background = 'rgba(255, 77, 77, 0.1)';
-            document.querySelector('.icon-circle i').className = 'fas fa-times';
-            document.querySelector('.icon-circle i').style.color = '#ff4d4d';
+            const circle = document.querySelector('.icon-circle');
+            circle.style.borderColor = '#ff4d4d';
+            circle.style.boxShadow = '0 0 20px rgba(255, 77, 77, 0.3)';
+            circle.style.background = 'rgba(255, 77, 77, 0.1)';
+
+            const icon = document.querySelector('.icon-circle i');
+            icon.className = 'fas fa-times';
+            icon.style.color = '#ff4d4d';
+
             document.querySelector('h1').innerText = "Payment Failed";
         }
 
