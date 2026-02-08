@@ -1,25 +1,24 @@
-import { createClient } from 'redis';
-import dotenv from 'dotenv';
+// ============================================================
+// ⚠️ SAFE MODE: Redis is temporarily disabled for deployment
+// This prevents the "WRONGPASS" error from crashing the build.
+// ============================================================
 
-dotenv.config();
+// 1. Export a "Fake" Client
+// We use 'as any' to trick TypeScript so we don't have to mock every function.
+export const redisClient = {
+    on: (event: string, callback: Function) => {
+        // Do nothing
+    },
+    connect: async () => {
+        console.log("⚠️ Redis Client: Connection skipped (Safe Mode)");
+    },
+    isOpen: false,
+    get: async () => null,
+    set: async () => null,
+    del: async () => null,
+} as any;
 
-// 1. Create the Client (Export as NAMED export)
-export const redisClient = createClient({
-    // Checks for Upstash URL first, then generic REDIS_URL, then localhost
-    url: process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL || 'redis://localhost:6379'
-});
-
-redisClient.on('error', (err) => console.error('❌ Redis Client Error', err));
-redisClient.on('connect', () => console.log('✅ Redis Client Connected'));
-
-// 2. Connect Function (For server.ts)
+// 2. Export a "Fake" Connect Function
 export const connectRedis = async () => {
-    try {
-        // Only connect if not already open
-        if (!redisClient.isOpen) {
-            await redisClient.connect();
-        }
-    } catch (err) {
-        console.error('Could not connect to Redis:', err);
-    }
+    console.log("⚠️ connectRedis: Skipped (Safe Mode)");
 };
