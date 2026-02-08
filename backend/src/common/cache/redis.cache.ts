@@ -1,4 +1,4 @@
-import redisClient from '../../config/redis';
+import { redisClient } from '../../config/redis';
 
 // Set data in Cache (expires in 1 hour by default)
 export const setCache = async (key: string, data: any, ttl: number = 3600) => {
