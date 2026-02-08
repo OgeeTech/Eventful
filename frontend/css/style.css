@@ -192,3 +192,103 @@ nav {
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
+
+
+/* =========================
+   MOBILE OPTIMIZATION
+   ========================= */
+@media (max-width: 600px) {
+
+    /* NAVBAR */
+    nav {
+        padding: 1rem 5%;
+        width: 100%;
+    }
+
+    .brand {
+        font-size: 1.3rem;
+    }
+
+    .nav-links {
+        width: 100%;
+    }
+
+    .nav-links a {
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+
+    /* HERO SECTION */
+    .hero-container {
+        min-height: auto;
+        padding: 120px 5% 60px;
+        text-align: center;
+        gap: 40px;
+    }
+
+    .hero-text h1 {
+        font-size: 2.3rem;
+        line-height: 1.25;
+    }
+
+    .hero-text p {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-btns {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .hero-btns a {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* TESTIMONIAL SLIDER */
+    .testimonial-widget {
+        max-width: 100%;
+        margin: 30px auto 0;
+    }
+
+    .t-slide {
+        align-items: flex-start;
+    }
+
+    .t-quote {
+        font-size: 0.8rem;
+    }
+
+    .t-dots {
+        margin-left: 0;
+        justify-content: center;
+    }
+
+    /* HERO IMAGE */
+    .hero-image {
+        margin-top: 20px;
+    }
+
+    .hero-image img {
+        width: 90%;
+        transform: none;
+        filter: drop-shadow(10px 10px 30px rgba(0,0,0,0.4));
+    }
+
+    /* FEATURE CARDS */
+    section[style*="grid"] {
+        padding: 30px 5%;
+    }
+
+    .glass-card {
+        padding: 1.5rem;
+    }
+
+    /* FOOTER */
+    footer {
+        padding: 30px 15px;
+        font-size: 0.8rem;
+    }
+}
