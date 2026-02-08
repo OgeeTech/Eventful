@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Explore Events - Eventful</title>
+    <link rel="stylesheet" href="./css/style.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -495,7 +496,10 @@
 <body>
 
     <nav>
-        <a href="landing.html" class="brand">Eventful<span>.</span></a>
+        <a href="landing.html" class="brand">
+            <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
+        </a>
+        <!-- <a href="landing.html" class="brand">Eventful<span>.</span></a> -->
         <div class="nav-right" id="navRight"></div>
     </nav>
 
@@ -575,6 +579,13 @@
             <button onclick="closeShareModal()" class="btn-cancel" style="width:100%;">Close</button>
         </div>
     </div>
+    <footer>
+        <p>
+            Built with <i class="fas fa-heart heart-icon"></i> by
+            <a href="https://github.com/OgeeTech" target="_blank">OgeeTech</a>
+        </p>
+        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">&copy; 2026 Eventful. All rights reserved.</p>
+    </footer>
 
     <script>
         // --- 1. SETUP & AUTH ---

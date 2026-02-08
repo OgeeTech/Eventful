@@ -6,6 +6,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventful - The Future of Events</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        /* --- EMBEDDED CSS FOR SLIDER --- */
+        :root {
+            --primary: #00DC82;
+            --text-muted: #94A3B8;
+        }
+
+        /* Container for the slider */
+        .testimonial-widget {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* The track that moves left/right */
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Individual Slides */
+        .t-slide {
+            min-width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            /* Prevent text wrapping issues during slide */
+            box-sizing: border-box;
+        }
+
+        /* Avatars */
+        .t-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        /* Text Content */
+        .t-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .t-name {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .t-stars {
+            color: var(--primary);
+            font-size: 0.8rem;
+            margin: 2px 0;
+        }
+
+        .t-quote {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* Navigation Dots */
+        .t-dots {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            margin-left: 60px;
+            /* Align with text */
+        }
+
+        .t-dot {
+            width: 8px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .t-dot.active {
+            background-color: var(--primary);
+            width: 20px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -13,7 +111,9 @@
     <div class="glow-blob"></div>
 
     <nav>
-        <a href="landing.html" class="brand">Eventful<span>.</span></a>
+        <a href="landing.html" class="brand">
+            <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
+        </a>
         <div class="nav-links">
             <a href="index.html">Events</a>
             <a href="signin.html">Login</a>
@@ -34,14 +134,42 @@
                 <a href="index.html" class="btn btn-glass">Explore Events</a>
             </div>
 
-            <div style="margin-top: 40px; display: flex; align-items: center; gap: 15px;">
-                <div style="width: 40px; height: 40px; background: #333; border-radius: 50%; overflow: hidden;">
-                    <div style="width:100%; height:100%; background: #555;"></div>
+            <div class="testimonial-widget">
+                <div class="testimonial-track" id="track">
+
+                    <div class="t-slide">
+                        <div class="t-avatar">F</div>
+                        <div class="t-content">
+                            <div class="t-name">Fredrick N.</div>
+                            <div class="t-stars">★★★★★</div>
+                            <div class="t-quote">"Best tool for ticketing. Highly recommend!"</div>
+                        </div>
+                    </div>
+
+                    <div class="t-slide">
+                        <div class="t-avatar">S</div>
+                        <div class="t-content">
+                            <div class="t-name">Sarah Jenkins</div>
+                            <div class="t-stars">★★★★★</div>
+                            <div class="t-quote">"Sold out my art show in 2 hours using Eventful."</div>
+                        </div>
+                    </div>
+
+                    <div class="t-slide">
+                        <div class="t-avatar">D</div>
+                        <div class="t-content">
+                            <div class="t-name">David O.</div>
+                            <div class="t-stars">★★★★★</div>
+                            <div class="t-quote">"The analytics dashboard is a game changer."</div>
+                        </div>
+                    </div>
+
                 </div>
-                <div>
-                    <div style="color: #fff; font-size: 0.9rem; font-weight: bold;">Fredrick N.</div>
-                    <div style="color: var(--primary); font-size: 0.8rem;">★★★★★</div>
-                    <div style="color: var(--text-muted); font-size: 0.8rem;">"Best tool for ticketing."</div>
+
+                <div class="t-dots" id="dotsContainer">
+                    <div class="t-dot active" onclick="goToSlide(0)"></div>
+                    <div class="t-dot" onclick="goToSlide(1)"></div>
+                    <div class="t-dot" onclick="goToSlide(2)"></div>
                 </div>
             </div>
         </div>
@@ -72,6 +200,48 @@
 
         </div>
     </section>
+    <footer>
+        <p>
+            Built with <i class="fas fa-heart heart-icon"></i> by
+            <a href="https://github.com/OgeeTech" target="_blank">OgeeTech</a>
+        </p>
+        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">&copy; 2026 Eventful. All rights reserved.</p>
+    </footer>
+    <script>
+        let currentSlide = 0;
+        const track = document.getElementById('track');
+        const dots = document.querySelectorAll('.t-dot');
+        const totalSlides = dots.length;
+
+        function updateSlide() {
+            // Move the track
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // Update dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlide();
+        }
+
+        // Manual Navigation
+        window.goToSlide = function (index) {
+            currentSlide = index;
+            updateSlide();
+            resetTimer();
+        }
+
+        // Auto Swipe
+        let slideInterval = setInterval(nextSlide, 4000); // 4 seconds
+
+        function resetTimer() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 4000);
+        }
+    </script>
 
 </body>
 

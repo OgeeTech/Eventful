@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Attendees - Eventful</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -141,6 +140,7 @@
             color: #94A3B8;
             cursor: pointer;
             transition: 0.3s;
+            margin-left: 10px;
         }
 
         .btn-copy:hover {
@@ -220,6 +220,10 @@
                         const statusText = user.status === 'valid' ? 'Active' : 'Checked In';
                         const initial = user.name.charAt(0).toUpperCase();
 
+                        // FIX: Show the raw 8-digit ID (or a placeholder if it's an old ticket)
+                        const displayId = user.ticketId ? `#${user.ticketId}` : '-----';
+                        const copyValue = user.ticketId || '';
+
                         tbody.innerHTML += `
                             <tr>
                                 <td>
@@ -229,11 +233,13 @@
                                     </div>
                                 </td>
                                 <td>${user.email}</td>
-                                <td style="font-family: monospace; color: #00DC82;">
-                                    ${user.ticketId.substring(0, 8)}...
-                                    <button class="btn-copy" onclick="navigator.clipboard.writeText('${user.ticketId}')" title="Copy ID">
-                                        <i class="far fa-copy"></i>
-                                    </button>
+                                <td style="font-family: monospace; color: #00DC82; font-size: 1rem; letter-spacing: 1px;">
+                                    ${displayId}
+                                    ${user.ticketId ? `
+                                        <button class="btn-copy" onclick="copyId('${copyValue}')" title="Copy ID">
+                                            <i class="far fa-copy"></i>
+                                        </button>
+                                    ` : ''}
                                 </td>
                                 <td><span class="badge ${statusClass}">${statusText}</span></td>
                             </tr>
@@ -246,6 +252,11 @@
                 console.error(err);
                 document.getElementById('attendeeList').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:#ff4d4d;">Failed to load data.</td></tr>';
             }
+        }
+
+        function copyId(text) {
+            navigator.clipboard.writeText(text);
+            alert("Copied: " + text);
         }
 
         loadAttendees();
