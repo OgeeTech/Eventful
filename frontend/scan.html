@@ -22,10 +22,10 @@
 
         .scanner-container {
             background: rgba(21, 26, 35, 0.95);
-            border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             padding: 30px;
+            border-radius: 20px;
             width: 100%;
             max-width: 450px;
             text-align: center;
@@ -35,8 +35,7 @@
 
         h2 {
             margin: 0 0 10px;
-            color: #fff;
-            font-size: 1.8rem;
+            color: white;
         }
 
         p {
@@ -45,52 +44,22 @@
             font-size: 0.9rem;
         }
 
-        /* Tabs */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: #94A3B8;
-            cursor: pointer;
-            padding: 10px 15px;
-            border-radius: 8px 8px 0 0;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active {
-            color: #00DC82;
-            background: rgba(0, 220, 130, 0.1);
-            box-shadow: 0 -2px 5px rgba(0, 220, 130, 0.2);
-        }
-
-        /* Camera Section */
-        #cameraSection {
-            margin-bottom: 20px;
-        }
-
+        /* Camera Box */
         #reader {
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
-            border: 2px solid #00DC82;
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 20px rgba(0, 220, 130, 0.4);
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none !important;
         }
 
+        /* Hide HTML5-QRCode link */
         #reader__dashboard_section_csr span {
             display: none !important;
-            /* Hide link */
         }
 
-        /* Manual Section */
+        /* Manual Input */
         .input-group {
             display: flex;
             gap: 10px;
@@ -99,94 +68,89 @@
 
         input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            color: #fff;
+            color: white;
             outline: none;
             text-align: center;
             font-family: monospace;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
         }
 
         input:focus {
             border-color: #00DC82;
-            box-shadow: 0 0 8px rgba(0, 220, 130, 0.4);
-            background: rgba(0, 0, 0, 0.5);
         }
 
         .btn-scan {
             padding: 12px 20px;
             background: #00DC82;
             color: black;
-            font-weight: bold;
             border: none;
             border-radius: 8px;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .btn-scan:hover {
             background: #00b86b;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 220, 130, 0.4);
         }
 
         /* Result Box */
         #result {
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 8px;
             margin-top: 15px;
             font-size: 0.95rem;
             display: none;
-            text-align: center;
-            transition: all 0.3s ease;
         }
 
-        #result.valid {
+        .valid {
             background: rgba(0, 220, 130, 0.15);
             border: 1px solid #00DC82;
             color: #00DC82;
-            box-shadow: 0 0 15px rgba(0, 220, 130, 0.3);
         }
 
-        #result.invalid {
+        .invalid {
             background: rgba(255, 77, 77, 0.15);
             border: 1px solid #ff4d4d;
             color: #ff4d4d;
-            box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
         }
 
-        /* Back Link */
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            color: white;
+            border-color: #00DC82;
+        }
+
         .back-link {
             color: #94A3B8;
             text-decoration: none;
             font-size: 0.85rem;
             display: block;
             margin-top: 20px;
-            transition: 0.3s;
         }
 
         .back-link:hover {
-            color: #00DC82;
-            text-decoration: underline;
-        }
-
-        /* Spinner Icon Fix */
-        #result i.fa-spinner {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            color: white;
         }
     </style>
 </head>
@@ -252,42 +216,48 @@
             }
             document.getElementById('result').style.display = 'none';
         }
+
         // --- CAMERA SCANNER LOGIC ---
         function startScanner() {
             if (html5QrcodeScanner) return;
 
-            html5QrcodeScanner = new Html5Qrcode("reader");
-
-            Html5Qrcode.getCameras().then(cameras => {
-                if (cameras && cameras.length) {
-                    const cameraId = cameras[0].id;
-                    html5QrcodeScanner.start(
-                        cameraId,
-                        { fps: 10, qrbox: { width: 250, height: 250 } },
-                        (decodedText) => {
-                            console.log(`Scan result: ${decodedText}`);
-                            // Only stop after a successful scan
-                            stopScanner();
-                            document.getElementById('ticketId').value = decodedText;
-                            verifyTicket(decodedText);
-                        },
-                        (errorMessage) => {
-                            // console.log("Scan error:", errorMessage);
+            setTimeout(() => {
+                html5QrcodeScanner = new Html5QrcodeScanner(
+                    "reader",
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 },
+                        // 👇 THIS FORCES THE BACK CAMERA
+                        videoConstraints: {
+                            facingMode: "environment"
                         }
-                    ).catch(err => console.error("Camera start failed:", err));
-                }
-            }).catch(err => console.error("No cameras found:", err));
+                    },
+                    /* verbose= */ false
+                );
+
+                html5QrcodeScanner.render((decodedText) => {
+                    console.log(`Scan result: ${decodedText}`);
+                    stopScanner();
+                    document.getElementById('ticketId').value = decodedText;
+                    switchMode('manual');
+                    verifyTicket(decodedText);
+                }, (error) => {
+                    // Ignore minor scan errors
+                });
+            }, 100);
         }
 
         function stopScanner() {
             if (html5QrcodeScanner) {
-                html5QrcodeScanner.stop().then(() => {
-                    html5QrcodeScanner.clear();
+                try {
+                    html5QrcodeScanner.clear().then(() => {
+                        html5QrcodeScanner = null;
+                    }).catch(err => console.error("Failed to clear scanner", err));
+                } catch (e) {
                     html5QrcodeScanner = null;
-                }).catch(err => console.error("Failed to stop scanner:", err));
+                }
             }
         }
-
 
         // --- VERIFY TICKET LOGIC ---
         async function verifyTicket(scannedId = null) {
@@ -312,8 +282,6 @@
                     },
                     body: JSON.stringify({ ticketId })
                 });
-
-                console.log("Response Status:", response.status);
 
                 if (!response.ok) {
                     const data = await response.json();
