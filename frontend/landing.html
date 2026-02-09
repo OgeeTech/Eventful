@@ -417,7 +417,59 @@
                 width: 85%;
             }
         }
-    </style>
+
+        @media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 2rem;
+        line-height: 1.35;
+    }
+
+    .hero-text p {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-btns .btn {
+        border-radius: 14px;   /* less pill, more modern */
+        font-size: 1rem;
+        padding: 1.1rem;
+    }
+}
+@media (max-width: 900px) {
+    nav {
+        position: fixed;
+        background: rgba(11, 14, 20, 0.95);
+        backdrop-filter: blur(10px);
+    }
+}
+
+ @media (max-width: 480px) {
+    .hero-image img {
+        width: 75%;
+    }
+}
+@media (max-width: 480px) {
+    .t-quote {
+        font-size: 0.8rem;
+    }
+
+    .t-name {
+        font-size: 0.9rem;
+    }
+}
+.nav-links {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.nav-links.active {
+    max-height: 300px;
+}
+
+
+   </style>
 </head>
 
 <body>
