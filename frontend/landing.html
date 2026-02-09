@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+        <link rel="stylesheet" href="./css/style.css">nk
 <style>
   :root {
     --bg-dark: #0B0E14;
@@ -314,9 +315,64 @@ footer {
         width: 75%;
     }
 }
-  
+ 
+ /* ===== TESTIMONIAL SLIDER ===== */
+.testimonial-track {
+    display: flex;
+    gap: 15px;
+    transition: transform 0.5s ease;
+    width: 100%;
+}
+
+.t-slide {
+    flex: 0 0 100%; /* each slide takes full width */
+    display: flex;
+    gap: 15px;
+    background: var(--bg-card);
+    padding: 15px;
+    border-radius: 12px;
+    align-items: center;
+}
+
+.t-avatar {
+    flex-shrink: 0;
+}
+
+.t-content {
+    display: flex;
+    flex-direction: column;
+}
+
+/* dots */
+.t-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 8px;
+}
+
+.t-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.t-dot.active {
+    background: var(--primary);
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 900px) {
+    .testimonial-track {
+        overflow-x: hidden;
+    }
+}
+
 </style>
-st
+
 </head>
 
 <body>
