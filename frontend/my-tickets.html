@@ -11,8 +11,8 @@
 
     <style>
         /* ===============================
-   GLOBAL RESET & BASE
-================================ */
+           GLOBAL RESET & BASE
+        ================================ */
         *,
         *::before,
         *::after {
@@ -28,8 +28,8 @@
         }
 
         /* ===============================
-   NAVBAR
-================================ */
+           NAVBAR
+        ================================ */
         nav {
             display: flex;
             justify-content: space-between;
@@ -94,17 +94,14 @@
         }
 
         /* ===============================
-   PAGE CONTAINER
-================================ */
+           PAGE CONTAINER
+        ================================ */
         .ticket-container {
             max-width: 900px;
             margin: 40px auto;
             padding: 0 16px;
         }
 
-        /* ===============================
-   BACK BUTTON
-================================ */
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -122,8 +119,8 @@
         }
 
         /* ===============================
-   TICKET CARD
-================================ */
+           TICKET CARD
+        ================================ */
         .real-ticket {
             display: flex;
             background: #ffffff;
@@ -159,7 +156,6 @@
             right: 285px;
         }
 
-        /* Reminder ribbon */
         .reminder-ribbon {
             position: absolute;
             top: 0;
@@ -175,8 +171,8 @@
         }
 
         /* ===============================
-   TICKET LEFT
-================================ */
+           TICKET LEFT
+        ================================ */
         .ticket-main {
             flex: 1;
             padding: 28px;
@@ -227,8 +223,8 @@
         }
 
         /* ===============================
-   ACTION BUTTONS
-================================ */
+           ACTION BUTTONS
+        ================================ */
         .ticket-actions {
             margin-top: 18px;
             display: flex;
@@ -267,8 +263,8 @@
         }
 
         /* ===============================
-   TICKET RIGHT (QR)
-================================ */
+           TICKET RIGHT (QR)
+        ================================ */
         .ticket-stub {
             width: 300px;
             background: #f8f9fa;
@@ -298,8 +294,8 @@
         }
 
         /* ===============================
-   MODALS
-================================ */
+           MODALS
+        ================================ */
         .modal {
             display: none;
             position: fixed;
@@ -307,7 +303,6 @@
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(6px);
             z-index: 2000;
-            display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -342,8 +337,8 @@
         }
 
         /* ===============================
-   MOBILE FIXES
-================================ */
+           MOBILE FIXES
+        ================================ */
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
@@ -426,7 +421,8 @@
         <div class="modal-content">
             <h3 style="color:white; margin:0;">Set Reminder ⏰</h3>
             <p style="color:#94A3B8; font-size:0.9rem;">When should we notify you?</p>
-            <div class="modal-options">
+            <div class="modal-options"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0;">
                 <button class="time-btn" onclick="selectTime(1, this)">1 Hour Before</button>
                 <button class="time-btn" onclick="selectTime(3, this)">3 Hours Before</button>
                 <button class="time-btn" onclick="selectTime(24, this)">1 Day Before</button>
@@ -445,7 +441,8 @@
     <div id="notifModal" class="modal">
         <div class="modal-content">
             <h3 style="color:white; margin-bottom:10px;">Notifications</h3>
-            <div id="notifList" style="text-align: left; max-height: 300px; overflow-y: auto;"></div>
+            <div id="notifList" style="text-align: left; max-height: 300px; overflow-y: auto; color: #ccc;">No new
+                notifications.</div>
             <button onclick="closeModal('notifModal')" class="time-btn"
                 style="width:100%; margin-top:20px;">Close</button>
         </div>
@@ -456,11 +453,208 @@
             <i id="msgIcon" class="fas fa-check-circle" style="font-size:3rem; color:#00DC82; margin-bottom:15px;"></i>
             <h3 id="msgTitle" style="color:white; margin:0 0 10px 0;">Success</h3>
             <p id="msgText" style="color:#ccc; margin-bottom:20px;">Operation completed.</p>
-            <button onclick="closeModal('messageModal')" class="time-btn" style="width:100%;">Okay</button>
+            <button id="btnSuccessOkay" onclick="closeModal('messageModal')" class="time-btn"
+                style="width:100%;">Okay</button>
         </div>
     </div>
 
+    <script>
+        // 👇 1. POINT TO RENDER CLOUD SERVER
+        const API_URL = "https://eventful-api-74t2.onrender.com/api";
 
+        const token = localStorage.getItem('token');
+        const userName = localStorage.getItem('userName') || 'Attendee';
+        document.getElementById('userNameDisplay').innerText = userName;
+
+        if (!token) window.location.href = 'signin.html';
+
+        // --- 1. INITIALIZATION LOGIC ---
+        async function initPage() {
+            // A. Load tickets first
+            const newestTicket = await loadTickets();
+
+            // B. Check if returning from Payment (Paystack adds 'reference' or 'trxref')
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentRef = urlParams.get('reference') || urlParams.get('trxref');
+
+            if (paymentRef && newestTicket) {
+                // Remove the reference from URL so it doesn't run again on refresh
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                // RUN SUCCESS FLOW
+                runPostPaymentFlow(newestTicket);
+            }
+        }
+
+        // --- 2. THE SUCCESS CHAIN ---
+        function runPostPaymentFlow(ticket) {
+            const btn = document.getElementById('btnSuccessOkay');
+
+            // Override the button click ONLY for this flow
+            btn.onclick = function () {
+                // 1. Close Success Modal
+                document.getElementById('messageModal').style.display = 'none';
+
+                // 2. Reset button to default behavior
+                btn.onclick = function () { closeModal('messageModal'); };
+
+                // 3. Open Reminder Modal after a short delay
+                setTimeout(() => {
+                    openReminderModal(ticket.eventId._id);
+                }, 400);
+            };
+
+            showMessage("Payment Successful", "Your ticket has been added to your wallet! 🎉");
+        }
+
+        // --- 3. TICKETS LOGIC ---
+        async function loadTickets() {
+            try {
+                const response = await fetch(`${API_URL}/tickets/my-tickets`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                const list = document.getElementById('ticketsList');
+                list.innerHTML = '';
+
+                // FIX: Used backticks to prevent syntax error on multi-line string
+                if (!data.tickets || data.tickets.length === 0) {
+                    list.innerHTML = `
+                        <div style="text-align:center; padding:40px; border:1px dashed #333; border-radius:10px;">
+                            <p style="color:#666;">No tickets found.</p>
+                            <a href="index.html" class="time-btn" style="display:inline-block; text-decoration:none; margin-top:10px;">Browse Events</a>
+                        </div>`;
+                    return null;
+                }
+
+                const savedReminders = JSON.parse(localStorage.getItem('ticketReminders') || '{}');
+
+                data.tickets.forEach((t, index) => {
+                    if (!t.eventId) return;
+
+                    const qrId = `qr-${index}`;
+                    const ticketIdDiv = `ticket-div-${index}`;
+                    const reminderText = savedReminders[t.eventId._id] ? `🔔 ${savedReminders[t.eventId._id]}H` : '';
+                    const displayStyle = reminderText ? 'block' : 'none';
+                    const rawId = t.ticketId || t._id;
+                    const displayId = t.ticketId ? `#${t.ticketId}` : `Ref: ${t._id.substring(0, 8)}...`;
+
+                    list.innerHTML += `
+                    <div class="real-ticket" id="${ticketIdDiv}">
+                        <div class="reminder-ribbon" id="ribbon-${t.eventId._id}" style="display: ${displayStyle}">
+                            ${reminderText}
+                        </div>
+                        <div class="ticket-main">
+                            <div>
+                                <h2 class="event-title">${t.eventId.title}</h2>
+                                <div class="event-loc">
+                                    <i class="fas fa-map-marker-alt" style="color:#00DC82"></i> 
+                                    ${t.eventId.location}
+                                </div>
+                            </div>
+                            <div class="ticket-details">
+                                <div class="detail-item"><span>Date</span><strong>${new Date(t.eventId.date).toLocaleDateString()}</strong></div>
+                                <div class="detail-item"><span>Name</span><strong>${userName}</strong></div>
+                                <div class="detail-item"><span>Admit</span><strong>1</strong></div>
+                            </div>
+                            <div class="ticket-actions">
+                                <button class="btn-icon" onclick="openReminderModal('${t.eventId._id}')">
+                                    <i class="far fa-bell"></i> Remind
+                                </button>
+                                <button class="btn-icon btn-download" onclick="downloadTicket('${ticketIdDiv}')">
+                                    <i class="fas fa-download"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ticket-stub">
+                            <span style="font-size:0.7rem; color:#aaa; margin-bottom:8px; letter-spacing:2px;">ENTRY PASS</span>
+                            <div id="${qrId}" class="qr-box"></div>
+                            <div class="ticket-id">${displayId}</div>
+                        </div>
+                    </div>
+                    `;
+
+                    setTimeout(() => {
+                        new QRCode(document.getElementById(qrId), {
+                            text: rawId,
+                            width: 110,
+                            height: 110
+                        });
+                    }, 100);
+                });
+
+                // Return the most recent ticket (first one) for the success flow
+                return data.tickets[0];
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('ticketsList').innerHTML = '<p style="color:#ff4d4d">Error loading tickets. Please try refreshing.</p>';
+                return null;
+            }
+        }
+
+        // --- NOTIFICATION & REMINDER LOGIC ---
+        function openNotifications() {
+            document.getElementById('notifModal').style.display = 'flex';
+        }
+
+        function openReminderModal(eventId) {
+            document.getElementById('selectedEventId').value = eventId;
+            document.getElementById('reminderModal').style.display = 'flex';
+            document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('selected'));
+        }
+
+        function selectTime(hours, btn) {
+            document.getElementById('selectedHours').value = hours;
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function confirmReminder() {
+            const eventId = document.getElementById('selectedEventId').value;
+            const hours = document.getElementById('selectedHours').value;
+            if (!hours) return;
+
+            const ribbon = document.getElementById(`ribbon-${eventId}`);
+            if (ribbon) { ribbon.innerText = `🔔 ${hours}H`; ribbon.style.display = 'block'; }
+
+            const savedReminders = JSON.parse(localStorage.getItem('ticketReminders') || '{}');
+            savedReminders[eventId] = hours;
+            localStorage.setItem('ticketReminders', JSON.stringify(savedReminders));
+
+            closeModal('reminderModal');
+            showMessage("Success", "Reminder set!");
+        }
+
+        // --- UTILS ---
+        function downloadTicket(id) {
+            const el = document.getElementById(id);
+            const actions = el.querySelector('.ticket-actions');
+            actions.style.opacity = '0'; // Hide buttons during screenshot
+
+            html2canvas(el, { scale: 2, backgroundColor: null }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Eventful-Ticket.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                actions.style.opacity = '1'; // Show buttons back
+                showMessage("Saved", "Ticket saved to gallery! 📸");
+            });
+        }
+
+        function showMessage(title, text) {
+            document.getElementById('msgTitle').innerText = title;
+            document.getElementById('msgText').innerText = text;
+            document.getElementById('messageModal').style.display = 'flex';
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function logout() { localStorage.clear(); window.location.href = 'signin.html'; }
+
+        // START THE PAGE
+        initPage();
+    </script>
 </body>
 
 </html>
