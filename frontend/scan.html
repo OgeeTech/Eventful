@@ -252,41 +252,42 @@
             }
             document.getElementById('result').style.display = 'none';
         }
-
         // --- CAMERA SCANNER LOGIC ---
         function startScanner() {
             if (html5QrcodeScanner) return;
 
-            setTimeout(() => {
-                html5QrcodeScanner = new Html5QrcodeScanner(
-                    "reader",
-                    { fps: 10, qrbox: { width: 250, height: 250 } },
-                    /* verbose= */ false
-                );
+            html5QrcodeScanner = new Html5Qrcode("reader");
 
-                html5QrcodeScanner.render((decodedText) => {
-                    console.log(`Scan result: ${decodedText}`);
-                    stopScanner();
-                    document.getElementById('ticketId').value = decodedText;
-                    switchMode('manual');
-                    verifyTicket(decodedText);
-                }, (error) => {
-                    // Ignore minor scan errors
-                });
-            }, 100);
+            Html5Qrcode.getCameras().then(cameras => {
+                if (cameras && cameras.length) {
+                    const cameraId = cameras[0].id;
+                    html5QrcodeScanner.start(
+                        cameraId,
+                        { fps: 10, qrbox: { width: 250, height: 250 } },
+                        (decodedText) => {
+                            console.log(`Scan result: ${decodedText}`);
+                            // Only stop after a successful scan
+                            stopScanner();
+                            document.getElementById('ticketId').value = decodedText;
+                            verifyTicket(decodedText);
+                        },
+                        (errorMessage) => {
+                            // console.log("Scan error:", errorMessage);
+                        }
+                    ).catch(err => console.error("Camera start failed:", err));
+                }
+            }).catch(err => console.error("No cameras found:", err));
         }
 
         function stopScanner() {
             if (html5QrcodeScanner) {
-                try {
-                    html5QrcodeScanner.clear().then(() => {
-                        html5QrcodeScanner = null;
-                    }).catch(err => console.error("Failed to clear scanner", err));
-                } catch (e) {
+                html5QrcodeScanner.stop().then(() => {
+                    html5QrcodeScanner.clear();
                     html5QrcodeScanner = null;
-                }
+                }).catch(err => console.error("Failed to stop scanner:", err));
             }
         }
+
 
         // --- VERIFY TICKET LOGIC ---
         async function verifyTicket(scannedId = null) {
