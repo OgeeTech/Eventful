@@ -33,7 +33,7 @@ export const initializePayment = async (req: AuthRequest, res: Response, next: N
         // If deployed, use https://your-netlify-site.com
 
         // For now, let's assume you are testing locally on port 5500:
-        const FRONTEND_URL = "http://127.0.0.1:5500";
+        const FRONTEND_URL = "https://iventfuul.netlify.app";
 
         // If you are using a different port (like 3000 or 8080), change it above!
 
