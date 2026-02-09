@@ -22,10 +22,10 @@
 
         .scanner-container {
             background: rgba(21, 26, 35, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
             border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 30px;
             width: 100%;
             max-width: 450px;
             text-align: center;
@@ -35,7 +35,8 @@
 
         h2 {
             margin: 0 0 10px;
-            color: white;
+            color: #fff;
+            font-size: 1.8rem;
         }
 
         p {
@@ -44,22 +45,52 @@
             font-size: 0.9rem;
         }
 
-        /* Camera Box */
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #00DC82;
+            background: rgba(0, 220, 130, 0.1);
+            box-shadow: 0 -2px 5px rgba(0, 220, 130, 0.2);
+        }
+
+        /* Camera Section */
+        #cameraSection {
+            margin-bottom: 20px;
+        }
+
         #reader {
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: none !important;
+            border: 2px solid #00DC82;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px rgba(0, 220, 130, 0.4);
         }
 
-        /* Hide HTML5-QRCode link */
         #reader__dashboard_section_csr span {
             display: none !important;
+            /* Hide link */
         }
 
-        /* Manual Input */
+        /* Manual Section */
         .input-group {
             display: flex;
             gap: 10px;
@@ -68,89 +99,94 @@
 
         input {
             flex: 1;
-            padding: 12px;
+            padding: 12px 15px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
-            color: white;
+            color: #fff;
             outline: none;
             text-align: center;
             font-family: monospace;
             letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
 
         input:focus {
             border-color: #00DC82;
+            box-shadow: 0 0 8px rgba(0, 220, 130, 0.4);
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .btn-scan {
             padding: 12px 20px;
             background: #00DC82;
             color: black;
+            font-weight: bold;
             border: none;
             border-radius: 8px;
-            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .btn-scan:hover {
             background: #00b86b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 220, 130, 0.4);
         }
 
         /* Result Box */
         #result {
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 12px;
             margin-top: 15px;
             font-size: 0.95rem;
             display: none;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .valid {
+        #result.valid {
             background: rgba(0, 220, 130, 0.15);
             border: 1px solid #00DC82;
             color: #00DC82;
+            box-shadow: 0 0 15px rgba(0, 220, 130, 0.3);
         }
 
-        .invalid {
+        #result.invalid {
             background: rgba(255, 77, 77, 0.15);
             border: 1px solid #ff4d4d;
             color: #ff4d4d;
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
         }
 
-        /* Tabs */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: #94A3B8;
-            cursor: pointer;
-            padding-bottom: 5px;
-            border-bottom: 2px solid transparent;
-            font-weight: 500;
-        }
-
-        .tab-btn.active {
-            color: white;
-            border-color: #00DC82;
-        }
-
+        /* Back Link */
         .back-link {
             color: #94A3B8;
             text-decoration: none;
             font-size: 0.85rem;
             display: block;
             margin-top: 20px;
+            transition: 0.3s;
         }
 
         .back-link:hover {
-            color: white;
+            color: #00DC82;
+            text-decoration: underline;
+        }
+
+        /* Spinner Icon Fix */
+        #result i.fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>

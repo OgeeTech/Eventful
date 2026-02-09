@@ -9,103 +9,164 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* ============================
+   BASE & VARIABLES
+============================ */
+        :root {
+            --bg-dark: #0B0E14;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --primary: #00DC82;
+            --primary-hover: #00b86b;
+            --text-white: #ffffff;
+            --text-muted: #94A3B8;
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            background-color: var(--bg-dark);
+            overflow-x: hidden;
+            padding: 40px 16px;
         }
 
-        /* Back Arrow */
+        /* ============================
+   BACK LINK
+============================ */
         .back-link {
-            position: absolute;
-            top: 30px;
-            left: 40px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: 0.3s;
-            display: flex;
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            z-index: 20;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.3s ease;
+            z-index: 50;
         }
 
         .back-link:hover {
             color: var(--primary);
-            transform: translateX(-5px);
+            transform: translateX(-4px);
         }
 
-        /* Split Card Container */
+        /* ============================
+   GLOW BLOBS
+============================ */
+        .glow-blob {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 220, 130, 0.18) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============================
+   AUTH CONTAINER
+============================ */
         .auth-container {
+            width: 100%;
+            max-width: 920px;
             display: flex;
-            width: 900px;
-            max-width: 90%;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--bg-card);
             border: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
             position: relative;
             z-index: 10;
         }
 
-        /* Left Side: Illustrator/Graphic */
+        /* ============================
+   LEFT: ILLUSTRATION
+============================ */
         .auth-illustration {
             flex: 1;
-            background: linear-gradient(135deg, rgba(0, 220, 130, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+            padding: 48px 36px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px;
             text-align: center;
             border-right: 1px solid var(--glass-border);
+            background: linear-gradient(135deg,
+                    rgba(0, 220, 130, 0.12),
+                    rgba(0, 0, 0, 0));
         }
 
         .graphic-icon {
             font-size: 4rem;
             color: var(--primary);
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 15px rgba(0, 220, 130, 0.4));
+            filter: drop-shadow(0 0 18px rgba(0, 220, 130, 0.45));
         }
 
-        /* Right Side: Form */
+        .auth-illustration h3 {
+            margin: 0 0 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .auth-illustration p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ============================
+   RIGHT: FORM SIDE
+============================ */
         .auth-form-side {
             flex: 1.2;
-            padding: 50px 40px;
+            padding: 56px 44px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        h2 {
-            margin: 0 0 10px;
-            font-size: 1.8rem;
-            color: white;
+        .auth-form-side h2 {
+            margin: 0 0 8px;
+            font-size: 1.9rem;
+            font-weight: 700;
         }
 
-        p.subtitle {
-            color: var(--text-muted);
+        .subtitle {
             font-size: 0.9rem;
-            margin-bottom: 30px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
         }
 
-        /* Input Groups with Icons */
+        /* ============================
+   INPUT GROUPS
+============================ */
         .input-group {
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .input-group i {
             position: absolute;
-            left: 15px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
+            font-size: 0.9rem;
             color: var(--text-muted);
             transition: 0.3s;
         }
@@ -113,29 +174,30 @@
         .input-group input,
         .input-group select {
             width: 100%;
-            padding: 14px 14px 14px 45px;
-            /* Space for icon */
+            padding: 14px 14px 14px 42px;
+            font-size: 0.95rem;
+            color: var(--text-white);
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: white;
+            border-radius: 10px;
             outline: none;
-            transition: 0.3s;
-            font-size: 0.95rem;
+            transition: 0.3s ease;
         }
 
-        /* Dropdown specific */
-        select option {
+        .input-group input::placeholder {
+            color: #6b7280;
+        }
+
+        .input-group select option {
             background: #151A23;
             color: white;
-            padding: 10px;
         }
 
         .input-group input:focus,
         .input-group select:focus {
             border-color: var(--primary);
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 10px rgba(0, 220, 130, 0.1);
+            box-shadow: 0 0 0 2px rgba(0, 220, 130, 0.15);
         }
 
         .input-group input:focus+i,
@@ -143,14 +205,68 @@
             color: var(--primary);
         }
 
-        /* Mobile Responsive */
+        /* ============================
+   PRIMARY BUTTON
+============================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 6px 18px rgba(0, 220, 130, 0.35);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* ============================
+   STATUS & FOOTER TEXT
+============================ */
+        #status {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.9rem;
+            min-height: 22px;
+        }
+
+        .auth-form-side a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-form-side a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================
+   MOBILE (≤768px)
+============================ */
         @media (max-width: 768px) {
+            body {
+                align-items: flex-start;
+                padding-top: 80px;
+            }
+
             .auth-container {
                 flex-direction: column;
-                width: 90%;
-                max-width: 400px;
-                height: auto;
-                overflow-y: auto;
+                max-width: 420px;
             }
 
             .auth-illustration {
@@ -158,20 +274,39 @@
             }
 
             .auth-form-side {
-                padding: 40px 30px;
+                padding: 40px 28px;
+            }
+
+            .auth-form-side h2 {
+                font-size: 1.6rem;
             }
 
             .back-link {
-                top: 20px;
-                left: 20px;
+                top: 16px;
+                left: 16px;
             }
+        }
 
-            body {
-                align-items: flex-start;
-                padding-top: 60px;
-                height: auto;
-                min-height: 100vh;
-            }
+        /* ============================
+   SHOW / HIDE PASSWORD
+============================ */
+        .password-group {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary);
         }
     </style>
 </head>
@@ -212,10 +347,16 @@
                     <i class="fas fa-envelope"></i>
                 </div>
 
-                <div class="input-group">
+                <div class="input-group password-group">
                     <input type="password" id="password" placeholder="Password" required>
                     <i class="fas fa-lock"></i>
+
+                    <!-- toggle -->
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <i class="fas fa-eye"></i>
+                    </span>
                 </div>
+
 
                 <div class="input-group">
                     <select id="role">
@@ -311,6 +452,22 @@
                 status.innerText = err.message;
             }
         });
+
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const icon = document.querySelector(".toggle-password i");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
     </script>
 
 </body>
