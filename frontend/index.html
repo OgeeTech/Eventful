@@ -33,6 +33,7 @@
             color: white;
             line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
         /* =====================
@@ -49,14 +50,18 @@
             background: rgba(11, 15, 20, 0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--glass-border);
+            height: 70px;
         }
 
         .brand {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             font-weight: 800;
             color: white;
             text-decoration: none;
             letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .brand span {
@@ -66,15 +71,16 @@
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: clamp(12px, 2vw, 18px);
         }
 
         .nav-link {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
             font-weight: 500;
             transition: 0.3s;
+            white-space: nowrap;
         }
 
         .nav-link:hover {
@@ -86,19 +92,23 @@
             font-size: 1.6rem;
             color: white;
             cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
         }
 
         /* =====================
    BUTTONS & PROFILE
 ===================== */
         .btn-action {
-            padding: 8px 18px;
+            padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2.5vw, 18px);
             border-radius: 999px;
-            font-size: 0.9rem;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
             font-weight: 600;
             cursor: pointer;
             border: none;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         /* =====================
@@ -107,19 +117,19 @@
         .social-grid {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: clamp(10px, 2vw, 15px);
             margin: 25px 0;
             flex-wrap: wrap;
         }
 
         .social-btn {
-            width: 50px;
-            height: 50px;
+            width: clamp(45px, 10vw, 50px);
+            height: clamp(45px, 10vw, 50px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             color: white;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -177,51 +187,52 @@
         .profile-box {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 6px 14px;
+            gap: clamp(6px, 1vw, 10px);
+            padding: clamp(4px, 1vw, 6px) clamp(10px, 2vw, 14px);
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             border-radius: 999px;
         }
 
         .profile-icon {
-            width: 28px;
-            height: 28px;
+            width: clamp(24px, 6vw, 28px);
+            height: clamp(24px, 6vw, 28px);
             border-radius: 50%;
             background: var(--primary);
             color: #000;
             display: grid;
             place-items: center;
             font-weight: bold;
-            font-size: 0.8rem;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
         }
 
         /* =====================
    PAGE CONTAINER
 ===================== */
         .container {
+            width: 100%;
             max-width: 1200px;
             margin-inline: auto;
-            padding: 120px 16px 60px;
+            padding: clamp(100px, 12vh, 120px) clamp(16px, 3vw, 20px) clamp(40px, 6vw, 60px);
         }
 
         /* =====================
    SEARCH
 ===================== */
         .search-container {
-            max-width: 600px;
-            margin: 30px auto 50px;
+            max-width: min(600px, 90vw);
+            margin: clamp(20px, 4vw, 30px) auto clamp(40px, 6vw, 50px);
             position: relative;
         }
 
         .search-input {
             width: 100%;
-            padding: 16px 20px 16px 50px;
+            padding: clamp(14px, 3vw, 16px) clamp(16px, 3vw, 20px) clamp(14px, 3vw, 16px) clamp(40px, 5vw, 50px);
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             color: white;
-            font-size: 1rem;
+            font-size: clamp(0.95rem, 2vw, 1rem);
             outline: none;
         }
 
@@ -232,10 +243,30 @@
 
         .search-icon {
             position: absolute;
-            left: 18px;
+            left: clamp(15px, 3vw, 18px);
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
+        }
+
+        /* =====================
+   PAGE HEADER
+===================== */
+        .page-header {
+            text-align: center;
+            margin-bottom: clamp(20px, 4vw, 30px);
+        }
+
+        .page-header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         /* =====================
@@ -243,8 +274,8 @@
 ===================== */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+            gap: clamp(20px, 3vw, 30px);
         }
 
         .event-card {
@@ -264,7 +295,7 @@
 
         /* IMAGE */
         .card-image {
-            height: 180px;
+            height: clamp(160px, 30vw, 180px);
             position: relative;
         }
 
@@ -288,8 +319,8 @@
         }
 
         .control-btn {
-            width: 32px;
-            height: 32px;
+            width: clamp(28px, 6vw, 32px);
+            height: clamp(28px, 6vw, 32px);
             border-radius: 8px;
             border: none;
             background: rgba(255, 255, 255, 0.1);
@@ -298,6 +329,7 @@
             display: grid;
             place-items: center;
             transition: 0.2s;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
         }
 
         .control-btn:hover {
@@ -312,7 +344,7 @@
 
         /* CARD BODY */
         .card-body {
-            padding: 22px;
+            padding: clamp(18px, 3vw, 22px);
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -320,15 +352,16 @@
 
         .card-body h3 {
             margin: 0 0 12px;
-            font-size: 1.35rem;
+            font-size: clamp(1.1rem, 3vw, 1.35rem);
             font-weight: 700;
+            line-height: 1.3;
         }
 
         .meta-row {
             display: flex;
             gap: 8px;
             align-items: center;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
             color: #ccc;
             margin-bottom: 6px;
         }
@@ -340,11 +373,11 @@
 
         /* PROGRESS */
         .progress-container {
-            margin: 14px 0;
+            margin: clamp(10px, 2vw, 14px) 0;
         }
 
         .capacity-text {
-            font-size: 0.8rem;
+            font-size: clamp(0.75rem, 2vw, 0.8rem);
             color: var(--text-muted);
         }
 
@@ -362,10 +395,11 @@
 
         /* DESCRIPTION */
         .description {
-            font-size: 0.95rem;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
             color: var(--text-muted);
-            margin: 16px 0;
+            margin: clamp(12px, 2vw, 16px) 0;
             flex-grow: 1;
+            line-height: 1.5;
         }
 
         /* FOOTER ACTIONS */
@@ -373,27 +407,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            padding-top: 16px;
+            gap: clamp(8px, 2vw, 12px);
+            padding-top: clamp(12px, 2vw, 16px);
             border-top: 1px solid var(--glass-border);
+            flex-wrap: wrap;
         }
 
         .price-tag {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             font-weight: 700;
         }
 
         .btn-buy {
-            padding: 8px 24px;
+            padding: clamp(6px, 1.5vw, 8px) clamp(16px, 3vw, 24px);
             border-radius: 999px;
             border: none;
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            background: var(--primary);
+            color: #000;
         }
 
         .btn-buy:hover {
-            background: var(--primary);
+            background: #00b86b;
+            transform: translateY(-2px);
         }
 
         /* =====================
@@ -408,16 +447,18 @@
             z-index: 2000;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: clamp(10px, 3vw, 20px);
         }
 
         .modal-content {
             width: 100%;
-            max-width: 500px;
+            max-width: min(500px, 90vw);
             background: var(--bg-card);
             border-radius: 18px;
-            padding: 28px;
+            padding: clamp(20px, 4vw, 28px);
             border: 1px solid var(--glass-border);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         /* =====================
@@ -425,49 +466,26 @@
 ===================== */
         footer {
             text-align: center;
-            padding: 40px 16px;
+            padding: clamp(30px, 6vw, 40px) clamp(12px, 3vw, 16px);
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-       
+
         /* Close Button Style */
         .btn-cancel {
             color: #94a3b8;
-            /* Muted Text */
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px;
+            padding: clamp(10px, 2vw, 12px);
             width: 100%;
             border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 20px;
-            /* Space from icons */
-        }
-
-        .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* Close Button Style */
-        .btn-cancel {
             background: rgba(255, 255, 255, 0.05);
-            color: #94a3b8;
-            /* Muted Text */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            width: 100%;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            /* Space from icons */
+            font-size: clamp(0.9rem, 2vw, 1rem);
         }
 
         .btn-cancel:hover {
@@ -484,16 +502,16 @@
         /* Header Separator */
         .modal-content h2 {
             border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-            font-size: 1.5rem;
+            padding-bottom: clamp(12px, 2vw, 15px);
+            margin-bottom: clamp(20px, 3vw, 25px);
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
         }
 
         /* Labels */
         label {
             display: block;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
             font-weight: 600;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -503,13 +521,12 @@
         /* Input Fields */
         .modal-input {
             width: 100%;
-            padding: 12px 16px;
+            padding: clamp(10px, 2vw, 12px) clamp(12px, 2vw, 16px);
             background: rgba(0, 0, 0, 0.3);
-            /* Darker background for contrast */
             border: 1px solid var(--glass-border);
             border-radius: 12px;
             color: white;
-            font-size: 1rem;
+            font-size: clamp(0.95rem, 2vw, 1rem);
             font-family: inherit;
             outline: none;
             transition: all 0.3s ease;
@@ -531,7 +548,7 @@
         /* Layout for Date/Price Row */
         .modal-row {
             display: flex;
-            gap: 20px;
+            gap: clamp(15px, 3vw, 20px);
         }
 
         /* Responsive: Stack Date/Price on mobile */
@@ -547,19 +564,17 @@
             background: var(--primary);
             color: black;
             border: none;
-            padding: 14px;
+            padding: clamp(12px, 2vw, 14px);
             flex: 2;
-            /* Takes up more space than cancel */
             border-radius: 12px;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: clamp(0.95rem, 2vw, 1rem);
             cursor: pointer;
             transition: transform 0.2s;
         }
 
         .btn-save:hover {
             background: #00b86b;
-            /* Darker Green */
             transform: translateY(-2px);
         }
 
@@ -569,18 +584,17 @@
 
         /* Warning Icon */
         .msg-icon {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            margin-bottom: clamp(15px, 3vw, 20px);
             display: block;
             text-align: center;
-            /* Default to orange for warning, JS can change to Red for errors */
             color: #f59e0b;
             filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
         }
 
         /* Modal Title */
         #confirmTitle {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             margin-bottom: 10px;
             letter-spacing: -0.5px;
         }
@@ -588,8 +602,8 @@
         /* Modal Text */
         .msg-text {
             color: var(--text-muted);
-            font-size: 1rem;
-            margin-bottom: 30px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            margin-bottom: clamp(25px, 4vw, 30px);
             text-align: center;
             line-height: 1.5;
         }
@@ -597,15 +611,15 @@
         /* Delete Button (Destructive) */
         .btn-confirm-delete {
             background: rgba(255, 77, 77, 0.15);
-            /* Low opacity red background */
             color: #ff4d4d;
             border: 1px solid rgba(255, 77, 77, 0.3);
-            padding: 14px;
+            padding: clamp(12px, 2vw, 14px);
             flex: 1;
             border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: clamp(0.95rem, 2vw, 1rem);
         }
 
         .btn-confirm-delete:hover {
@@ -618,7 +632,6 @@
         /* Adjust Cancel Button for consistency in this modal */
         #confirmModal .btn-cancel {
             margin-top: 0;
-            /* Remove top margin inside flex container */
             flex: 1;
         }
 
@@ -629,19 +642,17 @@
         /* Success/Error Icons */
         .msg-success {
             color: #00DC82;
-            /* Neon Mint */
             filter: drop-shadow(0 0 15px rgba(0, 220, 130, 0.4));
         }
 
         .msg-error {
             color: #ff4d4d;
-            /* Bright Red */
             filter: drop-shadow(0 0 15px rgba(255, 77, 77, 0.4));
         }
 
         /* Modal Title */
         #msgTitle {
-            font-size: 1.6rem;
+            font-size: clamp(1.3rem, 4vw, 1.6rem);
             margin-bottom: 10px;
             letter-spacing: -0.5px;
         }
@@ -649,8 +660,7 @@
         /* Center content specifically for this modal */
         #messageModal .modal-content {
             text-align: center;
-            max-width: 400px;
-            /* Slightly smaller for simple alerts */
+            max-width: min(400px, 90vw);
         }
 
         /* Make the "Okay" button full width here */
@@ -666,48 +676,70 @@
             transform: translateY(-2px);
         }
 
-        /* Make My Wallet look like a button on mobile */
-        @media (max-width: 900px) {
-            .wallet-btn {
-                display: inline-block;
-                width: 100%;
-                text-align: center;
-                padding: 10px 0;
-                background: var(--primary);
-                color: black;
-                border-radius: 999px;
-                font-weight: 600;
-                text-decoration: none;
-                margin-bottom: 8px;
-                transition: 0.3s;
-            }
-
-            .wallet-btn:hover {
-                background: #00b86b;
-                /* Slightly darker green on hover */
-            }
+        /* Modal Actions */
+        .modal-actions {
+            display: flex;
+            gap: clamp(10px, 2vw, 15px);
+            margin-top: clamp(20px, 3vw, 25px);
+            flex-wrap: wrap;
         }
 
+        /* Make buttons stack on mobile */
+        @media (max-width: 480px) {
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .modal-actions button {
+                width: 100%;
+                flex: 1 !important;
+            }
+        }
 
         /* =====================
    RESPONSIVE
 ===================== */
-        @media (max-width: 900px) {
+
+        /* Tablet & Small Laptop */
+        @media (max-width: 992px) {
+            .card-footer {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .price-tag {
+                text-align: center;
+            }
+
+            .card-footer>div:last-child {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+        }
+
+        /* Mobile Menu */
+        @media (max-width: 768px) {
             .menu-toggle {
                 display: block;
             }
 
             .nav-right {
-                position: absolute;
-                top: 100%;
+                position: fixed;
+                top: 70px;
                 left: 0;
                 width: 100%;
                 background: var(--bg-dark);
+                backdrop-filter: blur(20px);
                 flex-direction: column;
-                align-items: flex-start;
-                padding: 20px;
-                gap: 12px;
+                align-items: stretch;
+                padding: clamp(15px, 3vw, 20px);
+                gap: clamp(8px, 2vw, 12px);
                 display: none;
+                z-index: 999;
+                border-bottom: 1px solid var(--glass-border);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             }
 
             .nav-right.active {
@@ -717,32 +749,138 @@
             .nav-link,
             .btn-action {
                 width: 100%;
+                text-align: center;
+                padding: 12px;
             }
 
             .profile-box {
                 width: 100%;
                 background: none;
                 border: none;
-                padding: 0;
+                padding: 12px 0;
+                justify-content: center;
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
             }
 
-            .grid {
-                grid-template-columns: 1fr;
+            .wallet-btn {
+                display: block;
+                background: var(--primary);
+                color: #000;
+                border-radius: 999px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: 0.3s;
+            }
+
+            .wallet-btn:hover {
+                background: #00b86b;
+            }
+
+            .creator-controls {
+                padding: 4px;
+                gap: 6px;
             }
         }
 
+        /* Small Phones */
         @media (max-width: 480px) {
-            .container {
-                padding: 110px 14px 50px;
+            nav {
+                padding: 1rem 15px;
             }
 
-            .card-body h3 {
-                font-size: 1.2rem;
+            .container {
+                padding: 90px 12px 40px;
+            }
+
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .page-header p {
+                font-size: 0.95rem;
+            }
+
+            .grid {
+                gap: 15px;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .card-footer>div:last-child {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .control-btn {
+                width: 36px;
+                height: 36px;
             }
 
             .btn-buy {
-                padding: 8px 18px;
-                font-size: 0.85rem;
+                width: 100%;
+            }
+        }
+
+        /* Extra Small Devices */
+        @media (max-width: 360px) {
+            .brand {
+                font-size: 1.1rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .search-input {
+                padding-left: 35px;
+            }
+
+            .search-icon {
+                left: 12px;
+            }
+
+            .card-image {
+                height: 140px;
+            }
+        }
+
+        /* Landscape Mode */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .container {
+                padding-top: 90px;
+                padding-bottom: 30px;
+            }
+
+            .modal-content {
+                max-height: 80vh;
+            }
+
+            .event-card {
+                max-height: 400px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+
+            .menu-toggle,
+            .creator-controls,
+            .btn-buy,
+            .control-btn,
+            .btn-action,
+            .btn-logout {
+                display: none !important;
+            }
+
+            .modal {
+                display: none !important;
+            }
+
+            .event-card {
+                break-inside: avoid;
+                box-shadow: none;
             }
         }
     </style>
@@ -755,17 +893,18 @@
             <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
         </a>
 
-        <div class="menu-toggle" id="mobile-menu">
+        <button class="menu-toggle" id="mobile-menu" aria-label="Toggle menu">
             <i class="fas fa-bars"></i>
-        </div>
+        </button>
 
         <div class="nav-right" id="navRight"></div>
     </nav>
 
     <div class="container">
-        <h1 style="text-align:center; font-size: 2.5rem; margin-bottom: 10px;">Explore Events</h1>
-        <p style="text-align:center;color:var(--text-muted); font-size: 1.1rem;">Discover trending experiences around
-            you</p>
+        <div class="page-header">
+            <h1>Explore Events</h1>
+            <p>Discover trending experiences around you</p>
+        </div>
 
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
@@ -773,7 +912,9 @@
         </div>
 
         <div id="eventsGrid" class="grid">
-            <p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">Loading events...</p>
+            <p style="grid-column:1/-1;text-align:center;color:var(--text-muted); padding: 50px 20px;">
+                Loading events...
+            </p>
         </div>
     </div>
 
@@ -862,7 +1003,7 @@
 
     <footer>
         <p>
-            Built with <i class="fas fa-heart heart-icon"></i> by
+            Built with <i class="fas fa-heart" style="color:#ff4d4d;"></i> by
             <a href="https://github.com/OgeeTech" target="_blank">OgeeTech</a>
         </p>
         <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">&copy; 2026 Eventful. All rights reserved.</p>
@@ -888,22 +1029,49 @@
             if (navRight.classList.contains('active')) {
                 icon.classList.remove('fa-bars');
                 icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
             } else {
                 icon.classList.remove('fa-times');
                 icon.classList.add('fa-bars');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const nav = document.getElementById('navRight');
+            const menuBtn = document.getElementById('mobile-menu');
+
+            if (nav.classList.contains('active') &&
+                !nav.contains(e.target) &&
+                !menuBtn.contains(e.target)) {
+                nav.classList.remove('active');
+                menuBtn.querySelector('i').classList.remove('fa-times');
+                menuBtn.querySelector('i').classList.add('fa-bars');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navRight.classList.contains('active')) {
+                navRight.classList.remove('active');
+                mobileMenuBtn.querySelector('i').classList.remove('fa-times');
+                mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+                document.body.style.overflow = 'auto';
             }
         });
 
         if (token) {
-                navRight.innerHTML = `
-        <a href="my-tickets.html" class="nav-link wallet-btn">My Wallet</a>
-        ${role === 'creator' ? '<a href="dashboard.html" class="nav-link">Dashboard</a>' : ''}
-        <div class="profile-box">
-            <div class="profile-icon">${userName.charAt(0).toUpperCase()}</div>
-            <span class="profile-name">${userName}</span>
-        </div>
-        <button class="btn-action btn-logout" onclick="logout()">Logout</button>
-    `;
+            navRight.innerHTML = `
+                ${role !== 'creator' ? '<a href="my-tickets.html" class="nav-link wallet-btn">My Wallet</a>' : ''}
+                ${role === 'creator' ? '<a href="dashboard.html" class="nav-link">Dashboard</a>' : ''}
+                <div class="profile-box">
+                    <div class="profile-icon">${userName.charAt(0).toUpperCase()}</div>
+                    <span class="profile-name">${userName}</span>
+                </div>
+                <button class="btn-action btn-logout" onclick="logout()">Logout</button>
+            `;
         } else {
             navRight.innerHTML = `
                 <a href="signin.html" class="nav-link">Login</a>
@@ -917,21 +1085,29 @@
         }
 
         // --- 2. MODAL HELPER FUNCTIONS ---
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
 
         function showMessage(title, text, isSuccess = true) {
             document.getElementById('msgTitle').innerText = title;
             document.getElementById('msgText').innerText = text;
             const icon = document.getElementById('msgIcon');
             icon.className = isSuccess ? "fas fa-check-circle msg-icon msg-success" : "fas fa-times-circle msg-icon msg-error";
-            document.getElementById('messageModal').style.display = 'flex';
+            openModal('messageModal');
         }
 
         let confirmCallback = null;
         function showConfirm(text, callback) {
             document.getElementById('confirmText').innerText = text;
             confirmCallback = callback;
-            document.getElementById('confirmModal').style.display = 'flex';
+            openModal('confirmModal');
         }
 
         document.getElementById('btnConfirmYes').addEventListener('click', () => {
@@ -1010,7 +1186,7 @@
 
                     <div class="card-footer">
                         <div class="price-tag">${event.price > 0 ? "₦" + event.price.toLocaleString() : "Free"}</div>
-                        <div style="display:flex; gap:10px;">
+                        <div style="display:flex; gap:10px; align-items: center;">
                             <button class="control-btn" onclick="openShareModal('${event._id}')" title="Share">
                                 <i class="fas fa-share-alt"></i>
                             </button>
@@ -1036,10 +1212,10 @@
             if (event.date) {
                 document.getElementById('editDate').value = new Date(event.date).toISOString().split('T')[0];
             }
-            document.getElementById('editModal').style.display = 'flex';
+            openModal('editModal');
         }
 
-        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+        function closeEditModal() { closeModal('editModal'); }
 
         document.getElementById('editForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1104,21 +1280,24 @@
             document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
             document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
             document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-            document.getElementById('shareModal').style.display = 'flex';
+            openModal('shareModal');
         }
-        function closeShareModal() { document.getElementById('shareModal').style.display = 'none'; }
 
         function copyToClipboard() {
             navigator.clipboard.writeText(currentShareUrl).then(() => {
                 showMessage("Success", "Link copied! 📋");
-                closeShareModal();
+                closeModal('shareModal');
             });
         }
 
         // --- 6. LOAD & SEARCH ---
         document.getElementById("searchInput").addEventListener("input", e => {
             const term = e.target.value.toLowerCase();
-            renderEvents(allEvents.filter(ev => ev.title.toLowerCase().includes(term) || ev.location.toLowerCase().includes(term)));
+            renderEvents(allEvents.filter(ev =>
+                ev.title.toLowerCase().includes(term) ||
+                ev.location.toLowerCase().includes(term) ||
+                (ev.description && ev.description.toLowerCase().includes(term))
+            ));
         });
 
         async function loadEvents() {
@@ -1129,12 +1308,18 @@
                 renderEvents(allEvents);
             } catch (e) {
                 console.error("Load Error:", e);
-                document.getElementById("eventsGrid").innerHTML = `<p style="grid-column:1/-1;text-align:center;color:#ff4d4d">Failed to load events. Check console.</p>`;
+                document.getElementById("eventsGrid").innerHTML =
+                    `<p style="grid-column:1/-1;text-align:center;color:#ff4d4d; padding: 50px 20px;">
+                        Failed to load events. Please check your connection.
+                    </p>`;
             }
         }
 
         async function buyTicket(eventId) {
-            if (!token) { window.location.href = 'signin.html'; return; }
+            if (!token) {
+                window.location.href = 'signin.html';
+                return;
+            }
             localStorage.setItem('pendingEventId', eventId);
 
             try {
