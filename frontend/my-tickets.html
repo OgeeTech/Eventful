@@ -13,384 +13,383 @@
         /* ===============================
    GLOBAL RESET & BASE
 ================================ */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
 
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: #0B0E14;
-    color: white;
-    overflow-x: clip;
-}
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0E14;
+            color: white;
+            overflow-x: clip;
+        }
 
-/* ===============================
+        /* ===============================
    NAVBAR
 ================================ */
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 5%;
-    background: rgba(21, 26, 35, 0.95);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-}
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(21, 26, 35, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
 
-.brand {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: white;
-    text-decoration: none;
-}
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
 
-.brand span {
-    color: #00DC82;
-}
+        .brand span {
+            color: #00DC82;
+        }
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-.nav-icon-btn {
-    position: relative;
-    background: none;
-    border: none;
-    color: #94A3B8;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        .nav-icon-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: #94A3B8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.nav-icon-btn:hover {
-    color: white;
-}
+        .nav-icon-btn:hover {
+            color: white;
+        }
 
-.badge {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background: #ff4d4d;
-    color: white;
-    font-size: 0.6rem;
-    padding: 2px 5px;
-    border-radius: 50%;
-    font-weight: bold;
-}
+        .badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ff4d4d;
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 5px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
 
-.logout-link {
-    color: #ff4d4d;
-    text-decoration: none;
-    font-size: 0.9rem;
-    margin-left: 10px;
-}
+        .logout-link {
+            color: #ff4d4d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
 
-/* ===============================
+        /* ===============================
    PAGE CONTAINER
 ================================ */
-.ticket-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 16px;
-}
+        .ticket-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 16px;
+        }
 
-/* ===============================
+        /* ===============================
    BACK BUTTON
 ================================ */
-.back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #94A3B8;
-    text-decoration: none;
-    font-weight: 500;
-    margin-bottom: 20px;
-    transition: 0.3s;
-}
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #94A3B8;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
 
-.back-btn:hover {
-    color: #00DC82;
-    transform: translateX(-4px);
-}
+        .back-btn:hover {
+            color: #00DC82;
+            transform: translateX(-4px);
+        }
 
-/* ===============================
+        /* ===============================
    TICKET CARD
 ================================ */
-.real-ticket {
-    display: flex;
-    background: #ffffff;
-    border-radius: 14px;
-    overflow: hidden;
-    margin-bottom: 30px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
-    position: relative;
-    min-height: 220px;
-    background-image: radial-gradient(#e5e5f7 1px, transparent 1px);
-    background-size: 20px 20px;
-}
+        .real-ticket {
+            display: flex;
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
+            position: relative;
+            min-height: 220px;
+            background-image: radial-gradient(#e5e5f7 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
 
-/* Ripped edges (desktop only) */
-.real-ticket::before,
-.real-ticket::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 30px;
-    height: 30px;
-    background-color: #0B0E14;
-    border-radius: 50%;
-    transform: translateY(-50%);
-    z-index: 5;
-}
+        /* Ripped edges (desktop only) */
+        .real-ticket::before,
+        .real-ticket::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: #0B0E14;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+        }
 
-.real-ticket::before {
-    left: -15px;
-}
+        .real-ticket::before {
+            left: -15px;
+        }
 
-.real-ticket::after {
-    right: 285px;
-}
+        .real-ticket::after {
+            right: 285px;
+        }
 
-/* Reminder ribbon */
-.reminder-ribbon {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #f59e0b;
-    color: white;
-    padding: 5px 12px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    border-bottom-right-radius: 12px;
-    display: none;
-    z-index: 10;
-}
+        /* Reminder ribbon */
+        .reminder-ribbon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #f59e0b;
+            color: white;
+            padding: 5px 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-bottom-right-radius: 12px;
+            display: none;
+            z-index: 10;
+        }
 
-/* ===============================
+        /* ===============================
    TICKET LEFT
 ================================ */
-.ticket-main {
-    flex: 1;
-    padding: 28px;
-    border-right: 2px dashed #ccc;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: rgba(255, 255, 255, 0.85);
-}
+        .ticket-main {
+            flex: 1;
+            padding: 28px;
+            border-right: 2px dashed #ccc;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.85);
+        }
 
-.event-title {
-    font-size: 1.7rem;
-    color: #222;
-    font-weight: 800;
-    margin: 0;
-    line-height: 1.2;
-    text-transform: uppercase;
-}
+        .event-title {
+            font-size: 1.7rem;
+            color: #222;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
 
-.event-loc {
-    color: #666;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 6px;
-}
+        .event-loc {
+            color: #666;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
 
-.ticket-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-top: 18px;
-}
+        .ticket-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-top: 18px;
+        }
 
-.detail-item span {
-    display: block;
-    font-size: 0.7rem;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+        .detail-item span {
+            display: block;
+            font-size: 0.7rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-.detail-item strong {
-    font-size: 1.05rem;
-    color: #222;
-    font-weight: 700;
-}
+        .detail-item strong {
+            font-size: 1.05rem;
+            color: #222;
+            font-weight: 700;
+        }
 
-/* ===============================
+        /* ===============================
    ACTION BUTTONS
 ================================ */
-.ticket-actions {
-    margin-top: 18px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
+        .ticket-actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
 
-.btn-icon {
-    background: rgba(0, 220, 130, 0.12);
-    color: #00DC82;
-    border: 1px solid #00DC82;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.25s;
-}
+        .btn-icon {
+            background: rgba(0, 220, 130, 0.12);
+            color: #00DC82;
+            border: 1px solid #00DC82;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.25s;
+        }
 
-.btn-icon:hover {
-    background: #00DC82;
-    color: #000;
-}
+        .btn-icon:hover {
+            background: #00DC82;
+            color: #000;
+        }
 
-.btn-download {
-    background: #151A23;
-    color: white;
-    border-color: #333;
-}
+        .btn-download {
+            background: #151A23;
+            color: white;
+            border-color: #333;
+        }
 
-.btn-download:hover {
-    background: #000;
-}
+        .btn-download:hover {
+            background: #000;
+        }
 
-/* ===============================
+        /* ===============================
    TICKET RIGHT (QR)
 ================================ */
-.ticket-stub {
-    width: 300px;
-    background: #f8f9fa;
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-left: 2px dashed #fff;
-    text-align: center;
-}
+        .ticket-stub {
+            width: 300px;
+            background: #f8f9fa;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-left: 2px dashed #fff;
+            text-align: center;
+        }
 
-.qr-box {
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
+        .qr-box {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.ticket-id {
-    font-family: monospace;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #333;
-    margin-top: 10px;
-    letter-spacing: 2px;
-}
+        .ticket-id {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
 
-/* ===============================
+        /* ===============================
    MODALS
 ================================ */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(6px);
-    z-index: 2000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-.modal-content {
-    background: #151A23;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 420px;
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-}
+        .modal-content {
+            background: #151A23;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
 
-.time-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        .time-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.time-btn:hover,
-.time-btn.selected {
-    background: #00DC82;
-    color: black;
-    border-color: #00DC82;
-}
+        .time-btn:hover,
+        .time-btn.selected {
+            background: #00DC82;
+            color: black;
+            border-color: #00DC82;
+        }
 
-/* ===============================
+        /* ===============================
    MOBILE FIXES
 ================================ */
-@media (max-width: 768px) {
-    nav {
-        flex-direction: column;
-        gap: 12px;
-        padding: 14px 5%;
-    }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 12px;
+                padding: 14px 5%;
+            }
 
-    .nav-links {
-        width: 100%;
-        justify-content: space-between;
-    }
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
 
-    .real-ticket {
-        flex-direction: column;
-    }
+            .real-ticket {
+                flex-direction: column;
+            }
 
-    .real-ticket::before,
-    .real-ticket::after {
-        display: none;
-    }
+            .real-ticket::before,
+            .real-ticket::after {
+                display: none;
+            }
 
-    .ticket-main {
-        padding: 20px;
-        border-right: none;
-        border-bottom: 2px dashed #ccc;
-    }
+            .ticket-main {
+                padding: 20px;
+                border-right: none;
+                border-bottom: 2px dashed #ccc;
+            }
 
-    .ticket-stub {
-        width: 100%;
-        padding: 20px;
-        border-left: none;
-    }
+            .ticket-stub {
+                width: 100%;
+                padding: 20px;
+                border-left: none;
+            }
 
-    .event-title {
-        font-size: 1.35rem;
-    }
+            .event-title {
+                font-size: 1.35rem;
+            }
 
-    .ticket-details {
-        gap: 14px;
-    }
+            .ticket-details {
+                gap: 14px;
+            }
 
-    .btn-icon {
-        flex: 1;
-        justify-content: center;
-    }
-}
-
+            .btn-icon {
+                flex: 1;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
@@ -471,10 +470,49 @@ nav {
 
         if (!token) window.location.href = 'signin.html';
 
-        // --- TICKETS LOGIC ---
+        // --- 1. INITIALIZATION LOGIC (THE FIX) ---
+        async function initPage() {
+            // A. Load tickets first
+            const newestTicket = await loadTickets();
+
+            // B. Check if returning from Payment (Paystack adds 'reference' to URL)
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentRef = urlParams.get('reference') || urlParams.get('trxref');
+
+            if (paymentRef && newestTicket) {
+                // RUN SUCCESS FLOW ONLY IF PAYMENT JUST HAPPENED
+                runPostPaymentFlow(newestTicket);
+
+                // Clean the URL so it doesn't happen again on refresh
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        // --- 2. THE SUCCESS CHAIN ---
+        function runPostPaymentFlow(ticket) {
+            // Step 1: Show Success Modal
+            const msgBtn = document.querySelector('#messageModal button');
+
+            // Temporarily change what the "Okay" button does
+            msgBtn.onclick = function () {
+                closeModal('messageModal');
+
+                // Step 2: Open Reminder Modal automatically
+                // (We skip notifications modal to keep it simple, or you can add it back)
+                setTimeout(() => {
+                    openReminderModal(ticket.eventId._id);
+                }, 500);
+
+                // Reset button to normal behavior
+                msgBtn.onclick = function () { closeModal('messageModal'); };
+            };
+
+            showMessage("Payment Successful", "Your ticket has been added to your wallet! 🎉");
+        }
+
+        // --- 3. TICKETS LOGIC ---
         async function loadTickets() {
             try {
-                // 👇 USE API_URL HERE
                 const response = await fetch(`${API_URL}/tickets/my-tickets`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -485,20 +523,18 @@ nav {
 
                 if (!data.tickets || data.tickets.length === 0) {
                     list.innerHTML = '<div style="text-align:center; padding:40px; border:1px dashed #333; border-radius:10px;"><p style="color:#666;">No tickets found.</p><a href="index.html" class="time-btn" style="display:inline-block; text-decoration:none; margin-top:10px;">Browse Events</a></div>';
-                    return;
+                    return null;
                 }
 
                 const savedReminders = JSON.parse(localStorage.getItem('ticketReminders') || '{}');
 
                 data.tickets.forEach((t, index) => {
-                    if (!t.eventId) return; // Skip broken tickets
+                    if (!t.eventId) return;
 
                     const qrId = `qr-${index}`;
                     const ticketIdDiv = `ticket-div-${index}`;
                     const reminderText = savedReminders[t.eventId._id] ? `🔔 ${savedReminders[t.eventId._id]}H` : '';
                     const displayStyle = reminderText ? 'block' : 'none';
-
-                    // LOGIC FIX: Handle New 8-digit IDs vs Old MongoDB IDs
                     const rawId = t.ticketId || t._id;
                     const displayId = t.ticketId ? `#${t.ticketId}` : `Ref: ${t._id.substring(0, 8)}...`;
 
@@ -546,9 +582,13 @@ nav {
                     }, 100);
                 });
 
+                // Return the most recent ticket (first one) for the success flow
+                return data.tickets[0];
+
             } catch (err) {
                 console.error(err);
                 document.getElementById('ticketsList').innerHTML = '<p style="color:#ff4d4d">Error loading tickets. Please try refreshing.</p>';
+                return null;
             }
         }
 
@@ -610,8 +650,8 @@ nav {
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function logout() { localStorage.clear(); window.location.href = 'signin.html'; }
 
-        // INIT
-        loadTickets();
+        // START THE PAGE
+        initPage();
     </script>
 </body>
 

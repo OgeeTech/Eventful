@@ -9,464 +9,744 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <style>
-/* =====================
+        /* =====================
    ROOT & RESET
 ===================== */
-:root {
-    --primary: #00dc82;
-    --bg-dark: #0b0f14;
-    --bg-card: #151a23;
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-muted: #94a3b8;
-}
+        :root {
+            --primary: #00dc82;
+            --bg-dark: #0b0f14;
+            --bg-card: #151a23;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-muted: #94a3b8;
+        }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
 
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: var(--bg-dark);
-    color: white;
-    line-height: 1.6;
-    overflow-x: hidden;
-}
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-/* =====================
+        /* =====================
    NAVBAR
 ===================== */
-nav {
-    position: fixed;
-    inset: 0 0 auto 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem clamp(16px, 5vw, 60px);
-    background: rgba(11, 15, 20, 0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--glass-border);
-}
+        nav {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem clamp(16px, 5vw, 60px);
+            background: rgba(11, 15, 20, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
 
-.brand {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: white;
-    text-decoration: none;
-    letter-spacing: -0.5px;
-}
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
 
-.brand span {
-    color: var(--primary);
-}
+        .brand span {
+            color: var(--primary);
+        }
 
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
 
-.nav-link {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: 0.3s;
-}
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
 
-.nav-link:hover {
-    color: white;
-}
+        .nav-link:hover {
+            color: white;
+        }
 
-.menu-toggle {
-    display: none;
-    font-size: 1.6rem;
-    color: white;
-    cursor: pointer;
-}
+        .menu-toggle {
+            display: none;
+            font-size: 1.6rem;
+            color: white;
+            cursor: pointer;
+        }
 
-/* =====================
+        /* =====================
    BUTTONS & PROFILE
 ===================== */
-.btn-action {
-    padding: 8px 18px;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    text-decoration: none;
-}
-/* =====================
+        .btn-action {
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+
+        /* =====================
    SHARE MODAL STYLES
 ===================== */
-.social-grid {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 25px 0;
-    flex-wrap: wrap;
-}
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
 
-.social-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-}
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
 
-.social-btn:hover {
-    transform: translateY(-5px);
-    border-color: transparent;
-    color: white;
-}
+        .social-btn:hover {
+            transform: translateY(-5px);
+            border-color: transparent;
+            color: white;
+        }
 
-/* Brand Colors on Hover */
-.whatsapp:hover { background: #25D366; box-shadow: 0 0 20px rgba(37, 211, 102, 0.4); }
-.twitter:hover { background: #1DA1F2; box-shadow: 0 0 20px rgba(29, 161, 242, 0.4); }
-.facebook:hover { background: #1877F2; box-shadow: 0 0 20px rgba(24, 119, 242, 0.4); }
-.linkedin:hover { background: #0A66C2; box-shadow: 0 0 20px rgba(10, 102, 194, 0.4); }
-.copy-link:hover { background: #4B5563; box-shadow: 0 0 20px rgba(75, 85, 99, 0.4); }
+        /* Brand Colors on Hover */
+        .whatsapp:hover {
+            background: #25D366;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+        }
 
-.btn-primary {
-    background: var(--primary);
-    color: #000;
-}
+        .twitter:hover {
+            background: #1DA1F2;
+            box-shadow: 0 0 20px rgba(29, 161, 242, 0.4);
+        }
 
-.btn-logout {
-    background: none;
-    border: 1px solid #ff4d4d;
-    color: #ff4d4d;
-    padding: 6px 14px;
-    font-size: 0.8rem;
-}
+        .facebook:hover {
+            background: #1877F2;
+            box-shadow: 0 0 20px rgba(24, 119, 242, 0.4);
+        }
 
-.profile-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: 999px;
-}
+        .linkedin:hover {
+            background: #0A66C2;
+            box-shadow: 0 0 20px rgba(10, 102, 194, 0.4);
+        }
 
-.profile-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: #000;
-    display: grid;
-    place-items: center;
-    font-weight: bold;
-    font-size: 0.8rem;
-}
+        .copy-link:hover {
+            background: #4B5563;
+            box-shadow: 0 0 20px rgba(75, 85, 99, 0.4);
+        }
 
-/* =====================
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 999px;
+        }
+
+        .profile-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #000;
+            display: grid;
+            place-items: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        /* =====================
    PAGE CONTAINER
 ===================== */
-.container {
-    max-width: 1200px;
-    margin-inline: auto;
-    padding: 120px 16px 60px;
-}
+        .container {
+            max-width: 1200px;
+            margin-inline: auto;
+            padding: 120px 16px 60px;
+        }
 
-/* =====================
+        /* =====================
    SEARCH
 ===================== */
-.search-container {
-    max-width: 600px;
-    margin: 30px auto 50px;
-    position: relative;
-}
+        .search-container {
+            max-width: 600px;
+            margin: 30px auto 50px;
+            position: relative;
+        }
 
-.search-input {
-    width: 100%;
-    padding: 16px 20px 16px 50px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border);
-    color: white;
-    font-size: 1rem;
-    outline: none;
-}
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
 
-.search-input:focus {
-    border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.06);
-}
+        .search-input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.06);
+        }
 
-.search-icon {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-}
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
 
-/* =====================
+        /* =====================
    GRID & CARDS
 ===================== */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 30px;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
 
-.event-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--glass-border);
-    border-radius: 18px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: 0.3s;
-}
+        .event-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
+        }
 
-.event-card:hover {
-    transform: translateY(-6px);
-    background: rgba(255, 255, 255, 0.04);
-}
+        .event-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.04);
+        }
 
-/* IMAGE */
-.card-image {
-    height: 180px;
-    position: relative;
-}
+        /* IMAGE */
+        .card-image {
+            height: 180px;
+            position: relative;
+        }
 
-.svg-cover svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
+        .svg-cover svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
-/* CREATOR CONTROLS */
-.creator-controls {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    display: flex;
-    gap: 8px;
-    padding: 6px;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        /* CREATOR CONTROLS */
+        .creator-controls {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            padding: 6px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-.control-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: 0.2s;
-}
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: 0.2s;
+        }
 
-.control-btn:hover {
-    background: white;
-    color: black;
-}
+        .control-btn:hover {
+            background: white;
+            color: black;
+        }
 
-.btn-delete:hover {
-    background: #ff4d4d;
-    color: white;
-}
+        .btn-delete:hover {
+            background: #ff4d4d;
+            color: white;
+        }
 
-/* CARD BODY */
-.card-body {
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+        /* CARD BODY */
+        .card-body {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
 
-.card-body h3 {
-    margin: 0 0 12px;
-    font-size: 1.35rem;
-    font-weight: 700;
-}
+        .card-body h3 {
+            margin: 0 0 12px;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
 
-.meta-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #ccc;
-    margin-bottom: 6px;
-}
+        .meta-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 6px;
+        }
 
-.meta-row i {
-    color: var(--primary);
-    width: 18px;
-}
+        .meta-row i {
+            color: var(--primary);
+            width: 18px;
+        }
 
-/* PROGRESS */
-.progress-container {
-    margin: 14px 0;
-}
+        /* PROGRESS */
+        .progress-container {
+            margin: 14px 0;
+        }
 
-.capacity-text {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
+        .capacity-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
 
-.progress-bar-bg {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-}
+        .progress-bar-bg {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-.progress-bar-fill {
-    height: 100%;
-    background: var(--primary);
-}
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+        }
 
-/* DESCRIPTION */
-.description {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    margin: 16px 0;
-    flex-grow: 1;
-}
+        /* DESCRIPTION */
+        .description {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 16px 0;
+            flex-grow: 1;
+        }
 
-/* FOOTER ACTIONS */
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid var(--glass-border);
-}
+        /* FOOTER ACTIONS */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+        }
 
-.price-tag {
-    font-size: 1.2rem;
-    font-weight: 700;
-}
+        .price-tag {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
 
-.btn-buy {
-    padding: 8px 24px;
-    border-radius: 999px;
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        .btn-buy {
+            padding: 8px 24px;
+            border-radius: 999px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.btn-buy:hover {
-    background: var(--primary);
-}
+        .btn-buy:hover {
+            background: var(--primary);
+        }
 
-/* =====================
+        /* =====================
    MODALS
 ===================== */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(6px);
-    z-index: 2000;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-.modal-content {
-    width: 100%;
-    max-width: 500px;
-    background: var(--bg-card);
-    border-radius: 18px;
-    padding: 28px;
-    border: 1px solid var(--glass-border);
-}
+        .modal-content {
+            width: 100%;
+            max-width: 500px;
+            background: var(--bg-card);
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid var(--glass-border);
+        }
 
-/* =====================
+        /* =====================
    FOOTER
 ===================== */
-footer {
-    text-align: center;
-    padding: 40px 16px;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
+        footer {
+            text-align: center;
+            padding: 40px 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-/* =====================
+        Here is the CSS snippet to style the **Close** button so it matches the aesthetic of the social icons. Add this below the `.social-grid` CSS you just added: ```css
+
+        /* Close Button Style */
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            /* Muted Text */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            width: 100%;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            /* Space from icons */
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Close Button Style */
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            /* Muted Text */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            width: 100%;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            /* Space from icons */
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* =====================
+   EDIT MODAL STYLES
+===================== */
+
+        /* Header Separator */
+        .modal-content h2 {
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        /* Labels */
+        label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Input Fields */
+        .modal-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            /* Darker background for contrast */
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus State (Glowing Border) */
+        .modal-input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(0, 220, 130, 0.1);
+        }
+
+        /* Textarea specific */
+        textarea.modal-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Layout for Date/Price Row */
+        .modal-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Responsive: Stack Date/Price on mobile */
+        @media (max-width: 600px) {
+            .modal-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        /* Save Button */
+        .btn-save {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 14px;
+            flex: 2;
+            /* Takes up more space than cancel */
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #00b86b;
+            /* Darker Green */
+            transform: translateY(-2px);
+        }
+
+        /* =====================
+   DELETE MODAL STYLES
+===================== */
+
+        /* Warning Icon */
+        .msg-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: block;
+            text-align: center;
+            /* Default to orange for warning, JS can change to Red for errors */
+            color: #f59e0b;
+            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
+        }
+
+        /* Modal Title */
+        #confirmTitle {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Modal Text */
+        .msg-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* Delete Button (Destructive) */
+        .btn-confirm-delete {
+            background: rgba(255, 77, 77, 0.15);
+            /* Low opacity red background */
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            padding: 14px;
+            flex: 1;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm-delete:hover {
+            background: #ff4d4d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Adjust Cancel Button for consistency in this modal */
+        #confirmModal .btn-cancel {
+            margin-top: 0;
+            /* Remove top margin inside flex container */
+            flex: 1;
+        }
+
+        /* =====================
+   MESSAGE MODAL STYLES
+===================== */
+
+        /* Success/Error Icons */
+        .msg-success {
+            color: #00DC82;
+            /* Neon Mint */
+            filter: drop-shadow(0 0 15px rgba(0, 220, 130, 0.4));
+        }
+
+        .msg-error {
+            color: #ff4d4d;
+            /* Bright Red */
+            filter: drop-shadow(0 0 15px rgba(255, 77, 77, 0.4));
+        }
+
+        /* Modal Title */
+        #msgTitle {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Center content specifically for this modal */
+        #messageModal .modal-content {
+            text-align: center;
+            max-width: 400px;
+            /* Slightly smaller for simple alerts */
+        }
+
+        /* Make the "Okay" button full width here */
+        #messageModal .btn-save {
+            width: 100%;
+            margin-top: 15px;
+            background: var(--primary);
+            color: black;
+        }
+
+        #messageModal .btn-save:hover {
+            background: #00b86b;
+            transform: translateY(-2px);
+        }
+
+        /* Make My Wallet look like a button on mobile */
+        @media (max-width: 900px) {
+            .wallet-btn {
+                display: inline-block;
+                width: 100%;
+                text-align: center;
+                padding: 10px 0;
+                background: var(--primary);
+                color: black;
+                border-radius: 999px;
+                font-weight: 600;
+                text-decoration: none;
+                margin-bottom: 8px;
+                transition: 0.3s;
+            }
+
+            .wallet-btn:hover {
+                background: #00b86b;
+                /* Slightly darker green on hover */
+            }
+        }
+
+
+        /* =====================
    RESPONSIVE
 ===================== */
-@media (max-width: 900px) {
-    .menu-toggle {
-        display: block;
-    }
+        @media (max-width: 900px) {
+            .menu-toggle {
+                display: block;
+            }
 
-    .nav-right {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: var(--bg-dark);
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 20px;
-        gap: 12px;
-        display: none;
-    }
+            .nav-right {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--bg-dark);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                gap: 12px;
+                display: none;
+            }
 
-    .nav-right.active {
-        display: flex;
-    }
+            .nav-right.active {
+                display: flex;
+            }
 
-    .nav-link,
-    .btn-action {
-        width: 100%;
-    }
+            .nav-link,
+            .btn-action {
+                width: 100%;
+            }
 
-    .profile-box {
-        width: 100%;
-        background: none;
-        border: none;
-        padding: 0;
-    }
+            .profile-box {
+                width: 100%;
+                background: none;
+                border: none;
+                padding: 0;
+            }
 
-    .grid {
-        grid-template-columns: 1fr;
-    }
-}
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-@media (max-width: 480px) {
-    .container {
-        padding: 110px 14px 50px;
-    }
+        @media (max-width: 480px) {
+            .container {
+                padding: 110px 14px 50px;
+            }
 
-    .card-body h3 {
-        font-size: 1.2rem;
-    }
+            .card-body h3 {
+                font-size: 1.2rem;
+            }
 
-    .btn-buy {
-        padding: 8px 18px;
-        font-size: 0.85rem;
-    }
-}
-
+            .btn-buy {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 
@@ -617,15 +897,15 @@ footer {
         });
 
         if (token) {
-            navRight.innerHTML = `
-                <a href="my-tickets.html" class="nav-link">My Wallet</a>
-                ${role === 'creator' ? '<a href="dashboard.html" class="nav-link">Dashboard</a>' : ''}
-                <div class="profile-box">
-                    <div class="profile-icon">${userName.charAt(0).toUpperCase()}</div>
-                    <span class="profile-name">${userName}</span>
-                </div>
-                <button class="btn-action btn-logout" onclick="logout()">Logout</button>
-            `;
+                navRight.innerHTML = `
+        <a href="my-tickets.html" class="nav-link wallet-btn">My Wallet</a>
+        ${role === 'creator' ? '<a href="dashboard.html" class="nav-link">Dashboard</a>' : ''}
+        <div class="profile-box">
+            <div class="profile-icon">${userName.charAt(0).toUpperCase()}</div>
+            <span class="profile-name">${userName}</span>
+        </div>
+        <button class="btn-action btn-logout" onclick="logout()">Logout</button>
+    `;
         } else {
             navRight.innerHTML = `
                 <a href="signin.html" class="nav-link">Login</a>
