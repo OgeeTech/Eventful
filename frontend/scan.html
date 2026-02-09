@@ -168,7 +168,7 @@
 
         <div id="cameraSection">
             <div id="reader"></div>
-            <p style="font-size:0.8rem; margin-top:5px;">Permission required to access camera</p>
+            <p style="font-size:0.8rem; margin-top:5px;">Camera stays active for continuous scanning</p>
         </div>
 
         <div id="manualSection" style="display: none;">
@@ -190,6 +190,7 @@
         const API_URL = "https://eventful-api-74t2.onrender.com/api";
 
         let html5QrcodeScanner;
+        let isScanning = false; // 👇 Flag to prevent multiple scans of the same ticket instantly
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
 
@@ -218,47 +219,62 @@
         }
 
         // --- CAMERA SCANNER LOGIC ---
+        // --- CAMERA SCANNER LOGIC (Fixed for Persistence) ---
         function startScanner() {
-            if (html5QrcodeScanner) return;
+            if (html5QrcodeScanner) return; // Prevent duplicates
 
-            setTimeout(() => {
-                html5QrcodeScanner = new Html5QrcodeScanner(
-                    "reader",
-                    {
-                        fps: 10,
-                        qrbox: { width: 250, height: 250 },
-                        // 👇 THIS RESTORES THE BACK CAMERA FIX
-                        videoConstraints: {
-                            facingMode: "environment"
-                        }
-                    },
-                    /* verbose= */ false
-                );
+            // 1. Create instance using the PRO API (Stable & Persistent)
+            html5QrcodeScanner = new Html5Qrcode("reader");
 
-                html5QrcodeScanner.render((decodedText) => {
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            };
+
+            // 2. Start the camera manually
+            html5QrcodeScanner.start(
+                { facingMode: "environment" }, // Force Back Camera
+                config,
+                (decodedText) => {
+                    // SUCCESS CALLBACK
+                    if (isScanning) return; // Anti-spam lock
+                    isScanning = true;
+
                     console.log(`Scan result: ${decodedText}`);
-                    stopScanner();
-                    document.getElementById('ticketId').value = decodedText;
-                    switchMode('manual');
+
+                    // NOTE: We do NOT stop the scanner here. It stays open.
+
                     verifyTicket(decodedText);
-                }, (error) => {
-                    // Ignore minor scan errors
-                });
-            }, 100);
+
+                    // Cooldown: Ready for next scan in 2.5s
+                    setTimeout(() => {
+                        isScanning = false;
+                        document.getElementById('result').innerHTML = "Ready for next scan...";
+                        document.getElementById('result').className = "";
+                    }, 2500);
+                },
+                (errorMessage) => {
+                    // Ignore frame read errors (scanning empty space)
+                }
+            ).catch(err => {
+                console.error("Camera failed to start", err);
+                document.getElementById('reader').innerHTML =
+                    `<p style="color:#ff4d4d; padding:20px;">Camera Error: ${err}</p>`;
+            });
         }
 
         function stopScanner() {
             if (html5QrcodeScanner) {
-                try {
-                    html5QrcodeScanner.clear().then(() => {
-                        html5QrcodeScanner = null;
-                    }).catch(err => console.error("Failed to clear scanner", err));
-                } catch (e) {
+                // The Pro API requires stopping before clearing
+                html5QrcodeScanner.stop().then(() => {
+                    html5QrcodeScanner.clear();
                     html5QrcodeScanner = null;
-                }
+                }).catch(err => {
+                    console.error("Failed to stop scanner", err);
+                    html5QrcodeScanner = null;
+                });
             }
         }
-
         // --- VERIFY TICKET LOGIC ---
         async function verifyTicket(scannedId = null) {
             const ticketId = scannedId || document.getElementById('ticketId').value.trim();
@@ -273,7 +289,7 @@
             console.log("Checking Ticket ID:", ticketId);
 
             try {
-                // 👇 USE API_URL HERE
+                // 👇 USE API_URL
                 const response = await fetch(`${API_URL}/tickets/validate`, {
                     method: 'POST',
                     headers: {
