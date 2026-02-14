@@ -10,7 +10,8 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 import { connectDB } from './config/db';
-// import { connectRedis } from './config/redis'; // ❌ Disabled for Deployment Fix
+// ✅ RE-ENABLED REDIS IMPORT
+import { connectRedis } from './config/redis';
 import { errorHandler } from './common/middlewares/error.middleware';
 import { apiLimiter } from './common/middlewares/rate-limit.middleware';
 import { logger } from './common/utils/logger';
@@ -27,8 +28,14 @@ import notificationRoutes from './modules/notifications/notification.routes';
 const app = express();
 
 // 3. Global Middleware
+// ✅ RESTORED PROPER CORS FOR YOUR HOSTED FRONTEND
 app.use(cors({
-    origin: '*', // Allow ALL frontends (easiest for testing)
+    origin: [
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+        "https://iventfuul.netlify.app" // 👈 YOUR NETLIFY FRONTEND
+    ],
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -57,18 +64,18 @@ app.use(errorHandler);
 export { app };
 
 // ============================================================
-// 👇 CRITICAL FIX: Only Connect to DB (No Redis for now)
+// 👇 LIVE CONNECTIONS (DB + REDIS)
 // ============================================================
 if (process.env.NODE_ENV !== 'test') {
 
     // 1. Connect to Database
     connectDB();
 
-    // 2. Connect to Redis (DISABLED TEMPORARILY)
-    // connectRedis();
+    // 2. Connect to Redis (✅ RE-ENABLED)
+    connectRedis();
 
-    // 3. Start the Background Worker (DISABLED TEMPORARILY)
-    // require('./modules/notifications/notification.worker');
+    // 3. Start the Background Worker (✅ RE-ENABLED)
+    require('./modules/notifications/notification.worker');
 
     // 4. Start the Server Listener
     if (require.main === module) {

@@ -76,14 +76,22 @@
             top: 0;
             z-index: 1000;
             height: 60px;
-            padding: 0 clamp(15px, 5%, 5%);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            width: 100%;
             background: rgba(21, 26, 35, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .nav-inner {
+            height: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(15px, 5vw, 60px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
 
         .brand {
             display: flex;
@@ -612,31 +620,33 @@
 </head>
 
 <body>
-
-    <nav>
-        <a href="index.html" class="brand">
-            <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
-        </a>
-
-        <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle menu">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="nav-items" id="navItems">
-            <a href="index.html" class="nav-link">
-                <i class="fas fa-globe"></i> Public Gallery
+    <div class="nav-inner">
+        <nav>
+            <a href="index.html" class="brand">
+                <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
             </a>
-            <a href="scan.html" class="nav-link">
-                <i class="fas fa-qrcode"></i> Scanner
-            </a>
-            <button onclick="confirmLogout()" class="btn-nav-logout">
-                <i class="fas fa-sign-out-alt"></i> Logout
+
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
             </button>
-        </div>
-    </nav>
+
+            <div class="nav-items" id="navItems">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-globe"></i> Public Gallery
+                </a>
+                <a href="scan.html" class="nav-link">
+                    <i class="fas fa-qrcode"></i> Scanner
+                </a>
+                <button onclick="confirmLogout()" class="btn-nav-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+    </div>
+
 
     <div class="container">
-        <h2>📊 Dashboard Overview</h2>
+        <h2>Dashboard Overview</h2>
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Revenue</h3>

@@ -41,17 +41,23 @@
 ===================== */
         nav {
             position: fixed;
-            inset: 0 0 auto 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem clamp(16px, 5vw, 60px);
+            top: 0;
+            left: 0;
+            width: 100%;
             background: rgba(11, 15, 20, 0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--glass-border);
-            height: 70px;
         }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: auto;
+            padding: 1rem clamp(16px, 5vw, 60px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
 
         .brand {
             font-size: clamp(1.2rem, 4vw, 1.5rem);
@@ -889,15 +895,18 @@
 <body>
 
     <nav>
-        <a href="landing.html" class="brand">
-            <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
-        </a>
+        <div class="nav-inner">
+            <a href="landing.html" class="brand">
+                <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
+            </a>
 
-        <button class="menu-toggle" id="mobile-menu" aria-label="Toggle menu">
-            <i class="fas fa-bars"></i>
-        </button>
+            <button class="menu-toggle" id="mobile-menu" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
 
-        <div class="nav-right" id="navRight"></div>
+            <div class="nav-right" id="navRight"></div>
+        </div>
+
     </nav>
 
     <div class="container">
