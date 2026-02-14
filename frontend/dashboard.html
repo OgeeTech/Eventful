@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creator Dashboard - Eventful</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/style.css">
     <style>
         /* =========================
    GLOBAL RESET & BASE
@@ -48,7 +47,6 @@
             border-radius: 8px;
             color: #ffffff;
             font-size: 16px;
-            /* Prevents zoom on iOS */
         }
 
         input:focus,
@@ -57,7 +55,6 @@
             border-color: #00DC82;
         }
 
-        /* Date input icon */
         input[type="date"] {
             color-scheme: dark;
             color: #fff;
@@ -69,36 +66,63 @@
         }
 
         /* =========================
-   NAVBAR
+   NAVBAR - IMPROVED VERSION
 ========================= */
         nav {
             position: sticky;
             top: 0;
             z-index: 1000;
-            height: 60px;
             width: 100%;
-            background: rgba(21, 26, 35, 0.95);
+            background: rgba(21, 26, 35, 0.98);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .nav-inner {
-            height: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 clamp(15px, 5vw, 60px);
+        .nav-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-content {
+            width: 100%;
+            max-width: 1400px;
+            height: 70px;
+            padding: 0 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
+        /* For larger screens, content is centered with max-width */
+        @media (min-width: 1400px) {
+            .nav-content {
+                padding: 0 40px;
+            }
+        }
+
+        /* For smaller screens, content touches edges */
+        @media (max-width: 640px) {
+            .nav-content {
+                padding: 0 16px;
+                height: 60px;
+            }
+        }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            gap: 8px;
+            font-size: 1.5rem;
             font-weight: 800;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+            .brand {
+                font-size: 1.25rem;
+            }
         }
 
         .brand span {
@@ -108,51 +132,153 @@
         .nav-items {
             display: flex;
             align-items: center;
-            gap: clamp(15px, 2vw, 28px);
+            gap: 8px;
+        }
+
+        @media (min-width: 769px) {
+            .nav-items {
+                gap: 12px;
+            }
         }
 
         .nav-link {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 12px;
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            padding: 8px 16px;
+            font-size: 0.95rem;
             font-weight: 500;
             color: #94A3B8;
-            border-radius: 8px;
-            transition: 0.3s;
+            border-radius: 40px;
+            transition: all 0.2s ease;
             white-space: nowrap;
         }
 
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
             color: #ffffff;
         }
 
+        .nav-link.active {
+            background: rgba(0, 220, 130, 0.1);
+            color: #00DC82;
+        }
+
         .btn-nav-logout {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             padding: 8px 20px;
-            font-size: 0.9rem;
+            margin-left: 8px;
+            font-size: 0.95rem;
             font-weight: 600;
-            border-radius: 30px;
-            background: rgba(255, 77, 77, 0.12);
-            border: 1px solid rgba(255, 77, 77, 0.45);
+            border-radius: 40px;
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.2);
             color: #ff4d4d;
-            transition: 0.3s;
+            transition: all 0.2s ease;
             white-space: nowrap;
         }
 
         .btn-nav-logout:hover {
             background: #ff4d4d;
             color: #ffffff;
+            border-color: #ff4d4d;
         }
 
         .mobile-menu-btn {
             display: none;
             background: none;
             border: none;
-            font-size: 1.6rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
             color: #ffffff;
-            padding: 5px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Tablet and Mobile Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .nav-items {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                width: 100%;
+                background: rgba(21, 26, 35, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                align-items: stretch;
+                padding: 8px 0 16px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                gap: 0;
+            }
+
+            @media (max-width: 640px) {
+                .nav-items {
+                    top: 60px;
+                }
+            }
+
+            .nav-items.active {
+                display: flex;
+            }
+
+            .nav-link {
+                padding: 16px 24px;
+                border-radius: 0;
+                justify-content: flex-start;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .nav-link:last-of-type {
+                border-bottom: none;
+            }
+
+            .nav-link i {
+                width: 24px;
+                font-size: 1.2rem;
+            }
+
+            .btn-nav-logout {
+                margin: 16px 24px 8px;
+                padding: 14px 20px;
+                justify-content: center;
+                background: rgba(255, 77, 77, 0.15);
+            }
+        }
+
+        /* Small mobile adjustments */
+        @media (max-width: 480px) {
+            .nav-content {
+                padding: 0 12px;
+            }
+
+            .nav-link {
+                padding: 14px 20px;
+            }
+
+            .btn-nav-logout {
+                margin: 12px 20px 8px;
+            }
         }
 
         /* =========================
@@ -160,9 +286,16 @@
 ========================= */
         .container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 40px auto;
-            padding: 0 clamp(15px, 4vw, 20px);
+            padding: 0 24px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 16px;
+                margin: 30px auto;
+            }
         }
 
         h2 {
@@ -233,7 +366,6 @@
         .row input {
             flex: 1;
             min-width: 0;
-            /* Prevents flex items from overflowing */
         }
 
         .btn-primary {
@@ -431,10 +563,16 @@
 ========================= */
         footer {
             margin-top: clamp(60px, 8vw, 80px);
-            padding: 30px 20px;
+            padding: 30px 24px;
             text-align: center;
             color: #94A3B8;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        @media (max-width: 640px) {
+            footer {
+                padding: 30px 16px;
+            }
         }
 
         footer a {
@@ -444,10 +582,6 @@
         .heart-icon {
             color: #ff4d4d;
         }
-
-        /* =========================
-   RESPONSIVE MEDIA QUERIES
-========================= */
 
         /* Tablet Devices */
         @media (max-width: 992px) {
@@ -467,43 +601,6 @@
 
         /* Mobile Devices */
         @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .nav-items {
-                display: none;
-                position: fixed;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background: #151A23;
-                backdrop-filter: blur(10px);
-                flex-direction: column;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                padding: 20px 0;
-                gap: 0;
-                z-index: 999;
-            }
-
-            .nav-items.active {
-                display: flex;
-            }
-
-            .nav-link {
-                width: 100%;
-                padding: 16px 20px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                justify-content: center;
-            }
-
-            .btn-nav-logout {
-                margin: 20px;
-                width: calc(100% - 40px);
-                padding: 12px;
-                justify-content: center;
-            }
-
             .event-item {
                 flex-direction: column;
                 align-items: stretch;
@@ -569,7 +666,7 @@
         /* Extra Small Devices */
         @media (max-width: 360px) {
             .container {
-                padding: 0 10px;
+                padding: 0 12px;
             }
 
             .form-section {
@@ -578,10 +675,6 @@
 
             .stat-card {
                 padding: 15px;
-            }
-
-            .brand {
-                font-size: 1.1rem;
             }
         }
 
@@ -620,30 +713,31 @@
 </head>
 
 <body>
-    <div class="nav-inner">
-        <nav>
-            <a href="index.html" class="brand">
-                <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
-            </a>
-
-            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle menu">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <div class="nav-items" id="navItems">
-                <a href="index.html" class="nav-link">
-                    <i class="fas fa-globe"></i> Public Gallery
+    <nav>
+        <div class="nav-container">
+            <div class="nav-content">
+                <a href="index.html" class="brand">
+                    <i class="fas fa-layer-group" style="color:#00DC82;"></i> Eventful<span>.</span>
                 </a>
-                <a href="scan.html" class="nav-link">
-                    <i class="fas fa-qrcode"></i> Scanner
-                </a>
-                <button onclick="confirmLogout()" class="btn-nav-logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+
+                <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
                 </button>
-            </div>
-        </nav>
-    </div>
 
+                <div class="nav-items" id="navItems">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-globe"></i> Public Gallery
+                    </a>
+                    <a href="scan.html" class="nav-link">
+                        <i class="fas fa-qrcode"></i> Scanner
+                    </a>
+                    <button onclick="confirmLogout()" class="btn-nav-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
         <h2>Dashboard Overview</h2>
@@ -729,6 +823,7 @@
             <button onclick="closeModal('messageModal')" class="btn-primary">Okay</button>
         </div>
     </div>
+
     <footer>
         <p>
             Built with <i class="fas fa-heart heart-icon"></i> by
@@ -738,9 +833,7 @@
     </footer>
 
     <script>
-        // 👇 1. POINT TO RENDER CLOUD SERVER
         const API_URL = "https://eventful-api-74t2.onrender.com/api";
-
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
 
@@ -749,16 +842,16 @@
         let myEvents = [];
         let confirmCallback = null;
 
-        // --- UTILITY FUNCTIONS ---
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
 
-        // 👇 HAMBURGER TOGGLE FUNCTION
         function toggleMenu() {
             const nav = document.getElementById('navItems');
+            const btn = document.querySelector('.mobile-menu-btn i');
+
             nav.classList.toggle('active');
 
-            // Toggle Icon
-            const btn = document.querySelector('.mobile-menu-btn i');
             if (nav.classList.contains('active')) {
                 btn.classList.remove('fa-bars');
                 btn.classList.add('fa-times');
@@ -770,7 +863,6 @@
             }
         }
 
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             const nav = document.getElementById('navItems');
             const menuBtn = document.querySelector('.mobile-menu-btn');
@@ -781,7 +873,6 @@
             }
         });
 
-        // Close menu on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && document.getElementById('navItems').classList.contains('active')) {
                 toggleMenu();
@@ -796,13 +887,12 @@
             document.getElementById('messageModal').style.display = 'flex';
         }
 
-        // 👇 FIXED SHOW CONFIRM FUNCTION (Handles Button Text Correctly)
         function showConfirm(text, callback, buttonText = "Confirm", isDestructive = false) {
             document.getElementById('confirmText').innerText = text;
             confirmCallback = callback;
 
             const yesBtn = document.getElementById('btnConfirmYes');
-            yesBtn.innerText = buttonText; // Set Correct Text (Publish/Delete/Logout)
+            yesBtn.innerText = buttonText;
 
             if (isDestructive) {
                 yesBtn.className = "btn-confirm-delete";
@@ -820,10 +910,11 @@
             closeModal('confirmModal');
         });
 
-        // 1. LOAD ANALYTICS
         async function loadAnalytics() {
             try {
-                const res = await fetch(`${API_URL}/analytics/dashboard?t=${Date.now()}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(`${API_URL}/analytics/dashboard?t=${Date.now()}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 const data = await res.json();
                 document.getElementById('revenueDisplay').innerText = `₦${(data.totalRevenue || 0).toLocaleString()}`;
                 document.getElementById('ticketsDisplay').innerText = data.ticketsSold || 0;
@@ -832,10 +923,11 @@
             } catch (err) { console.error(err); }
         }
 
-        // 2. LOAD MY EVENTS
         async function loadMyEvents() {
             try {
-                const res = await fetch(`${API_URL}/events/my-events`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(`${API_URL}/events/my-events`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 const data = await res.json();
                 myEvents = data.events || [];
 
@@ -875,10 +967,8 @@
             } catch (err) { console.error(err); }
         }
 
-        // 3. CREATE EVENT
         document.getElementById('createEventForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            // Pass "Publish" as button text, and false for destructive (So it is Green)
             showConfirm("Are you sure you want to publish this event?", executeCreateEvent, "Publish", false);
         });
 
@@ -911,7 +1001,6 @@
             } catch (err) { showMessage("Error", "Connection failed", false); }
         }
 
-        // 4. EDIT EVENT LOGIC
         function openEditModal(id) {
             const event = myEvents.find(e => e._id === id);
             if (!event) return;
@@ -954,7 +1043,6 @@
             } catch (err) { showMessage("Error", "Connection error", false); }
         });
 
-        // 5. DELETE EVENT LOGIC
         function confirmDelete(id) {
             showConfirm("This will delete the event and all tickets permanently. This cannot be undone.", () => {
                 executeDelete(id);
@@ -978,15 +1066,13 @@
             } catch (err) { showMessage("Error", "Connection error", false); }
         }
 
-        // 6. LOGOUT LOGIC
         function confirmLogout() {
             showConfirm("Are you sure you want to log out?", () => {
                 localStorage.clear();
                 window.location.href = 'signin.html';
-            }, "Logout", true); // Destructive true -> Red button
+            }, "Logout", true);
         }
 
-        // INIT
         loadAnalytics();
         loadMyEvents();
     </script>

@@ -28,12 +28,12 @@ import notificationRoutes from './modules/notifications/notification.routes';
 const app = express();
 
 // 3. Global Middleware
-// ✅ RESTORED PROPER CORS FOR YOUR HOSTED FRONTEND
+// RESTORED PROPER CORS FOR YOUR HOSTED FRONTEND
 app.use(cors({
     origin: [
         "http://127.0.0.1:5500",
         "http://localhost:5500",
-        "https://iventfuul.netlify.app" // 👈 YOUR NETLIFY FRONTEND
+        "https://iventfuul.netlify.app" // YOUR NETLIFY FRONTEND
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -71,18 +71,18 @@ if (process.env.NODE_ENV !== 'test') {
     // 1. Connect to Database
     connectDB();
 
-    // 2. Connect to Redis (✅ RE-ENABLED)
+    // 2. Connect to Redis ( RE-ENABLED)
     connectRedis();
 
-    // 3. Start the Background Worker (✅ RE-ENABLED)
+    // 3. Start the Background Worker (RE-ENABLED)
     require('./modules/notifications/notification.worker');
 
     // 4. Start the Server Listener
     if (require.main === module) {
         const PORT = process.env.PORT || 5000;
         app.listen(PORT, () => {
-            logger.info(`🚀 Server running on port ${PORT}`);
-            logger.info(`📄 Documentation available at /api-docs`);
+            logger.info(` Server running on port ${PORT}`);
+            logger.info(` Documentation available at /api-docs`);
         });
     }
 }
